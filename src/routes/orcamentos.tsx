@@ -1,0 +1,182 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import {
+  db,
+  calcularTotal,
+  formatBRL,
+  STATUS_COLORS,
+  STATUS_LABELS,
+  type StatusOrcamento,
+} from "@/lib/db";
+import { PageHeader } from "@/components/app-shell";
+import { Plus, Search, Trash2, FileText, MessageCircle } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
+import { whatsappLink } from "@/lib/utils";
+
+export const Route = createFileRoute("/orcamentos")({
+  head: () => ({
+    meta: [
+      { title: "Orçamentos — Pintor Plus" },
+      { name: "description", content: "Histórico de orçamentos do pintor com PDF e WhatsApp." },
+    ],
+  }),
+  component: OrcamentosPage,
+});
+
+const STATUSES: StatusOrcamento[] = [
+  "rascunho",
+  "enviado",
+  "aprovado",
+  "em_andamento",
+  "finalizado",
+  "cancelado",
+];
+
+function OrcamentosPage() {
+  const [busca, setBusca] = useState("");
+  const [filtro, setFiltro] = useState<StatusOrcamento | "todos">("todos");
+  const orcamentos = useLiveQuery(
+    () => db.orcamentos.orderBy("atualizadoEm").reverse().toArray(),
+    [],
+    [],
+  );
+  const lista = (orcamentos ?? []).filter((o) => {
+    if (filtro !== "todos" && o.status !== filtro) return false;
+    if (busca && !(o.clienteSnapshot?.nome ?? "").toLowerCase().includes(busca.toLowerCase()))
+      return false;
+    return true;
+  });
+
+  return (
+    <div>
+      <PageHeader
+        eyebrow={`Histórico · ${orcamentos?.length ?? 0} total`}
+        title="Orçamentos"
+        actions={
+          <Link
+            to="/orcamentos/novo"
+            className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-2.5 text-xs font-black uppercase tracking-widest flex items-center gap-2"
+          >
+            <Plus className="size-4" strokeWidth={3} /> Novo
+          </Link>
+        }
+      />
+
+      <div className="px-5 lg:px-10 py-6 space-y-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-foreground/40" />
+          <input
+            type="search"
+            placeholder="Buscar por cliente..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            className="w-full bg-surface brutal-border-thin pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-brand"
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {(["todos", ...STATUSES] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setFiltro(s)}
+              className={`brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase tracking-widest brutal-press ${
+                filtro === s ? "bg-brand text-ink" : "bg-surface text-foreground/60"
+              }`}
+            >
+              {s === "todos" ? "Todos" : STATUS_LABELS[s]}
+            </button>
+          ))}
+        </div>
+
+        {lista.length === 0 ? (
+          <div className="brutal-border-thin border-dashed border-foreground/20 p-12 text-center">
+            <p className="text-foreground/50 text-sm font-bold uppercase tracking-widest mb-4">
+              Nenhum orçamento
+            </p>
+            <Link
+              to="/orcamentos/novo"
+              className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-2 text-xs font-black uppercase tracking-widest"
+            >
+              Criar primeiro
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {lista.map((o) => (
+              <div key={o.id} className="bg-surface brutal-border p-4 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-black uppercase truncate">
+                      {o.clienteSnapshot?.nome ?? "Sem cliente"}
+                    </p>
+                    <p className="text-mono text-[10px] text-foreground/40 uppercase">
+                      #{o.id} · {format(o.atualizadoEm, "dd MMM yy, HH:mm", { locale: ptBR })}
+                    </p>
+                  </div>
+                  <div className="text-display text-2xl italic text-brand shrink-0">
+                    {formatBRL(calcularTotal(o)).replace(",00", "")}
+                  </div>
+                </div>
+                <select
+                  value={o.status}
+                  onChange={(e) =>
+                    db.orcamentos.update(o.id!, {
+                      status: e.target.value as StatusOrcamento,
+                      atualizadoEm: Date.now(),
+                    })
+                  }
+                  className={`brutal-border-thin px-2 py-1 text-[10px] font-black uppercase tracking-widest ${STATUS_COLORS[o.status]}`}
+                >
+                  {STATUSES.map((s) => (
+                    <option key={s} value={s} className="bg-surface text-foreground">
+                      {STATUS_LABELS[s]}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    to="/orcamentos/$id"
+                    params={{ id: String(o.id) }}
+                    className="flex-1 brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest brutal-press text-center"
+                  >
+                    Ver
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      const blob = await gerarPdfOrcamento(o);
+                      baixarBlob(blob, `orcamento-${o.id}.pdf`);
+                    }}
+                    className="brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center gap-1"
+                  >
+                    <FileText className="size-3" /> PDF
+                  </button>
+                  {o.clienteSnapshot?.telefone && (
+                    <button
+                      onClick={async () => {
+                        const msg = await gerarMensagemWhatsapp(o);
+                        window.open(whatsappLink(o.clienteSnapshot!.telefone!, msg), "_blank");
+                      }}
+                      className="bg-success text-ink brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center gap-1"
+                    >
+                      <MessageCircle className="size-3" /> Wpp
+                    </button>
+                  )}
+                  <button
+                    onClick={() => confirm("Excluir orçamento?") && db.orcamentos.delete(o.id!)}
+                    className="brutal-border-thin px-2 py-2 brutal-press text-destructive"
+                    aria-label="Excluir"
+                  >
+                    <Trash2 className="size-3" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
