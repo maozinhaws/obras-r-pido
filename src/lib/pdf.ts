@@ -1,0 +1,188 @@
+import jsPDF from "jspdf";
+import { db, type Orcamento, calcularTotal, formatBRL, STATUS_LABELS } from "./db";
+import { fotoDataURL } from "./fotos";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+export async function gerarPdfOrcamento(o: Orcamento): Promise<Blob> {
+  const config = (await db.config.get(1)) ?? { id: 1 as const };
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const pageW = doc.internal.pageSize.getWidth();
+  let y = 15;
+
+  // Header brand bar
+  doc.setFillColor(255, 95, 0);
+  doc.rect(0, 0, pageW, 10, "F");
+
+  // Empresa
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text(config.nome ?? "Pintor Plus", 15, y + 5);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  y += 10;
+  if (config.documento) doc.text(`Doc: ${config.documento}`, 15, (y += 5));
+  if (config.telefone) doc.text(`Tel: ${config.telefone}`, 15, (y += 5));
+  if (config.email) doc.text(`Email: ${config.email}`, 15, (y += 5));
+  if (config.endereco) doc.text(`End: ${config.endereco}`, 15, (y += 5));
+
+  // Título orçamento
+  y += 6;
+  doc.setDrawColor(0);
+  doc.setLineWidth(0.6);
+  doc.line(15, y, pageW - 15, y);
+  y += 7;
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text(`ORÇAMENTO #${o.id ?? "—"}`, 15, y);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.text(
+    format(o.criadoEm, "dd/MM/yyyy", { locale: ptBR }),
+    pageW - 15,
+    y,
+    { align: "right" },
+  );
+  y += 4;
+  doc.text(`Status: ${STATUS_LABELS[o.status]}`, pageW - 15, y, { align: "right" });
+
+  // Cliente
+  y += 8;
+  doc.setFont("helvetica", "bold");
+  doc.text("CLIENTE", 15, y);
+  doc.setFont("helvetica", "normal");
+  y += 5;
+  const c = o.clienteSnapshot;
+  if (c) {
+    doc.text(c.nome ?? "—", 15, y);
+    if (c.telefone) doc.text(c.telefone, pageW - 15, y, { align: "right" });
+    if (c.endereco) {
+      y += 5;
+      doc.text(c.endereco, 15, y);
+    }
+  }
+
+  // Ambientes
+  y += 10;
+  doc.setFont("helvetica", "bold");
+  doc.text("AMBIENTES E ITENS", 15, y);
+  y += 2;
+  doc.setLineWidth(0.3);
+  doc.line(15, y, pageW - 15, y);
+  doc.setFont("helvetica", "normal");
+
+  for (const amb of o.ambientes) {
+    y += 7;
+    if (y > 270) {
+      doc.addPage();
+      y = 20;
+    }
+    doc.setFont("helvetica", "bold");
+    doc.text(amb.nome.toUpperCase(), 15, y);
+    doc.setFont("helvetica", "normal");
+    for (const item of amb.itens) {
+      y += 5;
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+      const dim = item.altura && item.comprimento
+        ? `${item.altura}m x ${item.comprimento}m = ${(item.altura * item.comprimento).toFixed(2)}m²`
+        : "";
+      doc.text(`• ${item.nome} ${dim ? "(" + dim + ")" : ""}`, 18, y);
+      doc.text(formatBRL(item.preco || 0), pageW - 15, y, { align: "right" });
+      if (item.servicos.length) {
+        y += 4;
+        doc.setFontSize(8);
+        doc.setTextColor(100);
+        doc.text(`  Serviços: ${item.servicos.join(", ")}`, 18, y);
+        doc.setTextColor(0);
+        doc.setFontSize(9);
+      }
+      if (item.observacao) {
+        y += 4;
+        doc.setFontSize(8);
+        doc.setTextColor(100);
+        doc.text(`  Obs: ${item.observacao}`, 18, y);
+        doc.setTextColor(0);
+        doc.setFontSize(9);
+      }
+      // fotos pequenas
+      if (item.fotos.length) {
+        let x = 18;
+        y += 3;
+        for (const fid of item.fotos.slice(0, 4)) {
+          const data = await fotoDataURL(fid);
+          if (!data) continue;
+          if (y > 250) {
+            doc.addPage();
+            y = 20;
+            x = 18;
+          }
+          try {
+            doc.addImage(data, "JPEG", x, y, 25, 18);
+            x += 27;
+          } catch {
+            /* ignore */
+          }
+        }
+        y += 19;
+      }
+    }
+  }
+
+  // Total
+  y += 10;
+  if (y > 260) {
+    doc.addPage();
+    y = 20;
+  }
+  doc.setLineWidth(0.6);
+  doc.line(15, y, pageW - 15, y);
+  y += 7;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text("TOTAL", 15, y);
+  doc.text(formatBRL(calcularTotal(o)), pageW - 15, y, { align: "right" });
+
+  // Detalhes
+  y += 10;
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  if (o.formaPagamento) doc.text(`Forma de pagamento: ${o.formaPagamento}`, 15, (y += 5));
+  if (o.validade) doc.text(`Validade: ${o.validade}`, 15, (y += 5));
+  if (o.inicio) doc.text(`Início: ${o.inicio}`, 15, (y += 5));
+  if (o.observacoes) {
+    y += 6;
+    doc.text("Observações:", 15, y);
+    const lines = doc.splitTextToSize(o.observacoes, pageW - 30);
+    y += 5;
+    doc.text(lines, 15, y);
+    y += lines.length * 4;
+  }
+
+  // Assinatura
+  if (config.assinatura) {
+    y += 14;
+    doc.line(60, y, pageW - 60, y);
+    y += 4;
+    doc.text(config.assinatura, pageW / 2, y, { align: "center" });
+  }
+
+  return doc.output("blob");
+}
+
+export async function gerarMensagemWhatsapp(o: Orcamento): Promise<string> {
+  const config = await db.config.get(1);
+  const intro = config?.mensagemPadraoWhats ?? "Olá! Segue o orçamento.";
+  return `${intro}\n\n*Cliente:* ${o.clienteSnapshot?.nome ?? "—"}\n*Total:* ${formatBRL(calcularTotal(o))}\n*Status:* ${STATUS_LABELS[o.status]}`;
+}
+
+export function baixarBlob(blob: Blob, nome: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nome;
+  a.click();
+  URL.revokeObjectURL(url);
+}
