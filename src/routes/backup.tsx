@@ -100,13 +100,13 @@ function BackupPage() {
     <div>
       <PageHeader eyebrow="Sistema · Dados" title="Backup" />
       <div className="px-5 lg:px-10 py-6 max-w-3xl space-y-4">
-        <div className="bg-surface brutal-border p-5">
+        <div className="glass p-6">
           <div className="flex items-center gap-2 text-mono text-[10px] uppercase text-brand mb-3">
             <Database className="size-3" /> {"> Dados no dispositivo"}
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
             {Object.entries(counts).map(([k, v]) => (
-              <div key={k} className="brutal-border-thin p-3 text-center">
+              <div key={k} className="glass border-white/10 bg-white/5 p-4 text-center">
                 <div className="text-display text-3xl italic">{v}</div>
                 <div className="text-[10px] font-black uppercase text-foreground/50">{k}</div>
               </div>
@@ -117,7 +117,7 @@ function BackupPage() {
         <div className="grid md:grid-cols-2 gap-3">
           <button
             onClick={exportar}
-            className="bg-brand text-ink brutal-border brutal-shadow brutal-press p-5 text-left"
+            className="glass-brand glass-press p-6 text-left group overflow-hidden relative"
           >
             <Download className="size-7 mb-3" strokeWidth={2.5} />
             <div className="text-display text-xl">Exportar Backup</div>
@@ -126,7 +126,7 @@ function BackupPage() {
             </div>
           </button>
 
-          <label className="bg-surface brutal-border brutal-press p-5 cursor-pointer">
+          <label className="glass glass-press p-6 cursor-pointer group">
             <Upload className="size-7 mb-3 text-brand" strokeWidth={2.5} />
             <div className="text-display text-xl">Importar Backup</div>
             <div className="text-[10px] font-mono uppercase opacity-50 mt-1">
@@ -141,7 +141,7 @@ function BackupPage() {
           </label>
         </div>
 
-        <div className="bg-surface brutal-border p-5 opacity-60">
+        <div className="glass p-6 opacity-60">
           <div className="flex items-center gap-2 text-mono text-[10px] uppercase text-brand mb-2">
             <Cloud className="size-3" /> {"> Google Drive"}
           </div>
@@ -150,13 +150,13 @@ function BackupPage() {
           </p>
           <button
             disabled
-            className="brutal-border-thin px-4 py-2 text-xs font-black uppercase tracking-widest"
+            className="glass px-5 py-3 text-xs font-bold uppercase tracking-widest"
           >
             Conectar (em breve)
           </button>
         </div>
 
-        <div className="brutal-border-thin border-warning p-4 flex gap-3 items-start">
+        <div className="glass border-warning/20 p-5 flex gap-4 items-start">
           <AlertTriangle className="size-5 text-warning shrink-0" />
           <p className="text-xs text-foreground/70">
             Faça backup com frequência. Se você desinstalar o app ou limpar os dados do
