@@ -53,7 +53,7 @@ function ConfigPage() {
         actions={
           <button
             onClick={salvar}
-            className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-2.5 text-xs font-black uppercase tracking-widest flex items-center gap-2"
+            className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
           >
             <Save className="size-4" strokeWidth={3} /> {salvo ? "Salvo!" : "Salvar"}
           </button>
@@ -63,7 +63,7 @@ function ConfigPage() {
       <div className="px-5 lg:px-10 py-6 max-w-3xl space-y-6">
         <Card titulo="Empresa">
           <div className="flex items-start gap-4">
-            <label className="size-24 brutal-border bg-midnight grid place-items-center cursor-pointer overflow-hidden shrink-0">
+            <label className="size-24 glass border-white/20 bg-white/5 grid place-items-center cursor-pointer overflow-hidden shrink-0 rounded-xl hover:border-brand/40 transition-all">
               {form.logo ? (
                 <img src={form.logo} alt="Logo" className="size-full object-contain" />
               ) : (
@@ -81,14 +81,14 @@ function ConfigPage() {
                 <input
                   value={form.nome ?? ""}
                   onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                  className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
                 />
               </Field>
               <Field label="CNPJ / CPF">
                 <input
                   value={form.documento ?? ""}
                   onChange={(e) => setForm({ ...form, documento: e.target.value })}
-                  className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
                 />
               </Field>
             </div>
@@ -102,7 +102,7 @@ function ConfigPage() {
                 value={form.telefone ?? ""}
                 onChange={(e) => setForm({ ...form, telefone: e.target.value })}
                 inputMode="tel"
-                className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
               />
             </Field>
             <Field label="E-mail">
@@ -110,7 +110,7 @@ function ConfigPage() {
                 type="email"
                 value={form.email ?? ""}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
               />
             </Field>
           </div>
@@ -119,7 +119,7 @@ function ConfigPage() {
               rows={2}
               value={form.endereco ?? ""}
               onChange={(e) => setForm({ ...form, endereco: e.target.value })}
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
             />
           </Field>
         </Card>
@@ -132,7 +132,7 @@ function ConfigPage() {
               onChange={(e) =>
                 setForm({ ...form, mensagemPadraoWhats: e.target.value })
               }
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
             />
           </Field>
         </Card>
@@ -143,7 +143,7 @@ function ConfigPage() {
               rows={2}
               value={form.assinatura ?? ""}
               onChange={(e) => setForm({ ...form, assinatura: e.target.value })}
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
             />
           </Field>
         </Card>
@@ -154,7 +154,7 @@ function ConfigPage() {
 
 function Card({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
-    <div className="bg-surface brutal-border p-5 lg:p-6 space-y-3">
+    <div className="glass p-6 space-y-4">
       <div className="text-mono text-[10px] uppercase tracking-widest text-brand">
         {`> ${titulo}`}
       </div>
