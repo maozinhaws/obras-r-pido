@@ -61,6 +61,29 @@ function ConfigPage() {
       />
 
       <div className="px-5 lg:px-10 py-6 max-w-3xl space-y-6">
+        <Card titulo="Aparência">
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { id: "moderno", label: "Moderno", desc: "Glass & Cores" },
+              { id: "brutalista", label: "Brutalista", desc: "Sólido & Direto" },
+              { id: "minimalista", label: "Minimalista", desc: "Contraste Alto" },
+            ].map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setForm({ ...form, tema: t.id as any })}
+                className={`p-4 rounded-xl border-2 transition-all text-left ${
+                  form.tema === t.id || (!form.tema && t.id === "moderno")
+                    ? "border-brand bg-brand/10"
+                    : "border-white/10 hover:border-white/20"
+                }`}
+              >
+                <div className="font-bold text-xs uppercase tracking-widest mb-1">{t.label}</div>
+                <div className="text-[10px] opacity-50">{t.desc}</div>
+              </button>
+            ))}
+          </div>
+        </Card>
+
         <Card titulo="Empresa">
           <div className="flex items-start gap-4">
             <label className="size-24 glass border-white/20 bg-white/5 grid place-items-center cursor-pointer overflow-hidden shrink-0 rounded-xl hover:border-brand/40 transition-all">
