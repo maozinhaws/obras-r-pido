@@ -128,6 +128,8 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     overscroll-behavior-y: none;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   body {
@@ -136,6 +138,7 @@
       radial-gradient(55vmax 55vmax at 110% 15%, color-mix(in oklab, var(--violet) 38%, transparent), transparent 65%),
       radial-gradient(70vmax 50vmax at 50% 110%, color-mix(in oklab, var(--cyan) 22%, transparent), transparent 60%);
     background-attachment: fixed;
+    min-height: 100vh;
   }
 
   ::selection {

@@ -109,7 +109,7 @@ function Home() {
         </div>
 
         {/* Stat: Faturamento */}
-        <div className="col-span-6 lg:col-span-3 glass rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3 glass rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
           <div className="flex items-center gap-2 text-brand text-mono text-[10px] uppercase tracking-widest">
             <TrendingUp className="size-3" strokeWidth={3} />· Faturamento
           </div>
@@ -127,7 +127,7 @@ function Home() {
         </div>
 
         {/* Stat: Clientes */}
-        <div className="col-span-6 lg:col-span-2 glass rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
+        <div className="col-span-12 sm:col-span-6 lg:col-span-2 glass rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
           <div className="text-brand text-mono text-[10px] uppercase tracking-widest">
             · Base
           </div>
