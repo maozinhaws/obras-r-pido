@@ -83,12 +83,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "App offline para pintores: orçamentos, clientes, agenda, recibo, PDF e WhatsApp em segundos.",
       },
-      { property: "og:title", content: "Pintor Plus" },
+      { property: "og:title", content: "Pintor Plus — Orçamentos no canteiro de obra" },
       {
         property: "og:description",
         content: "Orçamentos, clientes, agenda e recibo no bolso do pintor.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:title", content: "Pintor Plus — Orçamentos no canteiro de obra" },
+      { name: "description", content: "Obras Rápido is a mobile app for painters to manage clients, quotes, and projects offline." },
+      { property: "og:description", content: "Obras Rápido is a mobile app for painters to manage clients, quotes, and projects offline." },
+      { name: "twitter:description", content: "Obras Rápido is a mobile app for painters to manage clients, quotes, and projects offline." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/nveml7lPo8TvYZvy2z2QdfH1iqC2/social-images/social-1778968314189-web-app-manifest-512x512.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/nveml7lPo8TvYZvy2z2QdfH1iqC2/social-images/social-1778968314189-web-app-manifest-512x512.webp" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
