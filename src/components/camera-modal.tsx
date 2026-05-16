@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Camera, Zap, ZapOff, Maximize, Minimize, Trash2, Check } from "lucide-react";
-import { salvarFoto } from "@/lib/fotos";
+import { salvarFoto, urlFoto } from "@/lib/fotos";
 import { cn } from "@/lib/utils";
 
 interface CameraModalProps {
@@ -236,7 +236,6 @@ export function CameraModal({ onClose, onPhotosCaptured }: CameraModalProps) {
 
 function Thumbnail({ id, index, onClick }: { id: string, index: number, onClick: () => void }) {
   const [url, setUrl] = useState<string | null>(null);
-  const { urlFoto } = require("@/lib/fotos"); // Lazy loading/avoiding circular issues
 
   useEffect(() => {
     urlFoto(id).then(setUrl);
@@ -258,7 +257,6 @@ function Thumbnail({ id, index, onClick }: { id: string, index: number, onClick:
 
 function ReviewImage({ id }: { id: string }) {
   const [url, setUrl] = useState<string | null>(null);
-  const { urlFoto } = require("@/lib/fotos");
 
   useEffect(() => {
     urlFoto(id).then(setUrl);
