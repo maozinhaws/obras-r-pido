@@ -132,7 +132,8 @@ function EventoCard({
 }
 
 function baixarICS(e: EventoAgenda) {
-  const dt = e.data.replace(/-/g, "") + "T" + (e.hora ?? "08:00").replace(":", "") + "00";
+  const dtStart = e.data.replace(/-/g, "") + "T" + (e.hora ?? "08:00").replace(":", "") + "00";
+  const dtEnd = e.data.replace(/-/g, "") + "T" + (e.hora ?? "09:00").replace(":", "") + "00";
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -140,8 +141,8 @@ function baixarICS(e: EventoAgenda) {
     "BEGIN:VEVENT",
     `UID:pintor-${e.id}@pintorplus`,
     `DTSTAMP:${new Date().toISOString().replace(/[-:.]/g, "").slice(0, 15)}Z`,
-    `DTSTART:${dt}`,
-    `DTEND:${dt}`,
+    `DTSTART:${dtStart}`,
+    `DTEND:${dtEnd}`,
     `SUMMARY:${e.titulo}`,
     `DESCRIPTION:${e.observacao ?? ""}`,
     "END:VEVENT",

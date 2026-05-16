@@ -72,7 +72,7 @@ function NavRow({
 
 export function Sidebar() {
   return (
-    <aside className="hidden md:flex w-20 lg:w-64 glass-strong rounded-none border-l-0 border-y-0 flex-col sticky top-0 h-screen shrink-0 z-30">
+    <aside className="hidden md:flex w-20 lg:w-64 glass-strong rounded-none border-l-0 border-y-0 flex-col sticky top-0 h-screen shrink-0 z-30 overflow-x-hidden">
       <div className="p-4 lg:p-6 border-b border-white/10">
         <Link to="/" className="flex items-center gap-3">
           <div className="size-10 glass-brand rounded-xl grid place-items-center text-display text-xl text-white">
@@ -118,7 +118,7 @@ export function Sidebar() {
 
 export function BottomNav() {
   return (
-    <nav className="md:hidden fixed bottom-4 left-4 right-4 z-40 glass-strong rounded-2xl grid grid-cols-5 px-1 py-1">
+    <nav className="md:hidden fixed bottom-4 left-4 right-4 z-40 glass-strong rounded-2xl grid grid-cols-5 px-1 py-1 max-w-[calc(100vw-2rem)]">
       {BOTTOM_NAV.map((n) => {
         const active = useActive(n.to, n.to === "/");
         const Icon = n.icon;
@@ -150,7 +150,7 @@ export function PageHeader({
   actions?: React.ReactNode;
 }) {
   return (
-    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 flex flex-wrap gap-4 justify-between items-end border-b border-white/10">
+    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-white/10">
       <div>
         {eyebrow && (
           <div className="inline-block px-2.5 py-1 rounded-full glass text-brand text-[10px] font-black uppercase tracking-widest mb-3">

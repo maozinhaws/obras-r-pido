@@ -100,7 +100,7 @@ function NovoOrcamento() {
       </div>
 
       {/* Footer nav */}
-      <div className="fixed bottom-0 left-0 right-0 md:left-20 lg:left-64 glass-strong rounded-none border-t border-white/10 p-4 flex gap-3 z-30">
+      <div className="fixed bottom-0 left-0 right-0 md:left-20 lg:left-64 glass-strong rounded-none border-t border-white/10 p-4 flex gap-3 z-30 safe-area-bottom">
         <button
           onClick={() => (passo === 0 ? nav({ to: "/orcamentos" }) : setPasso(passo - 1))}
           className="glass-press glass px-5 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
@@ -180,7 +180,7 @@ function PassoCliente({
             <div className="text-mono text-[10px] uppercase tracking-widest text-brand">
               {"> Cadastrar novo"}
             </div>
-            <div className="grid md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <Field label="Nome *">
                 <input
                   value={novo.nome}
@@ -218,7 +218,7 @@ function PassoCliente({
               <div className="text-mono text-[10px] uppercase tracking-widest text-foreground/40 mb-3">
                 {"> Ou escolha um existente"}
               </div>
-              <div className="grid md:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {(clientes ?? []).map((c) => (
                   <button
                     key={c.id}
