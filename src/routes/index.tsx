@@ -68,14 +68,14 @@ function Home() {
         eyebrow="Painel · System Active"
         title="Performance Hub"
         actions={
-          <div className="hidden sm:flex brutal-border-thin bg-midnight">
-            <button className="px-3 py-1.5 bg-brand text-ink text-[10px] font-black uppercase">
+          <div className="hidden sm:flex glass rounded-full p-1 gap-1">
+            <button className="px-3 py-1.5 glass-brand rounded-full text-[10px] font-black uppercase text-white">
               Hoje
             </button>
-            <button className="px-3 py-1.5 text-foreground/40 text-[10px] font-black uppercase">
+            <button className="px-3 py-1.5 text-foreground/50 text-[10px] font-black uppercase rounded-full hover:bg-white/5">
               Semana
             </button>
-            <button className="px-3 py-1.5 text-foreground/40 text-[10px] font-black uppercase">
+            <button className="px-3 py-1.5 text-foreground/50 text-[10px] font-black uppercase rounded-full hover:bg-white/5">
               Mês
             </button>
           </div>
@@ -83,91 +83,93 @@ function Home() {
       />
 
       <div className="px-5 lg:px-10 py-6 lg:py-8 grid grid-cols-12 gap-3 lg:gap-4">
-        {/* Saudação + atalho principal */}
-        <div className="col-span-12 lg:col-span-5 bg-brand text-ink brutal-border brutal-shadow p-6 lg:p-8 flex flex-col justify-between min-h-[220px]">
-          <div className="flex items-start justify-between">
-            <div className="size-12 brutal-border-thin bg-white grid place-items-center">
-              <Plus className="size-7" strokeWidth={3} />
+        {/* Hero: Novo Orçamento */}
+        <div className="col-span-12 lg:col-span-5 glass-brand rounded-3xl p-6 lg:p-8 flex flex-col justify-between min-h-[240px] text-white liquid-ring relative overflow-hidden">
+          <div className="absolute -top-16 -right-16 size-56 rounded-full bg-white/20 blur-3xl pointer-events-none" />
+          <div className="flex items-start justify-between relative">
+            <div className="size-12 rounded-2xl glass-strong grid place-items-center">
+              <Plus className="size-7 text-white" strokeWidth={3} />
             </div>
-            <span className="text-mono text-[10px] font-bold opacity-60 uppercase">
+            <span className="text-mono text-[10px] font-bold opacity-80 uppercase">
               {config?.nome ? `> ${config.nome}` : "> SEM EMPRESA"}
             </span>
           </div>
           <button
             onClick={() => setModalOpen(true)}
-            className="text-left text-display text-3xl lg:text-4xl leading-[0.9]"
+            className="text-left text-display text-3xl lg:text-5xl leading-[0.9] relative drop-shadow-sm"
           >
             Novo
             <br />
             Orçamento
           </button>
-          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest opacity-70">
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest opacity-90 relative">
             <Zap className="size-3" strokeWidth={3} />
             Toque para iniciar
           </div>
         </div>
 
         {/* Stat: Faturamento */}
-        <div className="col-span-6 lg:col-span-3 bg-surface brutal-border p-5 flex flex-col justify-between min-h-[220px]">
+        <div className="col-span-6 lg:col-span-3 glass rounded-3xl p-5 flex flex-col justify-between min-h-[240px]">
           <div className="flex items-center gap-2 text-brand text-mono text-[10px] uppercase tracking-widest">
             <TrendingUp className="size-3" strokeWidth={3} />· Faturamento
           </div>
           <div className="space-y-2">
-            <div className="text-display text-3xl lg:text-4xl italic leading-none">
+            <div className="text-display text-3xl lg:text-4xl italic leading-none bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
               {formatBRL(faturamento).replace(",00", "")}
             </div>
-            <div className="h-2 bg-white/10 w-full overflow-hidden">
-              <div className="h-full bg-brand w-3/4" />
+            <div className="h-1.5 bg-white/10 w-full rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-brand to-[oklch(0.65_0.25_295)] w-3/4 rounded-full" />
             </div>
-            <div className="text-[10px] font-mono text-foreground/40 uppercase">
+            <div className="text-[10px] font-mono text-foreground/50 uppercase">
               {totalAprovados} aprovado{totalAprovados === 1 ? "" : "s"}
             </div>
           </div>
         </div>
 
         {/* Stat: Clientes */}
-        <div className="col-span-6 lg:col-span-2 bg-surface brutal-border p-5 flex flex-col justify-between min-h-[220px]">
+        <div className="col-span-6 lg:col-span-2 glass rounded-3xl p-5 flex flex-col justify-between min-h-[240px]">
           <div className="text-brand text-mono text-[10px] uppercase tracking-widest">
             · Base
           </div>
           <div>
-            <div className="text-display text-4xl lg:text-5xl italic leading-none">
+            <div className="text-display text-4xl lg:text-5xl italic leading-none bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent">
               {totalClientes}
             </div>
-            <div className="text-[10px] font-mono text-foreground/40 uppercase mt-1">
+            <div className="text-[10px] font-mono text-foreground/50 uppercase mt-1">
               Clientes
             </div>
           </div>
           <Link
             to="/clientes"
-            className="text-[10px] font-black text-brand uppercase tracking-widest underline underline-offset-2"
+            className="text-[10px] font-black text-brand uppercase tracking-widest"
           >
             Abrir →
           </Link>
         </div>
 
-        {/* Atalho secundário grande */}
-        <div className="col-span-12 lg:col-span-2 bg-white text-ink brutal-border brutal-shadow-brand p-5 flex flex-col justify-between min-h-[220px]">
-          <UserPlus className="size-7" strokeWidth={3} />
-          <Link to="/clientes" className="text-display text-2xl leading-[0.9]">
+        {/* Atalho secundário */}
+        <div className="col-span-12 lg:col-span-2 glass-strong rounded-3xl p-5 flex flex-col justify-between min-h-[240px] relative overflow-hidden">
+          <div className="absolute -bottom-10 -left-6 size-40 rounded-full bg-brand/30 blur-3xl pointer-events-none" />
+          <UserPlus className="size-7 text-brand relative" strokeWidth={2.5} />
+          <Link to="/clientes" className="text-display text-2xl leading-[0.9] relative">
             Novo
             <br />
             Cliente
           </Link>
-          <span className="text-[10px] font-mono opacity-60 uppercase">
+          <span className="text-[10px] font-mono opacity-60 uppercase relative">
             Cadastrar contato
           </span>
         </div>
 
         {/* Fluxo de Orçamentos */}
-        <div className="col-span-12 lg:col-span-8 bg-surface brutal-border p-6 lg:p-8">
+        <div className="col-span-12 lg:col-span-8 glass rounded-3xl p-6 lg:p-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-display text-xl lg:text-2xl italic">
               Fluxo de Orçamentos
             </h2>
             <Link
               to="/orcamentos"
-              className="text-[10px] font-black text-brand uppercase tracking-widest underline decoration-2 underline-offset-4 flex items-center gap-1"
+              className="text-[10px] font-black text-brand uppercase tracking-widest flex items-center gap-1 px-3 py-1.5 rounded-full glass-press hover:bg-white/5"
             >
               Histórico <ArrowRight className="size-3" strokeWidth={3} />
             </Link>
@@ -179,32 +181,32 @@ function Home() {
               cta={
                 <button
                   onClick={() => setModalOpen(true)}
-                  className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-2 text-xs font-black uppercase tracking-widest"
+                  className="glass-brand rounded-full glass-press px-5 py-2.5 text-xs font-black uppercase tracking-widest text-white"
                 >
                   Criar primeiro
                 </button>
               }
             />
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {orcamentos.map((o) => (
                 <Link
                   key={o.id}
                   to="/orcamentos/$id"
                   params={{ id: String(o.id) }}
-                  className="flex items-center justify-between p-4 bg-midnight brutal-border-thin hover:border-brand/60 brutal-press group"
+                  className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.07] hover:border-white/20 glass-press group"
                 >
                   <div className="flex items-center gap-4 min-w-0">
-                    <div className="size-10 bg-brand text-ink grid place-items-center text-display text-lg shrink-0">
+                    <div className="size-10 glass-brand rounded-xl grid place-items-center text-display text-lg text-white shrink-0">
                       $
                     </div>
                     <div className="min-w-0">
                       <p className="font-black text-sm uppercase truncate">
                         {o.clienteSnapshot?.nome ?? "Sem cliente"}
                       </p>
-                      <p className="text-[10px] text-foreground/50 font-bold uppercase tracking-widest mt-0.5">
+                      <p className="text-[10px] text-foreground/50 font-bold uppercase tracking-widest mt-1 flex items-center gap-2">
                         <span
-                          className={`inline-block px-1.5 py-0.5 mr-2 ${STATUS_COLORS[o.status]}`}
+                          className={`inline-block px-2 py-0.5 rounded-full ${STATUS_COLORS[o.status]}`}
                         >
                           {STATUS_LABELS[o.status]}
                         </span>
@@ -224,15 +226,18 @@ function Home() {
         </div>
 
         {/* Próximo evento */}
-        <div className="col-span-12 lg:col-span-4 bg-midnight brutal-border overflow-hidden relative">
-          <div className="p-6 lg:p-8 relative z-10 h-full flex flex-col justify-between min-h-[280px]">
-            <div className="inline-block self-start px-2 py-1 bg-white text-ink text-[10px] font-black uppercase mb-4">
+        <div className="col-span-12 lg:col-span-4 glass rounded-3xl overflow-hidden relative min-h-[300px]">
+          <div className="absolute -top-12 -right-12 size-48 rounded-full bg-[oklch(0.65_0.25_295)]/30 blur-3xl" />
+          <div className="absolute -bottom-16 -left-10 size-56 rounded-full bg-brand/20 blur-3xl" />
+          <div className="p-6 lg:p-8 relative z-10 h-full flex flex-col justify-between">
+            <div className="inline-block self-start px-3 py-1 rounded-full glass-strong text-white text-[10px] font-black uppercase mb-4">
+              <Clock className="size-3 inline mr-1 -mt-0.5" strokeWidth={3} />
               {eventos && eventos[0]
                 ? format(new Date(eventos[0].data + "T" + (eventos[0].hora ?? "08:00")), "dd MMM · HH:mm", { locale: ptBR })
                 : "Sem eventos"}
             </div>
             <div>
-              <h4 className="text-display text-2xl lg:text-3xl italic leading-[0.95] mb-4">
+              <h4 className="text-display text-2xl lg:text-3xl italic leading-[0.95] mb-4 bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
                 {eventos && eventos[0] ? eventos[0].titulo : "Agenda livre"}
               </h4>
               {eventos && eventos[0] && (
@@ -243,59 +248,35 @@ function Home() {
             </div>
             <Link
               to="/agenda"
-              className="self-start mt-4 text-[10px] font-black text-brand uppercase tracking-widest underline underline-offset-2"
+              className="self-start mt-4 text-[10px] font-black text-brand uppercase tracking-widest"
             >
               Ver agenda →
             </Link>
           </div>
-          <div className="absolute bottom-0 right-0 size-32 bg-brand/10 -rotate-12 translate-x-8 translate-y-8 brutal-border-thin border-brand/30 pointer-events-none" />
         </div>
 
         {/* Atalhos rápidos */}
-        <Link
-          to="/orcamentos/novo"
-          className="col-span-6 lg:col-span-3 bg-surface brutal-border p-5 brutal-press flex items-center gap-3"
-        >
-          <Camera className="size-7 text-brand" strokeWidth={2.5} />
-          <div className="text-display text-sm leading-tight">
-            Foto
-            <br />
-            Rápida
-          </div>
-        </Link>
-        <Link
-          to="/agenda"
-          className="col-span-6 lg:col-span-3 bg-surface brutal-border p-5 brutal-press flex items-center gap-3"
-        >
-          <CalendarCheck className="size-7 text-brand" strokeWidth={2.5} />
-          <div className="text-display text-sm leading-tight">
-            Novo
-            <br />
-            Evento
-          </div>
-        </Link>
-        <Link
-          to="/orcamentos"
-          className="col-span-6 lg:col-span-3 bg-surface brutal-border p-5 brutal-press flex items-center gap-3"
-        >
-          <FileText className="size-7 text-brand" strokeWidth={2.5} />
-          <div className="text-display text-sm leading-tight">
-            Gerar
-            <br />
-            PDF
-          </div>
-        </Link>
-        <Link
-          to="/backup"
-          className="col-span-6 lg:col-span-3 bg-surface brutal-border p-5 brutal-press flex items-center gap-3"
-        >
-          <Database className="size-7 text-brand" strokeWidth={2.5} />
-          <div className="text-display text-sm leading-tight">
-            Backup
-            <br />
-            Dados
-          </div>
-        </Link>
+        {[
+          { to: "/orcamentos/novo", icon: Camera, l1: "Foto", l2: "Rápida" },
+          { to: "/agenda", icon: CalendarCheck, l1: "Novo", l2: "Evento" },
+          { to: "/orcamentos", icon: FileText, l1: "Gerar", l2: "PDF" },
+          { to: "/backup", icon: Database, l1: "Backup", l2: "Dados" },
+        ].map(({ to, icon: Icon, l1, l2 }) => (
+          <Link
+            key={to}
+            to={to}
+            className="col-span-6 lg:col-span-3 glass rounded-2xl p-5 glass-press flex items-center gap-3 hover:bg-white/[0.08]"
+          >
+            <div className="size-11 rounded-xl glass-brand grid place-items-center shrink-0">
+              <Icon className="size-5 text-white" strokeWidth={2.5} />
+            </div>
+            <div className="text-display text-sm leading-tight">
+              {l1}
+              <br />
+              {l2}
+            </div>
+          </Link>
+        ))}
       </div>
 
       {modalOpen && <NovoOrcamentoModal onClose={() => setModalOpen(false)} />}
