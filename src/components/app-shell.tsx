@@ -58,10 +58,10 @@ function NavRow({
     <Link
       to={to}
       className={cn(
-        "flex items-center gap-3 px-3 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all",
+        "flex items-center gap-3 px-4 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all duration-200",
         active
           ? "glass-brand text-white"
-          : "text-foreground/55 hover:text-white hover:bg-white/5",
+          : "text-foreground/60 hover:text-white hover:bg-white/10",
       )}
     >
       <Icon className="size-5 shrink-0" strokeWidth={2.5} />
@@ -75,7 +75,7 @@ export function Sidebar() {
     <aside className="hidden md:flex w-20 lg:w-64 glass-strong rounded-none border-l-0 border-y-0 flex-col sticky top-0 h-screen shrink-0 z-30">
       <div className="p-4 lg:p-6 border-b border-white/10">
         <Link to="/" className="flex items-center gap-3">
-          <div className="size-10 glass-brand rounded-2xl grid place-items-center text-display text-xl text-white">
+          <div className="size-10 glass-brand rounded-xl grid place-items-center text-display text-xl text-white">
             P+
           </div>
           <div className="hidden lg:block">
@@ -106,7 +106,7 @@ export function Sidebar() {
       <div className="p-3 border-t border-white/10">
         <Link
           to="/orcamentos/novo"
-          className="flex items-center justify-center gap-2 glass-brand rounded-2xl glass-press py-3 text-xs font-black uppercase tracking-widest text-white"
+          className="flex items-center justify-center gap-2 glass-brand rounded-xl glass-press py-3.5 text-xs font-bold uppercase tracking-widest text-white"
         >
           <Zap className="size-4" strokeWidth={3} />
           <span className="hidden lg:inline">Novo Orçamento</span>
@@ -118,7 +118,7 @@ export function Sidebar() {
 
 export function BottomNav() {
   return (
-    <nav className="md:hidden fixed bottom-3 left-3 right-3 z-40 glass-strong rounded-3xl grid grid-cols-5 px-2 py-2">
+    <nav className="md:hidden fixed bottom-4 left-4 right-4 z-40 glass-strong rounded-2xl grid grid-cols-5 px-1 py-1">
       {BOTTOM_NAV.map((n) => {
         const active = useActive(n.to, n.to === "/");
         const Icon = n.icon;

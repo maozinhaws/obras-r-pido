@@ -87,7 +87,7 @@ function NovoOrcamento() {
         {PASSOS.map((p, i) => (
           <div
             key={p}
-            className={`brutal-border-thin h-2 ${i <= passo ? "bg-brand" : "bg-surface"}`}
+            className={`h-2.5 rounded-full transition-all duration-500 ${i <= passo ? "glass-brand" : "bg-white/5 border border-white/10"}`}
           />
         ))}
       </div>
@@ -100,10 +100,10 @@ function NovoOrcamento() {
       </div>
 
       {/* Footer nav */}
-      <div className="fixed bottom-0 left-0 right-0 md:left-20 lg:left-64 bg-midnight border-t-4 border-ink p-3 flex gap-2 z-30">
+      <div className="fixed bottom-0 left-0 right-0 md:left-20 lg:left-64 glass-strong rounded-none border-t border-white/10 p-4 flex gap-3 z-30">
         <button
           onClick={() => (passo === 0 ? nav({ to: "/orcamentos" }) : setPasso(passo - 1))}
-          className="brutal-border-thin px-4 py-3 text-xs font-black uppercase tracking-widest brutal-press flex items-center gap-1"
+          className="glass-press glass px-5 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
         >
           <ChevronLeft className="size-4" /> Voltar
         </button>
@@ -111,7 +111,7 @@ function NovoOrcamento() {
         {passo < PASSOS.length - 1 ? (
           <button
             onClick={() => setPasso(passo + 1)}
-            className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-5 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-1"
+            className="glass-brand glass-press px-6 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2 text-white"
           >
             Próximo <ChevronRight className="size-4" />
           </button>
@@ -158,7 +158,7 @@ function PassoCliente({
   return (
     <div className="space-y-6 py-6">
       {orc.clienteSnapshot && (
-        <div className="bg-brand text-ink brutal-border p-4 flex items-center justify-between">
+        <div className="glass-brand text-white p-5 flex items-center justify-between">
           <div>
             <p className="text-[10px] font-mono uppercase opacity-60">Cliente selecionado</p>
             <p className="text-display text-xl">{orc.clienteSnapshot.nome}</p>
@@ -176,7 +176,7 @@ function PassoCliente({
 
       {!orc.clienteSnapshot && (
         <>
-          <div className="bg-surface brutal-border p-4 space-y-3">
+          <div className="glass p-6 space-y-4">
             <div className="text-mono text-[10px] uppercase tracking-widest text-brand">
               {"> Cadastrar novo"}
             </div>
