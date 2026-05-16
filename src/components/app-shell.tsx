@@ -58,10 +58,10 @@ function NavRow({
     <Link
       to={to}
       className={cn(
-        "flex items-center gap-3 px-3 py-3 brutal-border-thin text-xs font-black uppercase tracking-widest brutal-press",
+        "flex items-center gap-3 px-3 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all",
         active
-          ? "bg-brand text-ink brutal-shadow-sm"
-          : "border-transparent text-foreground/50 hover:text-brand hover:border-ink/40",
+          ? "glass-brand text-white"
+          : "text-foreground/55 hover:text-white hover:bg-white/5",
       )}
     >
       <Icon className="size-5 shrink-0" strokeWidth={2.5} />
@@ -72,15 +72,17 @@ function NavRow({
 
 export function Sidebar() {
   return (
-    <aside className="hidden md:flex w-20 lg:w-64 bg-midnight border-r-4 border-ink flex-col sticky top-0 h-screen shrink-0">
-      <div className="p-4 lg:p-6 border-b-4 border-ink">
+    <aside className="hidden md:flex w-20 lg:w-64 glass-strong rounded-none border-l-0 border-y-0 flex-col sticky top-0 h-screen shrink-0 z-30">
+      <div className="p-4 lg:p-6 border-b border-white/10">
         <Link to="/" className="flex items-center gap-3">
-          <div className="size-10 bg-brand brutal-border-thin grid place-items-center text-display text-xl text-ink">
+          <div className="size-10 glass-brand rounded-2xl grid place-items-center text-display text-xl text-white">
             P+
           </div>
           <div className="hidden lg:block">
             <div className="text-display text-lg leading-none">Pintor</div>
-            <div className="text-display text-lg leading-none text-brand">Plus</div>
+            <div className="text-display text-lg leading-none bg-gradient-to-r from-brand to-[oklch(0.65_0.25_295)] bg-clip-text text-transparent">
+              Plus
+            </div>
           </div>
         </Link>
       </div>
@@ -101,10 +103,10 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-3 border-t-4 border-ink">
+      <div className="p-3 border-t border-white/10">
         <Link
           to="/orcamentos/novo"
-          className="flex items-center justify-center gap-2 bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press py-3 text-xs font-black uppercase tracking-widest"
+          className="flex items-center justify-center gap-2 glass-brand rounded-2xl glass-press py-3 text-xs font-black uppercase tracking-widest text-white"
         >
           <Zap className="size-4" strokeWidth={3} />
           <span className="hidden lg:inline">Novo Orçamento</span>
@@ -116,7 +118,7 @@ export function Sidebar() {
 
 export function BottomNav() {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-midnight border-t-4 border-ink grid grid-cols-5">
+    <nav className="md:hidden fixed bottom-3 left-3 right-3 z-40 glass-strong rounded-3xl grid grid-cols-5 px-2 py-2">
       {BOTTOM_NAV.map((n) => {
         const active = useActive(n.to, n.to === "/");
         const Icon = n.icon;
@@ -125,8 +127,8 @@ export function BottomNav() {
             key={n.to}
             to={n.to}
             className={cn(
-              "flex flex-col items-center justify-center gap-1 py-2.5 text-[9px] font-black uppercase tracking-tight",
-              active ? "text-brand" : "text-foreground/40",
+              "flex flex-col items-center justify-center gap-1 py-2 text-[9px] font-black uppercase tracking-tight rounded-2xl transition-all",
+              active ? "glass-brand text-white" : "text-foreground/50",
             )}
           >
             <Icon className="size-5" strokeWidth={2.5} />
@@ -148,14 +150,14 @@ export function PageHeader({
   actions?: React.ReactNode;
 }) {
   return (
-    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 flex flex-wrap gap-4 justify-between items-end border-b-4 border-ink">
+    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 flex flex-wrap gap-4 justify-between items-end border-b border-white/10">
       <div>
         {eyebrow && (
-          <div className="inline-block px-2 py-0.5 brutal-border-thin border-brand/40 text-brand text-[10px] font-black uppercase tracking-widest mb-2">
+          <div className="inline-block px-2.5 py-1 rounded-full glass text-brand text-[10px] font-black uppercase tracking-widest mb-3">
             {eyebrow}
           </div>
         )}
-        <h1 className="text-display text-3xl lg:text-5xl italic leading-none">
+        <h1 className="text-display text-3xl lg:text-5xl italic leading-none bg-gradient-to-br from-white via-white to-white/60 bg-clip-text text-transparent">
           {title}
         </h1>
       </div>
