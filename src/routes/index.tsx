@@ -305,11 +305,17 @@ function EmptyState({
 }
 
 function NovoOrcamentoModal({ onClose }: { onClose: () => void }) {
-  const modos = [
+  const modos: Array<{
+    modo: "flash" | "foto" | "detalhado";
+    icon: typeof Zap;
+    title: string;
+    desc: string;
+    tags?: string[];
+  }> = [
     { modo: "flash", icon: Zap, title: "Modo Flash", desc: "Rápido e prático", tags: ["Foto", "Texto", "Voz"] },
     { modo: "foto", icon: ImageIcon, title: "Modo Foto", desc: "Análise por imagem" },
     { modo: "detalhado", icon: ClipboardList, title: "Detalhado", desc: "Relatório completo" },
-  ] as const;
+  ];
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
       <div className="glass-strong rounded-3xl w-full max-w-2xl overflow-hidden animate-scale-in relative">
