@@ -7,9 +7,26 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/lib/db";
 
 import appCss from "../styles.css?url";
 import { Sidebar, BottomNav } from "@/components/app-shell";
+
+function ThemeHandler() {
+  const config = useLiveQuery(() => db.config.get(1));
+  
+  useEffect(() => {
+    if (config?.tema) {
+      document.documentElement.setAttribute("data-theme", config.tema);
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+  }, [config?.tema]);
+
+  return null;
+}
 
 function NotFoundComponent() {
   return (
@@ -140,7 +157,8 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen text-foreground">
+      <div className="flex min-h-screen text-foreground transition-colors duration-500">
+        <ThemeHandler />
         <Sidebar />
         <main className="flex-1 min-w-0 pb-24 md:pb-0">
           <Outlet />

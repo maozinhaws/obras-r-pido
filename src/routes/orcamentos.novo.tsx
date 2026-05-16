@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
+import { CameraModal } from "@/components/camera-modal";
 
 type SearchParams = { modo?: "flash" | "foto" | "detalhado" };
 
@@ -451,6 +452,7 @@ function ItemEditor({
   onDelete: () => void;
 }) {
   const [it, setIt] = useState<ItemAmbiente>(item);
+  const [cameraOpen, setCameraOpen] = useState(false);
 
   async function addFoto(file: File) {
     const id = await salvarFoto(file);
@@ -577,18 +579,24 @@ function ItemEditor({
                 }}
               />
             ))}
-            <label className="aspect-square bg-brand text-ink brutal-border grid place-items-center brutal-press cursor-pointer">
+            <button 
+              onClick={() => setCameraOpen(true)}
+              className="aspect-square glass-brand text-white grid place-items-center glass-press"
+            >
               <Camera className="size-8" strokeWidth={2.5} />
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                className="hidden"
-                onChange={(e) => e.target.files?.[0] && addFoto(e.target.files[0])}
-              />
-            </label>
+              <span className="text-[9px] font-black uppercase">Câmera</span>
+            </button>
           </div>
         </div>
+
+        {cameraOpen && (
+          <CameraModal
+            onClose={() => setCameraOpen(false)}
+            onPhotosCaptured={(ids) => {
+              setIt({ ...it, fotos: [...it.fotos, ...ids] });
+            }}
+          />
+        )}
       </div>
 
       <div className="p-3 border-t-4 border-ink flex gap-2">

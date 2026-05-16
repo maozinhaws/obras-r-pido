@@ -116,6 +116,39 @@
   /* same as root — app é dark-first */
 }
 
+/* Theme overrides */
+:root[data-theme="brutalista"] {
+  --radius: 0px;
+  --glass-bg: var(--midnight);
+  --glass-bg-strong: var(--midnight);
+  --glass-border: oklch(0.98 0 0);
+  --glass-border-strong: oklch(0.98 0 0);
+  --border: oklch(0.98 0 0);
+  --surface: oklch(0.18 0.04 275);
+}
+
+:root[data-theme="minimalista"] {
+  --midnight: #ffffff;
+  --surface: #f8fafc;
+  --foreground: #020617;
+  --background: #ffffff;
+  --card: #ffffff;
+  --card-foreground: #020617;
+  --brand: #020617;
+  --glass-bg: #ffffff;
+  --glass-border: #e2e8f0;
+  --glass-border-strong: #020617;
+  --border: #e2e8f0;
+  --radius: 8px;
+  --font-display: "Inter", system-ui, sans-serif;
+}
+
+:root[data-theme="minimalista"] body {
+  background-image: none;
+  background-color: #ffffff;
+  font-size: 1.15rem;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -151,11 +184,11 @@
   /* Brutalist accent (kept for legacy pages) */
   .brutal-border {
     border: 1px solid var(--glass-border-strong);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
   }
   .brutal-border-thin {
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius);
   }
   .brutal-shadow {
     box-shadow:
@@ -185,7 +218,7 @@
     backdrop-filter: blur(22px) saturate(160%);
     -webkit-backdrop-filter: blur(22px) saturate(160%);
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     box-shadow:
       0 1px 0 0 color-mix(in oklab, white 12%, transparent) inset,
       0 20px 40px -20px color-mix(in oklab, black 60%, transparent);
@@ -196,7 +229,7 @@
     backdrop-filter: blur(32px) saturate(180%);
     -webkit-backdrop-filter: blur(32px) saturate(180%);
     border: 1px solid var(--glass-border-strong);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius);
     box-shadow:
       0 1px 0 0 color-mix(in oklab, white 20%, transparent) inset,
       0 30px 60px -20px color-mix(in oklab, black 80%, transparent);
@@ -209,7 +242,7 @@
     backdrop-filter: blur(20px) saturate(160%);
     -webkit-backdrop-filter: blur(20px) saturate(160%);
     border: 1px solid color-mix(in oklab, white 25%, transparent);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     box-shadow:
       0 1px 0 0 color-mix(in oklab, white 30%, transparent) inset,
       0 20px 50px -15px color-mix(in oklab, var(--brand) 45%, transparent);
@@ -256,4 +289,12 @@
   .text-mono {
     font-family: var(--font-mono);
   }
+}
+
+/* Hide Lovable badge */
+#lovable-badge,
+#lovable-badge-v2,
+[id^="lovable-badge"],
+a[href*="lovable.dev"][target="_blank"] {
+  display: none !important;
 }
