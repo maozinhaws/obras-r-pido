@@ -294,7 +294,7 @@ function EmptyState({
   cta?: React.ReactNode;
 }) {
   return (
-    <div className="brutal-border-thin border-dashed border-foreground/20 p-10 text-center">
+    <div className="rounded-2xl border border-dashed border-white/15 p-10 text-center bg-white/[0.02]">
       <div className="text-foreground/40 mx-auto mb-3 w-fit">{icon}</div>
       <p className="text-foreground/60 text-sm font-bold uppercase tracking-widest mb-4">
         {title}
