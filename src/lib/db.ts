@@ -100,6 +100,7 @@ export interface ConfigEmpresa {
   servicosPadrao?: string[];
   formasPagamento?: string[];
   ambientesPadrao?: string[];
+  tema?: "moderno" | "brutalista" | "minimalista";
 }
 
 class PintorDB extends Dexie {
