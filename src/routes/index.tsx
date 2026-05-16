@@ -305,70 +305,58 @@ function EmptyState({
 }
 
 function NovoOrcamentoModal({ onClose }: { onClose: () => void }) {
+  const modos = [
+    { modo: "flash", icon: Zap, title: "Modo Flash", desc: "Rápido e prático", tags: ["Foto", "Texto", "Voz"] },
+    { modo: "foto", icon: ImageIcon, title: "Modo Foto", desc: "Análise por imagem" },
+    { modo: "detalhado", icon: ClipboardList, title: "Detalhado", desc: "Relatório completo" },
+  ] as const;
   return (
-    <div className="fixed inset-0 z-50 bg-midnight/90 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white text-ink w-full max-w-2xl brutal-border brutal-shadow-brand">
-        <div className="bg-ink text-white p-5 flex justify-between items-center">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+      <div className="glass-strong rounded-3xl w-full max-w-2xl overflow-hidden animate-scale-in relative">
+        <div className="absolute -top-20 -right-20 size-64 rounded-full bg-brand/30 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 size-64 rounded-full bg-[oklch(0.65_0.25_295)]/30 blur-3xl pointer-events-none" />
+        <div className="p-5 flex justify-between items-center border-b border-white/10 relative">
           <h3 className="text-display text-xl lg:text-2xl">Tipo de Orçamento</h3>
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="text-brand brutal-press p-1"
+            className="size-9 rounded-full glass grid place-items-center hover:bg-white/10 transition-colors"
           >
-            <X className="size-6" strokeWidth={3} />
+            <X className="size-5" strokeWidth={3} />
           </button>
         </div>
-        <div className="p-6 lg:p-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link
-            to="/orcamentos/novo"
-            search={{ modo: "flash" }}
-            onClick={onClose}
-            className="brutal-border-thin p-5 hover:bg-brand transition-colors group"
-          >
-            <Zap className="size-9 mb-3 group-hover:scale-110 transition-transform" strokeWidth={2.5} />
-            <h4 className="text-display text-lg leading-none mb-2">Modo Flash</h4>
-            <p className="text-[10px] font-bold opacity-50 uppercase mb-3">
-              Rápido e prático
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {["Foto", "Texto", "Voz"].map((t) => (
-                <span
-                  key={t}
-                  className="px-1.5 py-0.5 bg-ink text-white text-[9px] font-black uppercase"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </Link>
-
-          <Link
-            to="/orcamentos/novo"
-            search={{ modo: "foto" }}
-            onClick={onClose}
-            className="brutal-border-thin p-5 hover:bg-brand transition-colors group"
-          >
-            <ImageIcon className="size-9 mb-3 group-hover:scale-110 transition-transform" strokeWidth={2.5} />
-            <h4 className="text-display text-lg leading-none mb-2">Modo Foto</h4>
-            <p className="text-[10px] font-bold opacity-50 uppercase">
-              Análise por imagem
-            </p>
-          </Link>
-
-          <Link
-            to="/orcamentos/novo"
-            search={{ modo: "detalhado" }}
-            onClick={onClose}
-            className="brutal-border-thin p-5 hover:bg-brand transition-colors group"
-          >
-            <ClipboardList className="size-9 mb-3 group-hover:scale-110 transition-transform" strokeWidth={2.5} />
-            <h4 className="text-display text-lg leading-none mb-2">Detalhado</h4>
-            <p className="text-[10px] font-bold opacity-50 uppercase">
-              Relatório completo
-            </p>
-          </Link>
+        <div className="p-6 lg:p-8 grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+          {modos.map(({ modo, icon: Icon, title, desc, tags }) => (
+            <Link
+              key={modo}
+              to="/orcamentos/novo"
+              search={{ modo }}
+              onClick={onClose}
+              className="glass rounded-2xl p-5 hover:bg-white/10 glass-press group"
+            >
+              <div className="size-12 rounded-2xl glass-brand grid place-items-center mb-4">
+                <Icon className="size-6 text-white group-hover:scale-110 transition-transform" strokeWidth={2.5} />
+              </div>
+              <h4 className="text-display text-lg leading-none mb-2">{title}</h4>
+              <p className="text-[10px] font-bold opacity-60 uppercase mb-3">
+                {desc}
+              </p>
+              {tags && (
+                <div className="flex flex-wrap gap-1.5">
+                  {tags.map((t) => (
+                    <span
+                      key={t}
+                      className="px-2 py-0.5 rounded-full bg-white/10 text-[9px] font-black uppercase"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </Link>
+          ))}
         </div>
-        <div className="px-6 pb-5 text-[10px] font-mono opacity-40 uppercase">
+        <div className="px-6 pb-5 text-[10px] font-mono opacity-50 uppercase relative">
           {"> Salva como rascunho automaticamente"}
         </div>
       </div>
