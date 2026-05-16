@@ -58,7 +58,7 @@ function OrcamentosPage() {
         actions={
           <Link
             to="/orcamentos/novo"
-            className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-2.5 text-xs font-black uppercase tracking-widest flex items-center gap-2"
+            className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
           >
             <Plus className="size-4" strokeWidth={3} /> Novo
           </Link>
@@ -73,7 +73,7 @@ function OrcamentosPage() {
             placeholder="Buscar por cliente..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
-            className="w-full bg-surface brutal-border-thin pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-brand"
+            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3.5 text-sm focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
           />
         </div>
 
@@ -82,8 +82,8 @@ function OrcamentosPage() {
             <button
               key={s}
               onClick={() => setFiltro(s)}
-              className={`brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase tracking-widest brutal-press ${
-                filtro === s ? "bg-brand text-ink" : "bg-surface text-foreground/60"
+              className={`glass px-4 py-2 text-[10px] font-bold uppercase tracking-widest glass-press ${
+                filtro === s ? "glass-brand text-white" : "text-foreground/60"
               }`}
             >
               {s === "todos" ? "Todos" : STATUS_LABELS[s]}
@@ -98,7 +98,7 @@ function OrcamentosPage() {
             </p>
             <Link
               to="/orcamentos/novo"
-              className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-2 text-xs font-black uppercase tracking-widest"
+              className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest"
             >
               Criar primeiro
             </Link>
@@ -106,7 +106,7 @@ function OrcamentosPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {lista.map((o) => (
-              <div key={o.id} className="bg-surface brutal-border p-4 space-y-3">
+              <div key={o.id} className="glass p-5 space-y-4 group">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-black uppercase truncate">
@@ -128,7 +128,7 @@ function OrcamentosPage() {
                       atualizadoEm: Date.now(),
                     })
                   }
-                  className={`brutal-border-thin px-2 py-1 text-[10px] font-black uppercase tracking-widest ${STATUS_COLORS[o.status]}`}
+                  className={`glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status]}`}
                 >
                   {STATUSES.map((s) => (
                     <option key={s} value={s} className="bg-surface text-foreground">
@@ -140,7 +140,7 @@ function OrcamentosPage() {
                   <Link
                     to="/orcamentos/$id"
                     params={{ id: String(o.id) }}
-                    className="flex-1 brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest brutal-press text-center"
+                    className="flex-1 glass glass-press px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-center"
                   >
                     Ver
                   </Link>
@@ -149,7 +149,7 @@ function OrcamentosPage() {
                       const blob = await gerarPdfOrcamento(o);
                       baixarBlob(blob, `orcamento-${o.id}.pdf`);
                     }}
-                    className="brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center gap-1"
+                    className="glass glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
                   >
                     <FileText className="size-3" /> PDF
                   </button>
@@ -159,14 +159,14 @@ function OrcamentosPage() {
                         const msg = await gerarMensagemWhatsapp(o);
                         window.open(whatsappLink(o.clienteSnapshot!.telefone!, msg), "_blank");
                       }}
-                      className="bg-success text-ink brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center gap-1"
+                      className="glass-brand glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 text-white"
                     >
                       <MessageCircle className="size-3" /> Wpp
                     </button>
                   )}
                   <button
                     onClick={() => confirm("Excluir orçamento?") && db.orcamentos.delete(o.id!)}
-                    className="brutal-border-thin px-2 py-2 brutal-press text-destructive"
+                    className="glass glass-press border-destructive/20 px-3 py-2.5 text-destructive"
                     aria-label="Excluir"
                   >
                     <Trash2 className="size-3" />

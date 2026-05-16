@@ -44,7 +44,7 @@ function OrcamentoDetalhe() {
         actions={
           <Link
             to="/orcamentos"
-            className="brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center gap-1"
+            className="glass glass-press px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
           >
             <ArrowLeft className="size-3" /> Voltar
           </Link>
@@ -52,22 +52,23 @@ function OrcamentoDetalhe() {
       />
       <div className="px-5 lg:px-10 py-6 grid grid-cols-12 gap-3 lg:gap-4">
         <div className="col-span-12 lg:col-span-8 space-y-3">
-          <div className="bg-brand text-ink brutal-border brutal-shadow p-6">
-            <div className="text-mono text-[10px] uppercase opacity-60">Total</div>
-            <div className="text-display text-5xl italic">{formatBRL(total)}</div>
+          <div className="glass glass-brand text-white p-8 overflow-hidden relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+            <div className="text-mono text-[10px] uppercase opacity-70 relative z-10">Valor Total</div>
+            <div className="text-display text-5xl lg:text-7xl italic leading-none relative z-10 drop-shadow-lg">{formatBRL(total)}</div>
             <div
-              className={`inline-block mt-3 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest ${STATUS_COLORS[o.status]}`}
+              className={`inline-block mt-5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest relative z-10 ${STATUS_COLORS[o.status]}`}
             >
               {STATUS_LABELS[o.status]}
             </div>
           </div>
 
           {o.ambientes.map((a) => (
-            <div key={a.id} className="bg-surface brutal-border p-5">
+            <div key={a.id} className="glass p-6 group">
               <h3 className="text-display text-xl italic mb-3">{a.nome}</h3>
               <div className="space-y-3">
                 {a.itens.map((it) => (
-                  <div key={it.id} className="brutal-border-thin p-3">
+                  <div key={it.id} className="glass border-white/5 bg-white/[0.02] p-4 group-hover:bg-white/[0.04] transition-all">
                     <div className="flex justify-between items-start gap-3">
                       <div>
                         <p className="font-black uppercase text-sm">{it.nome}</p>
@@ -107,11 +108,11 @@ function OrcamentoDetalhe() {
         </div>
 
         <div className="col-span-12 lg:col-span-4 space-y-3">
-          <div className="bg-surface brutal-border p-4 space-y-2">
+          <div className="glass p-6 space-y-3">
             <div className="text-mono text-[10px] uppercase text-brand">{"> Ações"}</div>
             <Link
               to="/orcamentos/novo"
-              className="w-full bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+              className="w-full glass-brand text-white glass-press px-5 py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
             >
               <Edit3 className="size-3" /> Editar (em breve)
             </Link>
@@ -120,7 +121,7 @@ function OrcamentoDetalhe() {
                 const blob = await gerarPdfOrcamento(o);
                 baixarBlob(blob, `orcamento-${o.id}.pdf`);
               }}
-              className="w-full brutal-border-thin brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+              className="w-full glass glass-press px-5 py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
             >
               <FileText className="size-3" /> Baixar PDF
             </button>
@@ -130,20 +131,20 @@ function OrcamentoDetalhe() {
                   const m = await gerarMensagemWhatsapp(o);
                   window.open(whatsappLink(o.clienteSnapshot!.telefone!, m), "_blank");
                 }}
-                className="w-full bg-success text-ink brutal-border-thin brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                className="w-full glass-brand glass-press border-white/20 px-5 py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 text-white"
               >
                 <MessageCircle className="size-3" /> WhatsApp
               </button>
             )}
             <button
               disabled
-              className="w-full brutal-border-thin px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 opacity-40"
+              className="w-full glass px-5 py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 opacity-40"
             >
               <Receipt className="size-3" /> Recibo (em breve)
             </button>
           </div>
 
-          <div className="bg-surface brutal-border p-4 space-y-1 text-xs">
+          <div className="glass p-6 space-y-2 text-sm">
             <div className="text-mono text-[10px] uppercase text-brand mb-2">{"> Detalhes"}</div>
             <p>
               <strong>Pagamento:</strong> {o.formaPagamento ?? "—"}
@@ -170,7 +171,7 @@ function Thumb({ id }: { id: string }) {
     urlFoto(id).then(setUrl);
   }, [id]);
   return (
-    <div className="aspect-square bg-midnight brutal-border-thin overflow-hidden">
+    <div className="aspect-square bg-white/5 rounded-lg overflow-hidden border border-white/10 group-hover:border-white/30 transition-all">
       {url && <img src={url} alt="Foto" className="size-full object-cover" />}
     </div>
   );

@@ -87,7 +87,7 @@ function NovoOrcamento() {
         {PASSOS.map((p, i) => (
           <div
             key={p}
-            className={`brutal-border-thin h-2 ${i <= passo ? "bg-brand" : "bg-surface"}`}
+            className={`h-2.5 rounded-full transition-all duration-500 ${i <= passo ? "glass-brand" : "bg-white/5 border border-white/10"}`}
           />
         ))}
       </div>
@@ -100,10 +100,10 @@ function NovoOrcamento() {
       </div>
 
       {/* Footer nav */}
-      <div className="fixed bottom-0 left-0 right-0 md:left-20 lg:left-64 bg-midnight border-t-4 border-ink p-3 flex gap-2 z-30">
+      <div className="fixed bottom-0 left-0 right-0 md:left-20 lg:left-64 glass-strong rounded-none border-t border-white/10 p-4 flex gap-3 z-30">
         <button
           onClick={() => (passo === 0 ? nav({ to: "/orcamentos" }) : setPasso(passo - 1))}
-          className="brutal-border-thin px-4 py-3 text-xs font-black uppercase tracking-widest brutal-press flex items-center gap-1"
+          className="glass-press glass px-5 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
         >
           <ChevronLeft className="size-4" /> Voltar
         </button>
@@ -111,7 +111,7 @@ function NovoOrcamento() {
         {passo < PASSOS.length - 1 ? (
           <button
             onClick={() => setPasso(passo + 1)}
-            className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-5 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-1"
+            className="glass-brand glass-press px-6 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2 text-white"
           >
             Próximo <ChevronRight className="size-4" />
           </button>
@@ -158,7 +158,7 @@ function PassoCliente({
   return (
     <div className="space-y-6 py-6">
       {orc.clienteSnapshot && (
-        <div className="bg-brand text-ink brutal-border p-4 flex items-center justify-between">
+        <div className="glass-brand text-white p-5 flex items-center justify-between">
           <div>
             <p className="text-[10px] font-mono uppercase opacity-60">Cliente selecionado</p>
             <p className="text-display text-xl">{orc.clienteSnapshot.nome}</p>
@@ -176,7 +176,7 @@ function PassoCliente({
 
       {!orc.clienteSnapshot && (
         <>
-          <div className="bg-surface brutal-border p-4 space-y-3">
+          <div className="glass p-6 space-y-4">
             <div className="text-mono text-[10px] uppercase tracking-widest text-brand">
               {"> Cadastrar novo"}
             </div>
@@ -368,8 +368,8 @@ function ItensModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-midnight/95 flex flex-col">
-      <div className="bg-ink p-4 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xl flex flex-col animate-fade-in">
+      <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
         <h3 className="text-display text-lg">Itens · {ambiente.nome}</h3>
         <button onClick={onClose} className="text-brand" aria-label="Fechar">
           <X className="size-6" strokeWidth={3} />
@@ -388,7 +388,7 @@ function ItensModal({
               <button
                 key={it.id}
                 onClick={() => setEditing(it)}
-                className="w-full bg-surface brutal-border p-4 text-left brutal-press"
+                className="w-full glass p-5 text-left glass-press group"
               >
                 <div className="flex justify-between items-start">
                   <div>
@@ -407,16 +407,16 @@ function ItensModal({
               </button>
             ))}
           </div>
-          <div className="p-3 border-t-4 border-ink flex gap-2">
+          <div className="p-4 glass-strong rounded-none border-x-0 border-b-0 flex gap-3">
             <button
               onClick={novoItem}
-              className="flex-1 bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+              className="flex-1 glass-brand text-white glass-press px-4 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
             >
               <Plus className="size-4" strokeWidth={3} /> Novo Item
             </button>
             <button
               onClick={() => onSave(itens)}
-              className="flex-1 bg-success text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest"
+              className="flex-1 glass glass-brand border-white/40 text-white glass-press px-4 py-3.5 text-xs font-bold uppercase tracking-widest"
             >
               Concluir
             </button>
@@ -489,7 +489,7 @@ function ItemEditor({
           <input
             value={it.nome}
             onChange={(e) => setIt({ ...it, nome: e.target.value })}
-            className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
           />
         </div>
 
@@ -503,7 +503,7 @@ function ItemEditor({
               onChange={(e) =>
                 setIt({ ...it, altura: e.target.value ? parseFloat(e.target.value) : undefined })
               }
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
           </Field>
           <Field label="Comprimento (m)">
@@ -518,7 +518,7 @@ function ItemEditor({
                   comprimento: e.target.value ? parseFloat(e.target.value) : undefined,
                 })
               }
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
           </Field>
         </div>
@@ -669,7 +669,7 @@ function PassoPagamento({
             type="date"
             value={orc.validade ?? ""}
             onChange={(e) => setOrc({ ...orc, validade: e.target.value })}
-            className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
           />
         </Field>
         <Field label="Início">
@@ -677,7 +677,7 @@ function PassoPagamento({
             type="date"
             value={orc.inicio ?? ""}
             onChange={(e) => setOrc({ ...orc, inicio: e.target.value })}
-            className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
           />
         </Field>
       </div>
@@ -687,7 +687,7 @@ function PassoPagamento({
           value={orc.tipoServico ?? ""}
           onChange={(e) => setOrc({ ...orc, tipoServico: e.target.value })}
           placeholder="Ex: Pintura interna"
-          className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
         />
       </Field>
 
@@ -696,7 +696,7 @@ function PassoPagamento({
           rows={4}
           value={orc.observacoes ?? ""}
           onChange={(e) => setOrc({ ...orc, observacoes: e.target.value })}
-          className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand resize-none"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
         />
       </Field>
     </div>
@@ -718,20 +718,21 @@ function PassoRevisao({
   const total = calcularTotal(orc);
   return (
     <div className="space-y-4 py-6 max-w-3xl">
-      <div className="bg-brand text-ink brutal-border brutal-shadow p-6 text-center">
-        <div className="text-mono text-[10px] uppercase opacity-60 mb-1">Total</div>
-        <div className="text-display text-5xl lg:text-6xl italic leading-none">
+      <div className="glass-brand text-white p-8 text-center group overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+        <div className="text-mono text-[10px] uppercase opacity-60 mb-1 relative z-10">Total Estimado</div>
+        <div className="text-display text-5xl lg:text-7xl italic leading-none relative z-10">
           {formatBRL(total)}
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-3">
-        <div className="bg-surface brutal-border p-4">
+        <div className="glass p-5">
           <div className="text-mono text-[10px] uppercase text-brand mb-2">{"> Cliente"}</div>
           <p className="font-black uppercase">{orc.clienteSnapshot?.nome ?? "—"}</p>
           <p className="text-xs text-foreground/60">{orc.clienteSnapshot?.telefone}</p>
         </div>
-        <div className="bg-surface brutal-border p-4">
+        <div className="glass p-5">
           <div className="text-mono text-[10px] uppercase text-brand mb-2">{"> Pagamento"}</div>
           <p className="font-black uppercase text-sm">{orc.formaPagamento ?? "—"}</p>
           <p className="text-xs text-foreground/60">
@@ -741,7 +742,7 @@ function PassoRevisao({
         </div>
       </div>
 
-      <div className="bg-surface brutal-border p-4">
+      <div className="glass p-5">
         <div className="text-mono text-[10px] uppercase text-brand mb-2">{"> Mensagem WhatsApp"}</div>
         <pre className="whitespace-pre-wrap text-xs text-foreground/80 font-sans">{msg}</pre>
       </div>
@@ -752,7 +753,7 @@ function PassoRevisao({
             const blob = await gerarPdfOrcamento(orc);
             baixarBlob(blob, `orcamento-${orc.id ?? "novo"}.pdf`);
           }}
-          className="bg-surface brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-2"
+          className="glass glass-press px-6 py-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
         >
           <FileText className="size-4" /> Gerar PDF
         </button>
@@ -762,7 +763,7 @@ function PassoRevisao({
             target="_blank"
             rel="noreferrer"
             onClick={() => setOrc({ ...orc, status: "enviado" })}
-            className="bg-success text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-2"
+            className="glass-brand glass-press px-6 py-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2 text-white"
           >
             <MessageCircle className="size-4" /> Enviar WhatsApp
           </a>

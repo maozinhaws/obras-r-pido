@@ -25,7 +25,7 @@ function MaisPage() {
           <Link
             key={to}
             to={to}
-            className="bg-surface brutal-border p-5 brutal-press flex flex-col gap-3"
+            className="glass p-6 glass-press flex flex-col gap-3 group"
           >
             <Icon className="size-7 text-brand" strokeWidth={2.5} />
             <span className="text-display text-sm leading-tight">{label}</span>

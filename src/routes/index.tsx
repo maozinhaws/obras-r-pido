@@ -109,7 +109,7 @@ function Home() {
         </div>
 
         {/* Stat: Faturamento */}
-        <div className="col-span-6 lg:col-span-3 glass rounded-3xl p-5 flex flex-col justify-between min-h-[240px]">
+        <div className="col-span-6 lg:col-span-3 glass rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
           <div className="flex items-center gap-2 text-brand text-mono text-[10px] uppercase tracking-widest">
             <TrendingUp className="size-3" strokeWidth={3} />· Faturamento
           </div>
@@ -127,7 +127,7 @@ function Home() {
         </div>
 
         {/* Stat: Clientes */}
-        <div className="col-span-6 lg:col-span-2 glass rounded-3xl p-5 flex flex-col justify-between min-h-[240px]">
+        <div className="col-span-6 lg:col-span-2 glass rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
           <div className="text-brand text-mono text-[10px] uppercase tracking-widest">
             · Base
           </div>
@@ -148,7 +148,7 @@ function Home() {
         </div>
 
         {/* Atalho secundário */}
-        <div className="col-span-12 lg:col-span-2 glass-strong rounded-3xl p-5 flex flex-col justify-between min-h-[240px] relative overflow-hidden">
+        <div className="col-span-12 lg:col-span-2 glass-strong rounded-2xl p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden group">
           <div className="absolute -bottom-10 -left-6 size-40 rounded-full bg-brand/30 blur-3xl pointer-events-none" />
           <UserPlus className="size-7 text-brand relative" strokeWidth={2.5} />
           <Link to="/clientes" className="text-display text-2xl leading-[0.9] relative">
@@ -162,7 +162,7 @@ function Home() {
         </div>
 
         {/* Fluxo de Orçamentos */}
-        <div className="col-span-12 lg:col-span-8 glass rounded-3xl p-6 lg:p-8">
+        <div className="col-span-12 lg:col-span-8 glass rounded-2xl p-6 lg:p-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-display text-xl lg:text-2xl italic">
               Fluxo de Orçamentos
@@ -226,7 +226,7 @@ function Home() {
         </div>
 
         {/* Próximo evento */}
-        <div className="col-span-12 lg:col-span-4 glass rounded-3xl overflow-hidden relative min-h-[300px]">
+        <div className="col-span-12 lg:col-span-4 glass rounded-2xl overflow-hidden relative min-h-[300px]">
           <div className="absolute -top-12 -right-12 size-48 rounded-full bg-[oklch(0.65_0.25_295)]/30 blur-3xl" />
           <div className="absolute -bottom-16 -left-10 size-56 rounded-full bg-brand/20 blur-3xl" />
           <div className="p-6 lg:p-8 relative z-10 h-full flex flex-col justify-between">

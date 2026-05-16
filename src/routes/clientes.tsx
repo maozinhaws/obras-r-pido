@@ -41,7 +41,7 @@ function ClientesPage() {
         actions={
           <button
             onClick={() => setCriando(true)}
-            className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-2.5 text-xs font-black uppercase tracking-widest flex items-center gap-2"
+            className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
           >
             <Plus className="size-4" strokeWidth={3} /> Novo
           </button>
@@ -56,7 +56,7 @@ function ClientesPage() {
             placeholder="Buscar por nome ou telefone..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
-            className="w-full bg-surface brutal-border-thin pl-10 pr-3 py-3 text-sm placeholder:text-foreground/30 focus:outline-none focus:border-brand"
+            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3.5 text-sm placeholder:text-foreground/30 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
           />
         </div>
 
@@ -79,7 +79,7 @@ function ClientesPage() {
             {filtrados.map((c) => (
               <div
                 key={c.id}
-                className="bg-surface brutal-border p-4 flex flex-col gap-2"
+                className="glass p-5 flex flex-col gap-3 group"
               >
                 <div className="flex items-start justify-between">
                   <div className="min-w-0">
@@ -101,7 +101,7 @@ function ClientesPage() {
                     <MapPin className="size-3 mt-0.5 shrink-0" /> {c.endereco}
                   </div>
                 )}
-                <div className="flex gap-2 pt-2 mt-auto border-t-2 border-ink/20">
+                <div className="flex gap-2 pt-3 mt-auto border-t border-white/5">
                   <button
                     onClick={() => setEditando(c)}
                     className="flex-1 brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center justify-center gap-1"
@@ -162,8 +162,8 @@ function ClienteForm({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-midnight/90 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-surface w-full max-w-lg brutal-border md:brutal-shadow max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-end md:items-center justify-center p-0 md:p-4 animate-fade-in">
+      <div className="glass-strong w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale-in">
         <div className="bg-ink p-4 flex items-center justify-between sticky top-0 z-10">
           <h3 className="text-display text-lg">
             {cliente ? "Editar Cliente" : "Novo Cliente"}
@@ -178,14 +178,14 @@ function ClienteForm({
               autoFocus
               value={form.nome}
               onChange={(e) => setForm({ ...form, nome: e.target.value })}
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
           </Field>
           <Field label="Apelido">
             <input
               value={form.apelido ?? ""}
               onChange={(e) => setForm({ ...form, apelido: e.target.value })}
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
           </Field>
           <div className="grid grid-cols-2 gap-3">
@@ -194,14 +194,14 @@ function ClienteForm({
                 value={form.telefone ?? ""}
                 onChange={(e) => setForm({ ...form, telefone: e.target.value })}
                 inputMode="tel"
-                className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
               />
             </Field>
             <Field label="CPF/CNPJ">
               <input
                 value={form.documento ?? ""}
                 onChange={(e) => setForm({ ...form, documento: e.target.value })}
-                className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
               />
             </Field>
           </div>
@@ -210,7 +210,7 @@ function ClienteForm({
               value={form.email ?? ""}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               type="email"
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
           </Field>
           <Field label="Endereço">
@@ -218,11 +218,11 @@ function ClienteForm({
               value={form.endereco ?? ""}
               onChange={(e) => setForm({ ...form, endereco: e.target.value })}
               rows={2}
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
             />
           </Field>
         </div>
-        <div className="p-5 flex gap-3 border-t-4 border-ink sticky bottom-0 bg-surface">
+        <div className="p-6 flex gap-3 border-t border-white/10 sticky bottom-0 glass-strong">
           <button
             onClick={onClose}
             className="flex-1 brutal-border-thin px-4 py-3 text-xs font-black uppercase tracking-widest brutal-press"
