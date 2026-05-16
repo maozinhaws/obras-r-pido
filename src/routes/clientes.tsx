@@ -162,8 +162,8 @@ function ClienteForm({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-midnight/90 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-surface w-full max-w-lg brutal-border md:brutal-shadow max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-end md:items-center justify-center p-0 md:p-4 animate-fade-in">
+      <div className="glass-strong w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale-in">
         <div className="bg-ink p-4 flex items-center justify-between sticky top-0 z-10">
           <h3 className="text-display text-lg">
             {cliente ? "Editar Cliente" : "Novo Cliente"}

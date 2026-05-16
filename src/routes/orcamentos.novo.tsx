@@ -368,8 +368,8 @@ function ItensModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-midnight/95 flex flex-col">
-      <div className="bg-ink p-4 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xl flex flex-col animate-fade-in">
+      <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
         <h3 className="text-display text-lg">Itens · {ambiente.nome}</h3>
         <button onClick={onClose} className="text-brand" aria-label="Fechar">
           <X className="size-6" strokeWidth={3} />
@@ -388,7 +388,7 @@ function ItensModal({
               <button
                 key={it.id}
                 onClick={() => setEditing(it)}
-                className="w-full bg-surface brutal-border p-4 text-left brutal-press"
+                className="w-full glass p-5 text-left glass-press group"
               >
                 <div className="flex justify-between items-start">
                   <div>
@@ -407,16 +407,16 @@ function ItensModal({
               </button>
             ))}
           </div>
-          <div className="p-3 border-t-4 border-ink flex gap-2">
+          <div className="p-4 glass-strong rounded-none border-x-0 border-b-0 flex gap-3">
             <button
               onClick={novoItem}
-              className="flex-1 bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+              className="flex-1 glass-brand text-white glass-press px-4 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
             >
               <Plus className="size-4" strokeWidth={3} /> Novo Item
             </button>
             <button
               onClick={() => onSave(itens)}
-              className="flex-1 bg-success text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest"
+              className="flex-1 glass glass-brand border-white/40 text-white glass-press px-4 py-3.5 text-xs font-bold uppercase tracking-widest"
             >
               Concluir
             </button>
@@ -489,7 +489,7 @@ function ItemEditor({
           <input
             value={it.nome}
             onChange={(e) => setIt({ ...it, nome: e.target.value })}
-            className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
           />
         </div>
 
@@ -503,7 +503,7 @@ function ItemEditor({
               onChange={(e) =>
                 setIt({ ...it, altura: e.target.value ? parseFloat(e.target.value) : undefined })
               }
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
           </Field>
           <Field label="Comprimento (m)">
@@ -518,7 +518,7 @@ function ItemEditor({
                   comprimento: e.target.value ? parseFloat(e.target.value) : undefined,
                 })
               }
-              className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
           </Field>
         </div>
@@ -669,7 +669,7 @@ function PassoPagamento({
             type="date"
             value={orc.validade ?? ""}
             onChange={(e) => setOrc({ ...orc, validade: e.target.value })}
-            className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
           />
         </Field>
         <Field label="Início">
