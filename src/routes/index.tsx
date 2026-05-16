@@ -265,7 +265,7 @@ function Home() {
           <Link
             key={to}
             to={to}
-            className="col-span-6 lg:col-span-3 glass rounded-2xl p-5 glass-press flex items-center gap-3 hover:bg-white/[0.08]"
+            className="col-span-12 sm:col-span-6 lg:col-span-3 glass rounded-2xl p-5 glass-press flex items-center gap-3 hover:bg-white/[0.08]"
           >
             <div className="size-11 rounded-xl glass-brand grid place-items-center shrink-0">
               <Icon className="size-5 text-white" strokeWidth={2.5} />
