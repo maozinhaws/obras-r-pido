@@ -677,7 +677,7 @@ function PassoPagamento({
             type="date"
             value={orc.inicio ?? ""}
             onChange={(e) => setOrc({ ...orc, inicio: e.target.value })}
-            className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
           />
         </Field>
       </div>
@@ -687,7 +687,7 @@ function PassoPagamento({
           value={orc.tipoServico ?? ""}
           onChange={(e) => setOrc({ ...orc, tipoServico: e.target.value })}
           placeholder="Ex: Pintura interna"
-          className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
         />
       </Field>
 
@@ -696,7 +696,7 @@ function PassoPagamento({
           rows={4}
           value={orc.observacoes ?? ""}
           onChange={(e) => setOrc({ ...orc, observacoes: e.target.value })}
-          className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand resize-none"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
         />
       </Field>
     </div>
@@ -718,20 +718,21 @@ function PassoRevisao({
   const total = calcularTotal(orc);
   return (
     <div className="space-y-4 py-6 max-w-3xl">
-      <div className="bg-brand text-ink brutal-border brutal-shadow p-6 text-center">
-        <div className="text-mono text-[10px] uppercase opacity-60 mb-1">Total</div>
-        <div className="text-display text-5xl lg:text-6xl italic leading-none">
+      <div className="glass-brand text-white p-8 text-center group overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+        <div className="text-mono text-[10px] uppercase opacity-60 mb-1 relative z-10">Total Estimado</div>
+        <div className="text-display text-5xl lg:text-7xl italic leading-none relative z-10">
           {formatBRL(total)}
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-3">
-        <div className="bg-surface brutal-border p-4">
+        <div className="glass p-5">
           <div className="text-mono text-[10px] uppercase text-brand mb-2">{"> Cliente"}</div>
           <p className="font-black uppercase">{orc.clienteSnapshot?.nome ?? "—"}</p>
           <p className="text-xs text-foreground/60">{orc.clienteSnapshot?.telefone}</p>
         </div>
-        <div className="bg-surface brutal-border p-4">
+        <div className="glass p-5">
           <div className="text-mono text-[10px] uppercase text-brand mb-2">{"> Pagamento"}</div>
           <p className="font-black uppercase text-sm">{orc.formaPagamento ?? "—"}</p>
           <p className="text-xs text-foreground/60">
@@ -741,7 +742,7 @@ function PassoRevisao({
         </div>
       </div>
 
-      <div className="bg-surface brutal-border p-4">
+      <div className="glass p-5">
         <div className="text-mono text-[10px] uppercase text-brand mb-2">{"> Mensagem WhatsApp"}</div>
         <pre className="whitespace-pre-wrap text-xs text-foreground/80 font-sans">{msg}</pre>
       </div>
@@ -752,7 +753,7 @@ function PassoRevisao({
             const blob = await gerarPdfOrcamento(orc);
             baixarBlob(blob, `orcamento-${orc.id ?? "novo"}.pdf`);
           }}
-          className="bg-surface brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-2"
+          className="glass glass-press px-6 py-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
         >
           <FileText className="size-4" /> Gerar PDF
         </button>
@@ -762,7 +763,7 @@ function PassoRevisao({
             target="_blank"
             rel="noreferrer"
             onClick={() => setOrc({ ...orc, status: "enviado" })}
-            className="bg-success text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-2"
+            className="glass-brand glass-press px-6 py-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2 text-white"
           >
             <MessageCircle className="size-4" /> Enviar WhatsApp
           </a>
