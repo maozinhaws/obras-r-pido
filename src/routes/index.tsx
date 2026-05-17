@@ -35,6 +35,8 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+import { memo } from "react";
+
 function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const config = useLiveQuery(() => db.config.get(1));
@@ -279,7 +281,11 @@ function Home() {
         ))}
       </div>
 
-      {modalOpen && <NovoOrcamentoModal onClose={() => setModalOpen(false)} />}
+      {modalOpen && (
+        <Suspense fallback={null}>
+          <NovoOrcamentoModal onClose={() => setModalOpen(false)} />
+        </Suspense>
+      )}
     </div>
   );
 }
@@ -304,7 +310,7 @@ function EmptyState({
   );
 }
 
-function NovoOrcamentoModal({ onClose }: { onClose: () => void }) {
+export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) => {
   const modos: Array<{
     modo: "flash" | "foto" | "detalhado";
     icon: typeof Zap;

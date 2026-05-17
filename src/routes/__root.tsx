@@ -13,6 +13,9 @@ import { db } from "@/lib/db";
 
 import appCss from "../styles.css?url";
 import { Sidebar, BottomNav } from "@/components/app-shell";
+import { Suspense, lazy } from "react";
+
+const NovoOrcamentoModal = lazy(() => import("./index").then(m => ({ default: m.NovoOrcamentoModal })));
 
 function ThemeHandler() {
   const config = useLiveQuery(() => db.config.get(1));
