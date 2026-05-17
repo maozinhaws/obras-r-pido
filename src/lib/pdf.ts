@@ -1,12 +1,17 @@
-import jsPDF from "jspdf";
+import type jsPDFType from "jspdf";
 import { db, type Orcamento, calcularTotal, formatBRL, STATUS_LABELS } from "./db";
 import { fotoDataURL } from "./fotos";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+async function makeDoc(): Promise<jsPDFType> {
+  const { default: jsPDF } = await import("jspdf");
+  return new jsPDF({ unit: "mm", format: "a4" });
+}
+
 export async function gerarPdfOrcamento(o: Orcamento): Promise<Blob> {
   const config = (await db.config.get(1)) ?? { id: 1 as const };
-  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const doc = await makeDoc();
   const pageW = doc.internal.pageSize.getWidth();
   let y = 15;
 
@@ -188,7 +193,7 @@ export async function gerarPdfRecibo(params: {
 }): Promise<Blob> {
   const { orcamento: o, valor, data, formaPagamento, observacao, numero } = params;
   const config = (await db.config.get(1)) ?? { id: 1 as const };
-  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const doc = await makeDoc();
   const pageW = doc.internal.pageSize.getWidth();
   let y = 15;
 

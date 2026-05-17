@@ -118,17 +118,18 @@ export const Sidebar = memo(() => {
 });
 
 export const BottomNav = memo(() => {
+  const path = useRouterState({ select: (r) => r.location.pathname });
   return (
     <nav className="md:hidden fixed bottom-4 left-4 right-4 z-40 glass-strong rounded-2xl grid grid-cols-5 px-1 py-1 max-w-[calc(100vw-2rem)]">
       {BOTTOM_NAV.map((n) => {
-        const active = useActive(n.to, n.to === "/");
+        const active = n.to === "/" ? path === "/" : path === n.to || path.startsWith(n.to + "/");
         const Icon = n.icon;
         return (
           <Link
             key={n.to}
             to={n.to}
             className={cn(
-              "flex flex-col items-center justify-center gap-1 py-2 text-[9px] font-black uppercase tracking-tight rounded-2xl transition-all",
+              "flex flex-col items-center justify-center gap-1 py-2 text-[9px] font-black uppercase tracking-tight rounded-2xl transition-colors",
               active ? "glass-brand text-white" : "text-foreground/50",
             )}
           >

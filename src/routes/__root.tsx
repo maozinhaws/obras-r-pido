@@ -126,16 +126,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/icon.svg", type: "image/svg+xml" },
       {
         rel: "preconnect",
-        href: "https://fonts.googleapis.com",
-      },
-      {
-        rel: "preconnect",
         href: "https://fonts.gstatic.com",
         crossOrigin: "anonymous",
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Syne:wght@800&display=swap",
       },
     ],
   }),
@@ -163,7 +159,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen text-foreground transition-colors duration-500">
+      <div className="flex min-h-screen text-foreground">
         <ThemeHandler />
         <Sidebar />
         <main className="flex-1 min-w-0 pb-24 md:pb-0">
