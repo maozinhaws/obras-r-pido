@@ -49,7 +49,7 @@ const PASSOS = ["Cliente", "Ambientes", "Pagamento", "Revisão"] as const;
 
 function NovoOrcamento() {
   const nav = useNavigate();
-  const { editId } = Route.useSearch();
+  const { editId, modo } = Route.useSearch();
   const [passo, setPasso] = useState(0);
   const [carregado, setCarregado] = useState(!editId);
   const [orc, setOrc] = useState<Orcamento>({
