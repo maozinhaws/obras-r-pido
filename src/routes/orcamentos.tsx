@@ -35,20 +35,101 @@ const STATUSES: StatusOrcamento[] = [
   "cancelado",
 ];
 
+import { memo, useMemo } from "react";
+
+const OrcamentoCard = memo(({ o, STATUSES }: { o: any, STATUSES: StatusOrcamento[] }) => (
+  <div key={o.id} className="glass p-5 space-y-4 group">
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <p className="font-black uppercase truncate">
+          {o.clienteSnapshot?.nome ?? "Sem cliente"}
+        </p>
+        <p className="text-mono text-[10px] text-foreground/40 uppercase">
+          #{o.id} · {format(o.atualizadoEm, "dd MMM yy, HH:mm", { locale: ptBR })}
+        </p>
+      </div>
+      <div className="text-display text-2xl italic text-brand shrink-0">
+        {formatBRL(calcularTotal(o)).replace(",00", "")}
+      </div>
+    </div>
+    <select
+      value={o.status}
+      onChange={(e) =>
+        db.orcamentos.update(o.id!, {
+          status: e.target.value as StatusOrcamento,
+          atualizadoEm: Date.now(),
+        })
+      }
+      className={`glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status as StatusOrcamento]}`}
+    >
+      {STATUSES.map((s) => (
+        <option key={s} value={s} className="bg-surface text-foreground">
+          {STATUS_LABELS[s]}
+        </option>
+      ))}
+    </select>
+    <div className="flex flex-wrap gap-2">
+      <Link
+        to="/orcamentos/$id"
+        params={{ id: String(o.id) }}
+        className="flex-1 glass glass-press px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-center"
+      >
+        Ver
+      </Link>
+      <button
+        onClick={async () => {
+          const blob = await gerarPdfOrcamento(o);
+          baixarBlob(blob, `orcamento-${o.id}.pdf`);
+        }}
+        className="glass glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
+      >
+        <FileText className="size-3" /> PDF
+      </button>
+      {o.clienteSnapshot?.telefone && (
+        <button
+          onClick={async () => {
+            const msg = await gerarMensagemWhatsapp(o);
+            window.open(whatsappLink(o.clienteSnapshot!.telefone!, msg), "_blank");
+          }}
+          className="glass-brand glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 text-white"
+        >
+          <MessageCircle className="size-3" /> Wpp
+        </button>
+      )}
+      <button
+        onClick={() => confirm("Excluir orçamento?") && db.orcamentos.delete(o.id!)}
+        className="glass glass-press border-destructive/20 px-3 py-2.5 text-destructive"
+        aria-label="Excluir"
+      >
+        <Trash2 className="size-3" />
+      </button>
+    </div>
+  </div>
+));
+
 function OrcamentosPage() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<StatusOrcamento | "todos">("todos");
   const orcamentos = useLiveQuery(
-    () => db.orcamentos.orderBy("atualizadoEm").reverse().toArray(),
-    [],
+    () => {
+      const query = filtro === "todos" 
+        ? db.orcamentos.orderBy("atualizadoEm")
+        : db.orcamentos.where("status").equals(filtro).reverse();
+      
+      return query.reverse().toArray();
+    },
+    [filtro],
     [],
   );
-  const lista = (orcamentos ?? []).filter((o) => {
-    if (filtro !== "todos" && o.status !== filtro) return false;
-    if (busca && !(o.clienteSnapshot?.nome ?? "").toLowerCase().includes(busca.toLowerCase()))
-      return false;
-    return true;
-  });
+
+  const lista = useMemo(() => {
+    return (orcamentos ?? []).filter((o) => {
+      if (filtro !== "todos" && o.status !== filtro) return false;
+      if (busca && !(o.clienteSnapshot?.nome ?? "").toLowerCase().includes(busca.toLowerCase()))
+        return false;
+      return true;
+    });
+  }, [orcamentos, filtro, busca]);
 
   return (
     <div>
@@ -106,73 +187,7 @@ function OrcamentosPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {lista.map((o) => (
-              <div key={o.id} className="glass p-5 space-y-4 group">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-black uppercase truncate">
-                      {o.clienteSnapshot?.nome ?? "Sem cliente"}
-                    </p>
-                    <p className="text-mono text-[10px] text-foreground/40 uppercase">
-                      #{o.id} · {format(o.atualizadoEm, "dd MMM yy, HH:mm", { locale: ptBR })}
-                    </p>
-                  </div>
-                  <div className="text-display text-2xl italic text-brand shrink-0">
-                    {formatBRL(calcularTotal(o)).replace(",00", "")}
-                  </div>
-                </div>
-                <select
-                  value={o.status}
-                  onChange={(e) =>
-                    db.orcamentos.update(o.id!, {
-                      status: e.target.value as StatusOrcamento,
-                      atualizadoEm: Date.now(),
-                    })
-                  }
-                  className={`glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status]}`}
-                >
-                  {STATUSES.map((s) => (
-                    <option key={s} value={s} className="bg-surface text-foreground">
-                      {STATUS_LABELS[s]}
-                    </option>
-                  ))}
-                </select>
-                <div className="flex flex-wrap gap-2">
-                  <Link
-                    to="/orcamentos/$id"
-                    params={{ id: String(o.id) }}
-                    className="flex-1 glass glass-press px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-center"
-                  >
-                    Ver
-                  </Link>
-                  <button
-                    onClick={async () => {
-                      const blob = await gerarPdfOrcamento(o);
-                      baixarBlob(blob, `orcamento-${o.id}.pdf`);
-                    }}
-                    className="glass glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
-                  >
-                    <FileText className="size-3" /> PDF
-                  </button>
-                  {o.clienteSnapshot?.telefone && (
-                    <button
-                      onClick={async () => {
-                        const msg = await gerarMensagemWhatsapp(o);
-                        window.open(whatsappLink(o.clienteSnapshot!.telefone!, msg), "_blank");
-                      }}
-                      className="glass-brand glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 text-white"
-                    >
-                      <MessageCircle className="size-3" /> Wpp
-                    </button>
-                  )}
-                  <button
-                    onClick={() => confirm("Excluir orçamento?") && db.orcamentos.delete(o.id!)}
-                    className="glass glass-press border-destructive/20 px-3 py-2.5 text-destructive"
-                    aria-label="Excluir"
-                  >
-                    <Trash2 className="size-3" />
-                  </button>
-                </div>
-              </div>
+              <OrcamentoCard key={o.id} o={o} STATUSES={STATUSES} />
             ))}
           </div>
         )}

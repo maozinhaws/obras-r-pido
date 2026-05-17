@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import {
@@ -70,7 +71,7 @@ function NavRow({
   );
 }
 
-export function Sidebar() {
+export const Sidebar = memo(() => {
   return (
     <aside className="hidden md:flex w-20 lg:w-64 glass-strong rounded-none border-l-0 border-y-0 flex-col sticky top-0 h-screen shrink-0 z-30 overflow-x-hidden">
       <div className="p-4 lg:p-6 border-b border-white/10">
@@ -114,9 +115,9 @@ export function Sidebar() {
       </div>
     </aside>
   );
-}
+});
 
-export function BottomNav() {
+export const BottomNav = memo(() => {
   return (
     <nav className="md:hidden fixed bottom-4 left-4 right-4 z-40 glass-strong rounded-2xl grid grid-cols-5 px-1 py-1 max-w-[calc(100vw-2rem)]">
       {BOTTOM_NAV.map((n) => {
@@ -138,9 +139,9 @@ export function BottomNav() {
       })}
     </nav>
   );
-}
+});
 
-export function PageHeader({
+export const PageHeader = memo(({
   eyebrow,
   title,
   actions,
@@ -148,7 +149,7 @@ export function PageHeader({
   eyebrow?: string;
   title: string;
   actions?: React.ReactNode;
-}) {
+}) => {
   return (
     <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-white/10">
       <div>
@@ -164,4 +165,4 @@ export function PageHeader({
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </header>
   );
-}
+});
