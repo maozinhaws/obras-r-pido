@@ -32,11 +32,12 @@ import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf"
 import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
 
-type SearchParams = { modo?: "flash" | "foto" | "detalhado" };
+type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number };
 
 export const Route = createFileRoute("/orcamentos/novo")({
   validateSearch: (s: Record<string, unknown>): SearchParams => ({
     modo: (s.modo as SearchParams["modo"]) ?? "detalhado",
+    editId: s.editId ? Number(s.editId) : undefined,
   }),
   head: () => ({
     meta: [{ title: "Novo orçamento — Pintor Plus" }],
@@ -48,7 +49,9 @@ const PASSOS = ["Cliente", "Ambientes", "Pagamento", "Revisão"] as const;
 
 function NovoOrcamento() {
   const nav = useNavigate();
+  const { editId } = Route.useSearch();
   const [passo, setPasso] = useState(0);
+  const [carregado, setCarregado] = useState(!editId);
   const [orc, setOrc] = useState<Orcamento>({
     ambientes: [],
     status: "rascunho",
@@ -56,15 +59,25 @@ function NovoOrcamento() {
     atualizadoEm: Date.now(),
   });
 
+  // Carrega orçamento existente para edição
+  useEffect(() => {
+    if (!editId) return;
+    db.orcamentos.get(editId).then((o) => {
+      if (o) setOrc(o);
+      setCarregado(true);
+    });
+  }, [editId]);
+
   // autosave
   useEffect(() => {
+    if (!carregado) return;
     const t = setTimeout(async () => {
       const id = await db.orcamentos.put({ ...orc, atualizadoEm: Date.now() });
       if (!orc.id) setOrc((p) => ({ ...p, id: id as number }));
     }, 800);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(orc.ambientes), orc.clienteId, orc.formaPagamento, orc.observacoes]);
+  }, [JSON.stringify(orc), carregado]);
 
   return (
     <div>
