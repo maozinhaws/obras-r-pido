@@ -98,11 +98,9 @@ function Home() {
           </div>
           <button
             onClick={() => setModalOpen(true)}
-            className="text-left text-display text-3xl lg:text-5xl leading-[0.9] relative drop-shadow-sm"
+            className="text-left text-display text-2xl lg:text-4xl leading-[0.95] whitespace-nowrap relative drop-shadow-sm"
           >
-            Novo
-            <br />
-            Orçamento
+            Novo Orçamento
           </button>
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest opacity-90 relative">
             <Zap className="size-3" strokeWidth={3} />
@@ -116,7 +114,7 @@ function Home() {
             <TrendingUp className="size-3" strokeWidth={3} />· Faturamento
           </div>
           <div className="space-y-2">
-            <div className="text-display text-3xl lg:text-4xl italic leading-none bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+            <div className="text-display text-2xl lg:text-3xl leading-none whitespace-nowrap bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
               {formatBRL(faturamento).replace(",00", "")}
             </div>
             <div className="h-1.5 bg-white/10 w-full rounded-full overflow-hidden">
@@ -134,7 +132,7 @@ function Home() {
             · Base
           </div>
           <div>
-            <div className="text-display text-4xl lg:text-5xl italic leading-none bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent">
+            <div className="text-display text-3xl lg:text-4xl leading-none whitespace-nowrap bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent">
               {totalClientes}
             </div>
             <div className="text-[10px] font-mono text-foreground/50 uppercase mt-1">
@@ -153,10 +151,8 @@ function Home() {
         <div className="col-span-12 lg:col-span-2 glass-strong rounded-2xl p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden group">
           <div className="absolute -bottom-10 -left-6 size-40 rounded-full bg-brand/30 blur-3xl pointer-events-none" />
           <UserPlus className="size-7 text-brand relative" strokeWidth={2.5} />
-          <Link to="/clientes" className="text-display text-2xl leading-[0.9] relative">
-            Novo
-            <br />
-            Cliente
+          <Link to="/clientes" className="text-display text-xl leading-[0.95] whitespace-nowrap relative">
+            Novo Cliente
           </Link>
           <span className="text-[10px] font-mono opacity-60 uppercase relative">
             Cadastrar contato
@@ -166,7 +162,7 @@ function Home() {
         {/* Fluxo de Orçamentos */}
         <div className="col-span-12 lg:col-span-8 glass rounded-2xl p-6 lg:p-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-display text-xl lg:text-2xl italic">
+            <h2 className="text-display text-lg lg:text-xl whitespace-nowrap">
               Fluxo de Orçamentos
             </h2>
             <Link
@@ -217,7 +213,7 @@ function Home() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-display text-lg lg:text-xl italic group-hover:text-brand transition-colors">
+                    <p className="text-display text-base lg:text-lg whitespace-nowrap group-hover:text-brand transition-colors">
                       {formatBRL(calcularTotal(o)).replace(",00", "")}
                     </p>
                   </div>
@@ -239,7 +235,7 @@ function Home() {
                 : "Sem eventos"}
             </div>
             <div>
-              <h4 className="text-display text-2xl lg:text-3xl italic leading-[0.95] mb-4 bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+              <h4 className="text-display text-xl lg:text-2xl leading-[0.95] mb-4 bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
                 {eventos && eventos[0] ? eventos[0].titulo : "Agenda livre"}
               </h4>
               {eventos && eventos[0] && (
@@ -272,10 +268,8 @@ function Home() {
             <div className="size-11 rounded-xl glass-brand grid place-items-center shrink-0">
               <Icon className="size-5 text-white" strokeWidth={2.5} />
             </div>
-            <div className="text-display text-sm leading-tight">
-              {l1}
-              <br />
-              {l2}
+            <div className="text-display text-xs leading-tight whitespace-nowrap">
+              {l1} {l2}
             </div>
           </Link>
         ))}

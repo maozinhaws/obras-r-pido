@@ -158,7 +158,7 @@ export const PageHeader = memo(({
             {eyebrow}
           </div>
         )}
-        <h1 className="text-display text-3xl lg:text-5xl italic leading-none bg-gradient-to-br from-white via-white to-white/60 bg-clip-text text-transparent">
+        <h1 className="text-display text-2xl lg:text-4xl leading-none whitespace-nowrap bg-gradient-to-br from-white via-white to-white/60 bg-clip-text text-transparent">
           {title}
         </h1>
       </div>
