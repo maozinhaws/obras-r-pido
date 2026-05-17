@@ -106,6 +106,8 @@ export interface ConfigEmpresa {
   formasPagamento?: string[];
   ambientesPadrao?: string[];
   tema?: "moderno" | "brutalista" | "minimalista";
+  fonteTamanho?: "pequeno" | "normal" | "grande";
+  altoContraste?: boolean;
 }
 
 class PintorDB extends Dexie {
