@@ -281,11 +281,7 @@ function Home() {
         ))}
       </div>
 
-      {modalOpen && (
-        <Suspense fallback={null}>
-          <NovoOrcamentoModalLazy onClose={() => setModalOpen(false)} />
-        </Suspense>
-      )}
+      {modalOpen && <NovoOrcamentoModal onClose={() => setModalOpen(false)} />}
     </div>
   );
 }
