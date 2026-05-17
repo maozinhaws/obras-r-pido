@@ -35,9 +35,7 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-import { memo, Suspense, lazy } from "react";
-
-const NovoOrcamentoModalLazy = lazy(() => import("./index").then(m => ({ default: m.NovoOrcamentoModal })));
+import { memo } from "react";
 
 function Home() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -283,11 +281,7 @@ function Home() {
         ))}
       </div>
 
-      {modalOpen && (
-        <Suspense fallback={null}>
-          <NovoOrcamentoModalLazy onClose={() => setModalOpen(false)} />
-        </Suspense>
-      )}
+      {modalOpen && <NovoOrcamentoModal onClose={() => setModalOpen(false)} />}
     </div>
   );
 }
