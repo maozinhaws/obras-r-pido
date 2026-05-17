@@ -39,28 +39,24 @@ import { memo } from "react";
 
 function Home() {
   const [modalOpen, setModalOpen] = useState(false);
-  const config = useLiveQuery(() => db.config.get(1));
-  const orcamentos = useLiveQuery(
-    () => db.orcamentos.orderBy("atualizadoEm").reverse().limit(4).toArray(),
-    [],
-    [],
-  );
-  const eventos = useLiveQuery(
-    () =>
-      db.eventos
-        .where("data")
-        .aboveOrEqual(new Date().toISOString().slice(0, 10))
-        .sortBy("data"),
-    [],
-    [],
-  );
-  const totalClientes = useLiveQuery(() => db.clientes.count(), [], 0);
-  const totalAprovados = useLiveQuery(
-    () => db.orcamentos.where("status").equals("aprovado").count(),
-    [],
-    0,
-  );
-  const faturamento = (orcamentos ?? [])
+  const dashboard = useLiveQuery(async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const [config, orcamentos, eventos, totalClientes, totalAprovados] = await Promise.all([
+      db.config.get(1),
+      db.orcamentos.orderBy("atualizadoEm").reverse().limit(4).toArray(),
+      db.eventos.where("data").aboveOrEqual(today).sortBy("data"),
+      db.clientes.count(),
+      db.orcamentos.where("status").equals("aprovado").count(),
+    ]);
+    return { config, orcamentos, eventos, totalClientes, totalAprovados };
+  }, []);
+
+  const config = dashboard?.config;
+  const orcamentos = dashboard?.orcamentos ?? [];
+  const eventos = dashboard?.eventos ?? [];
+  const totalClientes = dashboard?.totalClientes ?? 0;
+  const totalAprovados = dashboard?.totalAprovados ?? 0;
+  const faturamento = orcamentos
     .filter((o) => o.status === "aprovado" || o.status === "finalizado")
     .reduce((acc, o) => acc + calcularTotal(o), 0);
 
