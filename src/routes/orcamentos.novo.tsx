@@ -762,6 +762,23 @@ function PassoPagamento({
         />
       </Field>
 
+      <Field label="Preço adicional por m² (R$)">
+        <input
+          type="number"
+          step="0.01"
+          inputMode="decimal"
+          value={orc.precoAdicionalM2 ?? ""}
+          onChange={(e) =>
+            setOrc({
+              ...orc,
+              precoAdicionalM2: e.target.value ? parseFloat(e.target.value) : undefined,
+            })
+          }
+          placeholder="Aplicado sobre o total de m² de todos os itens"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+        />
+      </Field>
+
       <Field label="Observações">
         <textarea
           rows={4}
