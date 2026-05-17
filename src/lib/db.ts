@@ -56,6 +56,11 @@ export interface Orcamento {
   tipoServico?: string;
   observacoes?: string;
   totalManual?: number;
+  precoAdicionalM2?: number;
+  pagadorDiferente?: boolean;
+  pagadorNome?: string;
+  pagadorTelefone?: string;
+  pagadorEndereco?: string;
   status: StatusOrcamento;
   criadoEm: number;
   atualizadoEm: number;
