@@ -170,6 +170,47 @@ function ConfigPage() {
             />
           </Field>
         </Card>
+
+        <Card titulo="Acessibilidade">
+          <Field label="Tamanho da fonte">
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { id: "pequeno", label: "Pequeno", size: "text-xs" },
+                { id: "normal", label: "Normal", size: "text-sm" },
+                { id: "grande", label: "Grande", size: "text-base" },
+              ].map((t) => {
+                const ativo = (form.fonteTamanho ?? "normal") === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setForm({ ...form, fonteTamanho: t.id as any })}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      ativo ? "border-brand bg-brand/10" : "border-white/10 hover:border-white/20"
+                    }`}
+                  >
+                    <div className={`font-bold uppercase tracking-widest ${t.size}`}>
+                      {t.label}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
+          <label className="flex items-center justify-between cursor-pointer pt-2">
+            <div>
+              <div className="text-sm font-bold uppercase tracking-widest">Alto contraste</div>
+              <p className="text-xs text-foreground/60 mt-1">
+                Aumenta legibilidade reduzindo opacidades
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              checked={form.altoContraste ?? false}
+              onChange={(e) => setForm({ ...form, altoContraste: e.target.checked })}
+              className="size-5 accent-brand"
+            />
+          </label>
+        </Card>
       </div>
     </div>
   );
