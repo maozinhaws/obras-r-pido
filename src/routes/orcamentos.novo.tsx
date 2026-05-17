@@ -108,7 +108,12 @@ function NovoOrcamento() {
 
       <div className="px-5 lg:px-10 pb-32">
         {passo === 0 && <PassoCliente orc={orc} setOrc={setOrc} />}
-        {passo === 1 && <PassoAmbientes orc={orc} setOrc={setOrc} />}
+        {passo === 1 &&
+          (modo === "foto" ? (
+            <PassoAmbientesFoto orc={orc} setOrc={setOrc} />
+          ) : (
+            <PassoAmbientes orc={orc} setOrc={setOrc} />
+          ))}
         {passo === 2 && <PassoPagamento orc={orc} setOrc={setOrc} />}
         {passo === 3 && <PassoRevisao orc={orc} setOrc={setOrc} />}
       </div>
