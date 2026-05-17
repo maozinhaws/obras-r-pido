@@ -20,6 +20,7 @@ import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrcamentosNovoRouteImport } from './routes/orcamentos.novo'
 import { Route as OrcamentosIdRouteImport } from './routes/orcamentos.$id'
+import { Route as OrcamentosIdReciboRouteImport } from './routes/orcamentos.$id.recibo'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -76,6 +77,11 @@ const OrcamentosIdRoute = OrcamentosIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => OrcamentosRoute,
 } as any)
+const OrcamentosIdReciboRoute = OrcamentosIdReciboRouteImport.update({
+  id: '/recibo',
+  path: '/recibo',
+  getParentRoute: () => OrcamentosIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -87,8 +93,9 @@ export interface FileRoutesByFullPath {
   '/mais': typeof MaisRoute
   '/orcamentos': typeof OrcamentosRouteWithChildren
   '/termos': typeof TermosRoute
-  '/orcamentos/$id': typeof OrcamentosIdRoute
+  '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
+  '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,8 +107,9 @@ export interface FileRoutesByTo {
   '/mais': typeof MaisRoute
   '/orcamentos': typeof OrcamentosRouteWithChildren
   '/termos': typeof TermosRoute
-  '/orcamentos/$id': typeof OrcamentosIdRoute
+  '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
+  '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,8 +122,9 @@ export interface FileRoutesById {
   '/mais': typeof MaisRoute
   '/orcamentos': typeof OrcamentosRouteWithChildren
   '/termos': typeof TermosRoute
-  '/orcamentos/$id': typeof OrcamentosIdRoute
+  '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
+  '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/orcamentos/$id'
     | '/orcamentos/novo'
+    | '/orcamentos/$id/recibo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/orcamentos/$id'
     | '/orcamentos/novo'
+    | '/orcamentos/$id/recibo'
   id:
     | '__root__'
     | '/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/orcamentos/$id'
     | '/orcamentos/novo'
+    | '/orcamentos/$id/recibo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -250,16 +262,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrcamentosIdRouteImport
       parentRoute: typeof OrcamentosRoute
     }
+    '/orcamentos/$id/recibo': {
+      id: '/orcamentos/$id/recibo'
+      path: '/recibo'
+      fullPath: '/orcamentos/$id/recibo'
+      preLoaderRoute: typeof OrcamentosIdReciboRouteImport
+      parentRoute: typeof OrcamentosIdRoute
+    }
   }
 }
 
+interface OrcamentosIdRouteChildren {
+  OrcamentosIdReciboRoute: typeof OrcamentosIdReciboRoute
+}
+
+const OrcamentosIdRouteChildren: OrcamentosIdRouteChildren = {
+  OrcamentosIdReciboRoute: OrcamentosIdReciboRoute,
+}
+
+const OrcamentosIdRouteWithChildren = OrcamentosIdRoute._addFileChildren(
+  OrcamentosIdRouteChildren,
+)
+
 interface OrcamentosRouteChildren {
-  OrcamentosIdRoute: typeof OrcamentosIdRoute
+  OrcamentosIdRoute: typeof OrcamentosIdRouteWithChildren
   OrcamentosNovoRoute: typeof OrcamentosNovoRoute
 }
 
 const OrcamentosRouteChildren: OrcamentosRouteChildren = {
-  OrcamentosIdRoute: OrcamentosIdRoute,
+  OrcamentosIdRoute: OrcamentosIdRouteWithChildren,
   OrcamentosNovoRoute: OrcamentosNovoRoute,
 }
 
@@ -281,13 +312,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

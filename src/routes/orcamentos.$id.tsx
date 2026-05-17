@@ -112,9 +112,10 @@ function OrcamentoDetalhe() {
             <div className="text-mono text-[10px] uppercase text-brand">{"> Ações"}</div>
             <Link
               to="/orcamentos/novo"
+              search={{ editId: o.id }}
               className="w-full glass-brand text-white glass-press px-5 py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
             >
-              <Edit3 className="size-3" /> Editar (em breve)
+              <Edit3 className="size-3" /> Editar
             </Link>
             <button
               onClick={async () => {
@@ -136,12 +137,13 @@ function OrcamentoDetalhe() {
                 <MessageCircle className="size-3" /> WhatsApp
               </button>
             )}
-            <button
-              disabled
-              className="w-full glass px-5 py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 opacity-40"
+            <Link
+              to="/orcamentos/$id/recibo"
+              params={{ id: String(o.id) }}
+              className="w-full glass glass-press px-5 py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
             >
-              <Receipt className="size-3" /> Recibo (em breve)
-            </button>
+              <Receipt className="size-3" /> Recibo
+            </Link>
           </div>
 
           <div className="glass p-6 space-y-2 text-sm">

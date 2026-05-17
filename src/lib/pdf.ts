@@ -178,6 +178,93 @@ export async function gerarMensagemWhatsapp(o: Orcamento): Promise<string> {
   return `${intro}\n\n*Cliente:* ${o.clienteSnapshot?.nome ?? "—"}\n*Total:* ${formatBRL(calcularTotal(o))}\n*Status:* ${STATUS_LABELS[o.status]}`;
 }
 
+export async function gerarPdfRecibo(params: {
+  orcamento: Orcamento;
+  valor: number;
+  data: string;
+  formaPagamento: string;
+  observacao?: string;
+  numero: number;
+}): Promise<Blob> {
+  const { orcamento: o, valor, data, formaPagamento, observacao, numero } = params;
+  const config = (await db.config.get(1)) ?? { id: 1 as const };
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const pageW = doc.internal.pageSize.getWidth();
+  let y = 15;
+
+  doc.setFillColor(255, 95, 0);
+  doc.rect(0, 0, pageW, 10, "F");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text("RECIBO DE PAGAMENTO", pageW / 2, y + 8, { align: "center" });
+  y += 14;
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Nº ${String(numero).padStart(4, "0")}`, pageW - 15, y, { align: "right" });
+  doc.text(format(new Date(data), "dd/MM/yyyy", { locale: ptBR }), 15, y);
+
+  y += 8;
+  doc.line(15, y, pageW - 15, y);
+  y += 8;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text("RECEBEMOS DE:", 15, y);
+  y += 6;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  const pagadorNome = o.pagadorDiferente ? o.pagadorNome : o.clienteSnapshot?.nome;
+  doc.text(pagadorNome ?? "—", 15, y);
+
+  y += 10;
+  doc.setFont("helvetica", "bold");
+  doc.text("A QUANTIA DE:", 15, y);
+  y += 7;
+  doc.setFontSize(18);
+  doc.text(formatBRL(valor), 15, y);
+  y += 8;
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Forma de pagamento: ${formaPagamento}`, 15, y);
+  y += 6;
+  doc.text(`Referente ao orçamento #${o.id} — ${o.tipoServico ?? "Serviços de pintura"}`, 15, y);
+
+  if (observacao) {
+    y += 8;
+    doc.setFont("helvetica", "bold");
+    doc.text("Observações:", 15, y);
+    y += 5;
+    doc.setFont("helvetica", "normal");
+    const lines = doc.splitTextToSize(observacao, pageW - 30);
+    doc.text(lines, 15, y);
+    y += lines.length * 5;
+  }
+
+  y += 20;
+  doc.line(60, y, pageW - 60, y);
+  y += 5;
+  doc.setFontSize(9);
+  doc.text(config.nome ?? "—", pageW / 2, y, { align: "center" });
+  if (config.documento) {
+    y += 4;
+    doc.text(config.documento, pageW / 2, y, { align: "center" });
+  }
+
+  // Aviso
+  y = 275;
+  doc.setFillColor(255, 230, 230);
+  doc.rect(15, y, pageW - 30, 10, "F");
+  doc.setTextColor(180, 0, 0);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  doc.text("❌ ESTE DOCUMENTO NÃO É NOTA FISCAL", pageW / 2, y + 6.5, { align: "center" });
+
+  return doc.output("blob");
+}
+
 export function baixarBlob(blob: Blob, nome: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");

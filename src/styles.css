@@ -149,6 +149,38 @@
   font-size: 1.15rem;
 }
 
+/* Acessibilidade — tamanho de fonte */
+:root[data-fonte="pequeno"] {
+  font-size: 14px;
+}
+:root[data-fonte="normal"] {
+  font-size: 16px;
+}
+:root[data-fonte="grande"] {
+  font-size: 18px;
+}
+
+/* Acessibilidade — alto contraste */
+:root[data-contraste="alto"] {
+  --foreground: #ffffff;
+  --glass-border: #ffffff;
+  --glass-border-strong: #ffffff;
+  --border: #ffffff;
+}
+:root[data-contraste="alto"][data-theme="minimalista"] {
+  --foreground: #000000;
+  --glass-border: #000000;
+  --glass-border-strong: #000000;
+  --border: #000000;
+}
+:root[data-contraste="alto"] .text-foreground\/40,
+:root[data-contraste="alto"] .text-foreground\/50,
+:root[data-contraste="alto"] .text-foreground\/60,
+:root[data-contraste="alto"] .text-foreground\/70 {
+  color: var(--foreground) !important;
+  opacity: 0.95;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

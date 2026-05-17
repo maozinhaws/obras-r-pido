@@ -32,11 +32,12 @@ import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf"
 import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
 
-type SearchParams = { modo?: "flash" | "foto" | "detalhado" };
+type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number };
 
 export const Route = createFileRoute("/orcamentos/novo")({
   validateSearch: (s: Record<string, unknown>): SearchParams => ({
     modo: (s.modo as SearchParams["modo"]) ?? "detalhado",
+    editId: s.editId ? Number(s.editId) : undefined,
   }),
   head: () => ({
     meta: [{ title: "Novo orçamento — Pintor Plus" }],
@@ -48,7 +49,9 @@ const PASSOS = ["Cliente", "Ambientes", "Pagamento", "Revisão"] as const;
 
 function NovoOrcamento() {
   const nav = useNavigate();
+  const { editId } = Route.useSearch();
   const [passo, setPasso] = useState(0);
+  const [carregado, setCarregado] = useState(!editId);
   const [orc, setOrc] = useState<Orcamento>({
     ambientes: [],
     status: "rascunho",
@@ -56,15 +59,25 @@ function NovoOrcamento() {
     atualizadoEm: Date.now(),
   });
 
+  // Carrega orçamento existente para edição
+  useEffect(() => {
+    if (!editId) return;
+    db.orcamentos.get(editId).then((o) => {
+      if (o) setOrc(o);
+      setCarregado(true);
+    });
+  }, [editId]);
+
   // autosave
   useEffect(() => {
+    if (!carregado) return;
     const t = setTimeout(async () => {
       const id = await db.orcamentos.put({ ...orc, atualizadoEm: Date.now() });
       if (!orc.id) setOrc((p) => ({ ...p, id: id as number }));
     }, 800);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(orc.ambientes), orc.clienteId, orc.formaPagamento, orc.observacoes]);
+  }, [JSON.stringify(orc), carregado]);
 
   return (
     <div>
@@ -236,6 +249,56 @@ function PassoCliente({
             </div>
           )}
         </>
+      )}
+
+      {/* Pagador diferente */}
+      {orc.clienteSnapshot && (
+        <div className="glass p-6 space-y-4">
+          <label className="flex items-center justify-between cursor-pointer">
+            <div>
+              <div className="text-mono text-[10px] uppercase tracking-widest text-brand">
+                {"> Pagador diferente?"}
+              </div>
+              <p className="text-xs text-foreground/60 mt-1">
+                Quem vai pagar não é o cliente
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              checked={orc.pagadorDiferente ?? false}
+              onChange={(e) => setOrc({ ...orc, pagadorDiferente: e.target.checked })}
+              className="size-5 accent-brand"
+            />
+          </label>
+          {orc.pagadorDiferente && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+              <Field label="Nome do pagador">
+                <input
+                  value={orc.pagadorNome ?? ""}
+                  onChange={(e) => setOrc({ ...orc, pagadorNome: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+                />
+              </Field>
+              <Field label="Telefone">
+                <input
+                  value={orc.pagadorTelefone ?? ""}
+                  onChange={(e) => setOrc({ ...orc, pagadorTelefone: e.target.value })}
+                  inputMode="tel"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+                />
+              </Field>
+              <div className="md:col-span-2">
+                <Field label="Endereço do pagador">
+                  <input
+                    value={orc.pagadorEndereco ?? ""}
+                    onChange={(e) => setOrc({ ...orc, pagadorEndereco: e.target.value })}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+                  />
+                </Field>
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
@@ -695,6 +758,23 @@ function PassoPagamento({
           value={orc.tipoServico ?? ""}
           onChange={(e) => setOrc({ ...orc, tipoServico: e.target.value })}
           placeholder="Ex: Pintura interna"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+        />
+      </Field>
+
+      <Field label="Preço adicional por m² (R$)">
+        <input
+          type="number"
+          step="0.01"
+          inputMode="decimal"
+          value={orc.precoAdicionalM2 ?? ""}
+          onChange={(e) =>
+            setOrc({
+              ...orc,
+              precoAdicionalM2: e.target.value ? parseFloat(e.target.value) : undefined,
+            })
+          }
+          placeholder="Aplicado sobre o total de m² de todos os itens"
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
         />
       </Field>

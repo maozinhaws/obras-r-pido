@@ -56,6 +56,11 @@ export interface Orcamento {
   tipoServico?: string;
   observacoes?: string;
   totalManual?: number;
+  precoAdicionalM2?: number;
+  pagadorDiferente?: boolean;
+  pagadorNome?: string;
+  pagadorTelefone?: string;
+  pagadorEndereco?: string;
   status: StatusOrcamento;
   criadoEm: number;
   atualizadoEm: number;
@@ -101,6 +106,8 @@ export interface ConfigEmpresa {
   formasPagamento?: string[];
   ambientesPadrao?: string[];
   tema?: "moderno" | "brutalista" | "minimalista";
+  fonteTamanho?: "pequeno" | "normal" | "grande";
+  altoContraste?: boolean;
 }
 
 class PintorDB extends Dexie {
@@ -185,10 +192,22 @@ export const STATUS_COLORS: Record<StatusOrcamento, string> = {
 
 export function calcularTotal(o: Orcamento): number {
   if (typeof o.totalManual === "number") return o.totalManual;
-  return o.ambientes.reduce(
+  const base = o.ambientes.reduce(
     (acc, amb) => acc + amb.itens.reduce((a, i) => a + (i.preco || 0), 0),
     0,
   );
+  const adicional = o.precoAdicionalM2
+    ? o.ambientes.reduce(
+        (acc, amb) =>
+          acc +
+          amb.itens.reduce(
+            (a, i) => a + (i.altura && i.comprimento ? i.altura * i.comprimento : 0),
+            0,
+          ),
+        0,
+      ) * o.precoAdicionalM2
+    : 0;
+  return base + adicional;
 }
 
 export function formatBRL(v: number): string {
