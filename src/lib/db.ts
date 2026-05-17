@@ -114,10 +114,10 @@ class PintorDB extends Dexie {
 
   constructor() {
     super("pintor_plus");
-    this.version(1).stores({
+    this.version(2).stores({
       clientes: "++id, nome, telefone, criadoEm",
       fornecedores: "++id, nome, categoria, criadoEm",
-      orcamentos: "++id, clienteId, status, criadoEm, atualizadoEm",
+      orcamentos: "++id, clienteId, status, criadoEm, atualizadoEm, [status+atualizadoEm]",
       fotos: "id, criadoEm",
       eventos: "++id, data, orcamentoId, criadoEm",
       recibos: "++id, orcamentoId, criadoEm",

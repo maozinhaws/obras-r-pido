@@ -111,8 +111,14 @@ function OrcamentosPage() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<StatusOrcamento | "todos">("todos");
   const orcamentos = useLiveQuery(
-    () => db.orcamentos.orderBy("atualizadoEm").reverse().toArray(),
-    [],
+    () => {
+      const query = filtro === "todos" 
+        ? db.orcamentos.orderBy("atualizadoEm")
+        : db.orcamentos.where("status").equals(filtro).reverse();
+      
+      return query.reverse().toArray();
+    },
+    [filtro],
     [],
   );
 

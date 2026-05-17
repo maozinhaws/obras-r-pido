@@ -374,4 +374,4 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
       </div>
     </div>
   );
-}
+});
