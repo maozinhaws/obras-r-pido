@@ -250,6 +250,56 @@ function PassoCliente({
           )}
         </>
       )}
+
+      {/* Pagador diferente */}
+      {orc.clienteSnapshot && (
+        <div className="glass p-6 space-y-4">
+          <label className="flex items-center justify-between cursor-pointer">
+            <div>
+              <div className="text-mono text-[10px] uppercase tracking-widest text-brand">
+                {"> Pagador diferente?"}
+              </div>
+              <p className="text-xs text-foreground/60 mt-1">
+                Quem vai pagar não é o cliente
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              checked={orc.pagadorDiferente ?? false}
+              onChange={(e) => setOrc({ ...orc, pagadorDiferente: e.target.checked })}
+              className="size-5 accent-brand"
+            />
+          </label>
+          {orc.pagadorDiferente && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+              <Field label="Nome do pagador">
+                <input
+                  value={orc.pagadorNome ?? ""}
+                  onChange={(e) => setOrc({ ...orc, pagadorNome: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+                />
+              </Field>
+              <Field label="Telefone">
+                <input
+                  value={orc.pagadorTelefone ?? ""}
+                  onChange={(e) => setOrc({ ...orc, pagadorTelefone: e.target.value })}
+                  inputMode="tel"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+                />
+              </Field>
+              <div className="md:col-span-2">
+                <Field label="Endereço do pagador">
+                  <input
+                    value={orc.pagadorEndereco ?? ""}
+                    onChange={(e) => setOrc({ ...orc, pagadorEndereco: e.target.value })}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+                  />
+                </Field>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
