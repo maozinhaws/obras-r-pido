@@ -192,9 +192,14 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
-    overscroll-behavior-y: none;
     overflow-x: hidden;
+    overflow-y: auto;
     width: 100%;
+  }
+
+  html {
+    min-height: 100%;
+    -webkit-overflow-scrolling: touch;
   }
 
   body {
@@ -202,8 +207,8 @@
       radial-gradient(60vmax 60vmax at 8% -10%, color-mix(in oklab, var(--brand) 35%, transparent), transparent 60%),
       radial-gradient(55vmax 55vmax at 110% 15%, color-mix(in oklab, var(--violet) 38%, transparent), transparent 65%),
       radial-gradient(70vmax 50vmax at 50% 110%, color-mix(in oklab, var(--cyan) 22%, transparent), transparent 60%);
-    background-attachment: fixed;
     min-height: 100vh;
+    min-height: 100dvh;
   }
 
   ::selection {

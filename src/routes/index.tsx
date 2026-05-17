@@ -83,7 +83,6 @@ function Home() {
       <div className="px-5 lg:px-10 py-6 lg:py-8 grid grid-cols-12 gap-3 lg:gap-4">
         {/* Hero: Novo Orçamento */}
         <div className="col-span-12 lg:col-span-5 glass-brand rounded-3xl p-6 lg:p-8 flex flex-col justify-between min-h-[240px] text-white liquid-ring relative overflow-hidden">
-          <div className="absolute -top-16 -right-16 size-56 rounded-full bg-white/20 blur-3xl pointer-events-none" />
           <div className="flex items-start justify-between relative">
             <div className="size-12 rounded-2xl glass-strong grid place-items-center">
               <Plus className="size-7 text-white" strokeWidth={3} />
@@ -110,7 +109,7 @@ function Home() {
             <TrendingUp className="size-3" strokeWidth={3} />· Faturamento
           </div>
           <div className="space-y-2">
-            <div className="text-display text-2xl lg:text-3xl leading-none whitespace-nowrap bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+            <div className="text-display text-2xl lg:text-3xl leading-none whitespace-nowrap text-white">
               {formatBRL(faturamento).replace(",00", "")}
             </div>
             <div className="h-1.5 bg-white/10 w-full rounded-full overflow-hidden">
@@ -128,7 +127,7 @@ function Home() {
             · Base
           </div>
           <div>
-            <div className="text-display text-3xl lg:text-4xl leading-none whitespace-nowrap bg-gradient-to-br from-white to-white/50 bg-clip-text text-transparent">
+            <div className="text-display text-3xl lg:text-4xl leading-none whitespace-nowrap text-white">
               {totalClientes}
             </div>
             <div className="text-[10px] font-mono text-foreground/50 uppercase mt-1">
@@ -145,7 +144,6 @@ function Home() {
 
         {/* Atalho secundário */}
         <div className="col-span-12 lg:col-span-2 glass-strong rounded-2xl p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden group">
-          <div className="absolute -bottom-10 -left-6 size-40 rounded-full bg-brand/30 blur-3xl pointer-events-none" />
           <UserPlus className="size-7 text-brand relative" strokeWidth={2.5} />
           <Link to="/clientes" className="text-display text-xl leading-[0.95] whitespace-nowrap relative">
             Novo Cliente
@@ -221,8 +219,6 @@ function Home() {
 
         {/* Próximo evento */}
         <div className="col-span-12 lg:col-span-4 glass rounded-2xl overflow-hidden relative min-h-[300px]">
-          <div className="absolute -top-12 -right-12 size-48 rounded-full bg-[oklch(0.65_0.25_295)]/30 blur-3xl" />
-          <div className="absolute -bottom-16 -left-10 size-56 rounded-full bg-brand/20 blur-3xl" />
           <div className="p-6 lg:p-8 relative z-10 h-full flex flex-col justify-between">
             <div className="inline-block self-start px-3 py-1 rounded-full glass-strong text-white text-[10px] font-black uppercase mb-4">
               <Clock className="size-3 inline mr-1 -mt-0.5" strokeWidth={3} />
@@ -231,7 +227,7 @@ function Home() {
                 : "Sem eventos"}
             </div>
             <div>
-              <h4 className="text-display text-xl lg:text-2xl leading-[0.95] mb-4 bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+              <h4 className="text-display text-xl lg:text-2xl leading-[0.95] mb-4 text-white">
                 {eventos && eventos[0] ? eventos[0].titulo : "Agenda livre"}
               </h4>
               {eventos && eventos[0] && (
@@ -309,10 +305,8 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
     { modo: "detalhado", icon: ClipboardList, title: "Detalhado", desc: "Relatório completo" },
   ];
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 animate-fade-in">
       <div className="glass-strong rounded-3xl w-full max-w-2xl overflow-hidden animate-scale-in relative">
-        <div className="absolute -top-20 -right-20 size-64 rounded-full bg-brand/30 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 size-64 rounded-full bg-[oklch(0.65_0.25_295)]/30 blur-3xl pointer-events-none" />
         <div className="p-5 flex justify-between items-center border-b border-white/10 relative">
           <h3 className="text-display text-xl lg:text-2xl">Tipo de Orçamento</h3>
           <button
