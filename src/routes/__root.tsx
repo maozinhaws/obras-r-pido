@@ -18,14 +18,18 @@ import { Sidebar, BottomNav } from "@/components/app-shell";
 
 function ThemeHandler() {
   const config = useLiveQuery(() => db.config.get(1));
-  
+
   useEffect(() => {
-    if (config?.tema) {
-      document.documentElement.setAttribute("data-theme", config.tema);
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-    }
-  }, [config?.tema]);
+    const root = document.documentElement;
+    if (config?.tema) root.setAttribute("data-theme", config.tema);
+    else root.removeAttribute("data-theme");
+
+    if (config?.fonteTamanho) root.setAttribute("data-fonte", config.fonteTamanho);
+    else root.removeAttribute("data-fonte");
+
+    if (config?.altoContraste) root.setAttribute("data-contraste", "alto");
+    else root.removeAttribute("data-contraste");
+  }, [config?.tema, config?.fonteTamanho, config?.altoContraste]);
 
   return null;
 }
