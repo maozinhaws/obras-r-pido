@@ -35,7 +35,9 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-import { memo } from "react";
+import { memo, Suspense, lazy } from "react";
+
+const NovoOrcamentoModal = lazy(() => import("./index").then(m => ({ default: m.NovoOrcamentoModal })));
 
 function Home() {
   const [modalOpen, setModalOpen] = useState(false);

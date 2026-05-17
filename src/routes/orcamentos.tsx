@@ -60,7 +60,7 @@ const OrcamentoCard = memo(({ o, STATUSES }: { o: any, STATUSES: StatusOrcamento
           atualizadoEm: Date.now(),
         })
       }
-      className={`glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status]}`}
+      className={`glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status as StatusOrcamento]}`}
     >
       {STATUSES.map((s) => (
         <option key={s} value={s} className="bg-surface text-foreground">
