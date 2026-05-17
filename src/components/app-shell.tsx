@@ -73,7 +73,7 @@ function NavRow({
 
 export const Sidebar = memo(() => {
   return (
-    <aside className="hidden md:flex w-20 lg:w-64 glass-strong rounded-none border-l-0 border-y-0 flex-col sticky top-0 h-screen shrink-0 z-30 overflow-x-hidden">
+    <aside className="hidden md:flex w-20 lg:w-64 glass-strong rounded-none border-l-0 border-y-0 flex-col sticky top-0 h-dvh shrink-0 z-30 overflow-x-hidden">
       <div className="p-4 lg:p-6 border-b border-white/10">
         <Link to="/" className="flex items-center gap-3">
           <div className="size-10 glass-brand rounded-xl grid place-items-center text-display text-xl text-white">
@@ -81,7 +81,7 @@ export const Sidebar = memo(() => {
           </div>
           <div className="hidden lg:block">
             <div className="text-display text-lg leading-none">Pintor</div>
-            <div className="text-display text-lg leading-none bg-gradient-to-r from-brand to-[oklch(0.65_0.25_295)] bg-clip-text text-transparent">
+            <div className="text-display text-lg leading-none text-brand">
               Plus
             </div>
           </div>
@@ -159,7 +159,7 @@ export const PageHeader = memo(({
             {eyebrow}
           </div>
         )}
-        <h1 className="text-display text-2xl lg:text-4xl leading-none whitespace-nowrap bg-gradient-to-br from-white via-white to-white/60 bg-clip-text text-transparent">
+        <h1 className="text-display text-2xl lg:text-4xl leading-none whitespace-nowrap text-white">
           {title}
         </h1>
       </div>
