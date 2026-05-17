@@ -49,7 +49,7 @@ const PASSOS = ["Cliente", "Ambientes", "Pagamento", "Revisão"] as const;
 
 function NovoOrcamento() {
   const nav = useNavigate();
-  const { editId } = Route.useSearch();
+  const { editId, modo } = Route.useSearch();
   const [passo, setPasso] = useState(0);
   const [carregado, setCarregado] = useState(!editId);
   const [orc, setOrc] = useState<Orcamento>({
@@ -108,7 +108,12 @@ function NovoOrcamento() {
 
       <div className="px-5 lg:px-10 pb-32">
         {passo === 0 && <PassoCliente orc={orc} setOrc={setOrc} />}
-        {passo === 1 && <PassoAmbientes orc={orc} setOrc={setOrc} />}
+        {passo === 1 &&
+          (modo === "foto" ? (
+            <PassoAmbientesFoto orc={orc} setOrc={setOrc} />
+          ) : (
+            <PassoAmbientes orc={orc} setOrc={setOrc} />
+          ))}
         {passo === 2 && <PassoPagamento orc={orc} setOrc={setOrc} />}
         {passo === 3 && <PassoRevisao orc={orc} setOrc={setOrc} />}
       </div>
@@ -396,6 +401,229 @@ function PassoAmbientes({
       )}
     </div>
   );
+}
+
+function PassoAmbientesFoto({
+  orc,
+  setOrc,
+}: {
+  orc: Orcamento;
+  setOrc: React.Dispatch<React.SetStateAction<Orcamento>>;
+}) {
+  const [ambienteAtivoId, setAmbienteAtivoId] = useState<string | null>(
+    orc.ambientes[0]?.id ?? null,
+  );
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [editandoItem, setEditandoItem] = useState<{ ambId: string; item: ItemAmbiente } | null>(
+    null,
+  );
+
+  function criarAmbiente(nome: string) {
+    const a: Ambiente = { id: uid(), nome, itens: [] };
+    setOrc({ ...orc, ambientes: [...orc.ambientes, a] });
+    setAmbienteAtivoId(a.id);
+  }
+
+  function removerAmbiente(id: string) {
+    const novos = orc.ambientes.filter((a) => a.id !== id);
+    setOrc({ ...orc, ambientes: novos });
+    if (ambienteAtivoId === id) setAmbienteAtivoId(novos[0]?.id ?? null);
+  }
+
+  function adicionarFotosComoItens(fotoIds: string[]) {
+    if (!ambienteAtivoId) return;
+    setOrc({
+      ...orc,
+      ambientes: orc.ambientes.map((a) =>
+        a.id === ambienteAtivoId
+          ? {
+              ...a,
+              itens: [
+                ...a.itens,
+                ...fotoIds.map<ItemAmbiente>((fid) => ({
+                  id: uid(),
+                  nome: "Parede",
+                  servicos: [],
+                  preco: 0,
+                  fotos: [fid],
+                })),
+              ],
+            }
+          : a,
+      ),
+    });
+  }
+
+  function atualizarItem(ambId: string, item: ItemAmbiente) {
+    setOrc({
+      ...orc,
+      ambientes: orc.ambientes.map((a) =>
+        a.id === ambId
+          ? { ...a, itens: a.itens.map((i) => (i.id === item.id ? item : i)) }
+          : a,
+      ),
+    });
+  }
+
+  function removerItem(ambId: string, itemId: string) {
+    setOrc({
+      ...orc,
+      ambientes: orc.ambientes.map((a) =>
+        a.id === ambId ? { ...a, itens: a.itens.filter((i) => i.id !== itemId) } : a,
+      ),
+    });
+  }
+
+  const ambienteAtivo = orc.ambientes.find((a) => a.id === ambienteAtivoId) ?? null;
+  const itensPendentes = ambienteAtivo
+    ? ambienteAtivo.itens.filter((i) => !i.preco).length
+    : 0;
+
+  return (
+    <div className="space-y-5 py-6">
+      {/* Ambientes existentes (tabs) */}
+      {orc.ambientes.length > 0 && (
+        <div>
+          <div className="text-mono text-[10px] uppercase tracking-widest text-foreground/40 mb-2">
+            {"> Ambiente ativo"}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {orc.ambientes.map((a) => (
+              <button
+                key={a.id}
+                onClick={() => setAmbienteAtivoId(a.id)}
+                className={`brutal-border-thin px-3 py-2 text-xs font-black uppercase tracking-widest brutal-press ${
+                  a.id === ambienteAtivoId ? "bg-brand text-ink" : "bg-surface"
+                }`}
+              >
+                {a.nome} · {a.itens.length}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Adicionar ambiente */}
+      <div>
+        <div className="text-mono text-[10px] uppercase tracking-widest text-foreground/40 mb-2">
+          {"> Adicionar ambiente"}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {AMBIENTES_PADRAO.map((n) => (
+            <button
+              key={n}
+              onClick={() => criarAmbiente(n)}
+              className="brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase tracking-widest brutal-press hover:bg-brand hover:text-ink"
+            >
+              + {n}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA câmera */}
+      {ambienteAtivo ? (
+        <>
+          <button
+            onClick={() => setCameraOpen(true)}
+            className="w-full glass-brand text-white p-6 flex flex-col items-center gap-2 glass-press"
+          >
+            <Camera className="size-10" strokeWidth={2.5} />
+            <span className="text-display text-2xl">Tirar fotos</span>
+            <span className="text-[10px] font-mono uppercase opacity-70">
+              Cada foto vira um item em {ambienteAtivo.nome}
+            </span>
+          </button>
+
+          {itensPendentes > 0 && (
+            <div className="brutal-border-thin border-warning bg-warning/10 p-3 text-[11px] font-bold uppercase tracking-widest text-warning">
+              {itensPendentes} item(ns) sem preço — toque pra preencher
+            </div>
+          )}
+
+          {/* Lista de itens do ambiente ativo */}
+          <div className="grid grid-cols-2 gap-3">
+            {ambienteAtivo.itens.map((it) => (
+              <button
+                key={it.id}
+                onClick={() => setEditandoItem({ ambId: ambienteAtivo.id, item: it })}
+                className="relative bg-surface brutal-border-thin overflow-hidden text-left glass-press"
+              >
+                <div className="aspect-square bg-midnight">
+                  {it.fotos[0] && <FotoCover id={it.fotos[0]} />}
+                </div>
+                <div className="p-2 space-y-0.5">
+                  <p className="text-[10px] font-black uppercase truncate">{it.nome}</p>
+                  <p
+                    className={`text-display text-base ${it.preco ? "text-brand" : "text-foreground/40"}`}
+                  >
+                    {it.preco ? formatBRL(it.preco).replace(",00", "") : "—"}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex justify-between pt-2">
+            <button
+              onClick={() => confirm("Remover ambiente?") && removerAmbiente(ambienteAtivo.id)}
+              className="brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest text-destructive brutal-press"
+            >
+              <Trash2 className="size-3 inline mr-1" /> Remover {ambienteAtivo.nome}
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="brutal-border-thin border-dashed p-10 text-center text-foreground/50 text-sm font-bold uppercase">
+          Adicione um ambiente acima pra começar
+        </div>
+      )}
+
+      {cameraOpen && (
+        <CameraModal
+          onClose={() => setCameraOpen(false)}
+          onPhotosCaptured={adicionarFotosComoItens}
+        />
+      )}
+
+      {editandoItem && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xl flex flex-col animate-fade-in">
+          <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
+            <h3 className="text-display text-lg">
+              Item · {orc.ambientes.find((a) => a.id === editandoItem.ambId)?.nome}
+            </h3>
+            <button
+              onClick={() => setEditandoItem(null)}
+              className="text-brand"
+              aria-label="Fechar"
+            >
+              <X className="size-6" strokeWidth={3} />
+            </button>
+          </div>
+          <ItemEditor
+            item={editandoItem.item}
+            onSave={(it) => {
+              atualizarItem(editandoItem.ambId, it);
+              setEditandoItem(null);
+            }}
+            onCancel={() => setEditandoItem(null)}
+            onDelete={() => {
+              removerItem(editandoItem.ambId, editandoItem.item.id);
+              setEditandoItem(null);
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FotoCover({ id }: { id: string }) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    urlFoto(id).then(setUrl);
+  }, [id]);
+  return url ? <img src={url} alt="" className="size-full object-cover" /> : null;
 }
 
 function ItensModal({
