@@ -203,10 +203,12 @@
   }
 
   body {
+    background-color: var(--midnight);
     background-image:
-      radial-gradient(60vmax 60vmax at 8% -10%, color-mix(in oklab, var(--brand) 35%, transparent), transparent 60%),
-      radial-gradient(55vmax 55vmax at 110% 15%, color-mix(in oklab, var(--violet) 38%, transparent), transparent 65%),
-      radial-gradient(70vmax 50vmax at 50% 110%, color-mix(in oklab, var(--cyan) 22%, transparent), transparent 60%);
+      radial-gradient(50vmax 50vmax at 10% 0%, color-mix(in oklab, var(--brand) 22%, transparent), transparent 60%),
+      radial-gradient(50vmax 50vmax at 100% 100%, color-mix(in oklab, var(--violet) 22%, transparent), transparent 60%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     min-height: 100vh;
     min-height: 100dvh;
   }
