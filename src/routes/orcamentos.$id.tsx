@@ -177,6 +177,47 @@ function OrcamentoDetalhe() {
   );
 }
 
+        </div>
+      </div>
+
+      {showHist && (
+        <div className="fixed inset-0 z-50 bg-midnight flex items-stretch justify-center p-4 overflow-auto">
+          <div className="w-full max-w-2xl bg-surface brutal-border brutal-shadow p-6 my-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-mono text-[10px] uppercase text-brand">{"> Histórico"}</div>
+                <h2 className="text-display text-2xl italic">Log de alterações</h2>
+              </div>
+              <button
+                onClick={() => setShowHist(false)}
+                className="glass glass-press p-2"
+                aria-label="Fechar"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            {(!o.historico || o.historico.length === 0) ? (
+              <p className="text-mono text-sm text-foreground/50">Nenhuma alteração registrada.</p>
+            ) : (
+              <ul className="space-y-2 text-mono text-xs max-h-[70vh] overflow-auto">
+                {[...o.historico].reverse().map((h) => {
+                  const d = new Date(h.timestamp);
+                  const ts = `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getFullYear()).slice(2)};${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
+                  return (
+                    <li key={h.id} className="border-l-2 border-brand pl-3 py-1">
+                      <span className="text-brand">{ts}</span> — {h.descricao}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Thumb({ id }: { id: string }) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
@@ -184,6 +225,10 @@ function Thumb({ id }: { id: string }) {
   }, [id]);
   return (
     <div className="aspect-square bg-white/5 rounded-lg overflow-hidden border border-white/10 group-hover:border-white/30 transition-all">
+      {url && <img src={url} alt="Foto" className="size-full object-cover" />}
+    </div>
+  );
+}
       {url && <img src={url} alt="Foto" className="size-full object-cover" />}
     </div>
   );
