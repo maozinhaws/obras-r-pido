@@ -12,7 +12,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 
 import appCss from "../styles.css?url";
-import { Sidebar, BottomNav } from "@/components/app-shell";
+import { Sidebar, SidebarProvider, MenuButton } from "@/components/app-shell";
 
 
 
@@ -150,14 +150,16 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen text-foreground">
-        <ThemeHandler />
-        <Sidebar />
-        <main className="flex-1 min-w-0 pb-24 md:pb-0">
-          <Outlet />
-        </main>
-        <BottomNav />
-      </div>
+      <SidebarProvider>
+        <div className="flex min-h-screen text-foreground">
+          <ThemeHandler />
+          <Sidebar />
+          <MenuButton />
+          <main className="flex-1 min-w-0">
+            <Outlet />
+          </main>
+        </div>
+      </SidebarProvider>
     </QueryClientProvider>
   );
 }
