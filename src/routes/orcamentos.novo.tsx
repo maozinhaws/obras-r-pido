@@ -54,6 +54,8 @@ function NovoOrcamento() {
   const { editId, modo } = Route.useSearch();
   const [passo, setPasso] = useState(0);
   const [carregado, setCarregado] = useState(!editId);
+  const rapido = modo === "flash" || modo === "foto";
+  const PASSOS = rapido ? PASSOS_RAPIDO : PASSOS_DETALHADO;
   const [orc, setOrc] = useState<Orcamento>({
     ambientes: [],
     status: "rascunho",
