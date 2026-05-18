@@ -126,6 +126,16 @@ export async function gerarPdfOrcamento(o: Orcamento): Promise<Blob> {
           }
           try {
             doc.addImage(data, "JPEG", x, y, 25, 18);
+            // marca d'água diagonal
+            doc.saveGraphicsState?.();
+            doc.setTextColor(255, 95, 0);
+            doc.setFontSize(4);
+            doc.text(config.nome ?? "PROTEGIDO", x + 12.5, y + 9, {
+              align: "center",
+              angle: -30,
+            });
+            doc.setTextColor(0);
+            doc.restoreGraphicsState?.();
             x += 27;
           } catch {
             /* ignore */
