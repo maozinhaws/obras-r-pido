@@ -69,16 +69,16 @@ function NovoOrcamento() {
     });
   }, [editId]);
 
-  // autosave
+  // autosave (debounced 1500ms, sem JSON.stringify em deps)
   useEffect(() => {
     if (!carregado) return;
     const t = setTimeout(async () => {
       const id = await db.orcamentos.put({ ...orc, atualizadoEm: Date.now() });
       if (!orc.id) setOrc((p) => ({ ...p, id: id as number }));
-    }, 800);
+    }, 1500);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(orc), carregado]);
+  }, [orc, carregado]);
 
   return (
     <div>
