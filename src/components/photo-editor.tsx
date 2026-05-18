@@ -160,12 +160,16 @@ export function PhotoEditor({ photoId, onClose, onSave }: Props) {
   }
 
   function startShapeDrag(e: React.PointerEvent, sh: Shape) {
-    if (tool !== "text") return; // arrastar só no modo texto pra não conflitar com desenho
+    // Permite arrastar qualquer figura existente (rect, circle, arrow, text)
+    // somente se a ferramenta atual coincide ou é texto — evita conflito ao desenhar
+    if (sh.kind === "path") return;
     e.stopPropagation();
     (e.target as Element).setPointerCapture(e.pointerId);
     const p = svgPoint(e);
-    const sx = sh.kind === "text" ? sh.x : sh.kind === "rect" ? sh.x : sh.kind === "circle" ? sh.cx : 0;
-    const sy = sh.kind === "text" ? sh.y : sh.kind === "rect" ? sh.y : sh.kind === "circle" ? sh.cy : 0;
+    let sx = 0, sy = 0;
+    if (sh.kind === "text" || sh.kind === "rect") { sx = sh.x; sy = sh.y; }
+    else if (sh.kind === "circle") { sx = sh.cx; sy = sh.cy; }
+    else if (sh.kind === "arrow") { sx = sh.x1; sy = sh.y1; }
     dragOffset.current = { dx: p.x - sx, dy: p.y - sy };
     setDragId(sh.id);
   }
@@ -181,10 +185,14 @@ export function PhotoEditor({ photoId, onClose, onSave }: Props) {
         if (s.kind === "text") return { ...s, x: nx, y: ny };
         if (s.kind === "rect") return { ...s, x: nx, y: ny };
         if (s.kind === "circle") return { ...s, cx: nx, cy: ny };
+        if (s.kind === "arrow") {
+          const dx = nx - s.x1;
+          const dy = ny - s.y1;
+          return { ...s, x1: nx, y1: ny, x2: s.x2 + dx, y2: s.y2 + dy };
+        }
         return s;
       }),
     );
-    // hit-test trash em coordenadas de tela
     const trash = trashRef.current?.getBoundingClientRect();
     if (trash) {
       const inside =

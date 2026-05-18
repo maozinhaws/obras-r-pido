@@ -100,18 +100,15 @@ export function CameraModal({ onClose, onPhotosCaptured }: CameraModalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Apply flash + zoom constraints
+  // Aplica apenas zoom em tempo real. Torch é acionado APENAS no momento da captura.
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
     const caps = (track.getCapabilities?.() ?? {}) as any;
-    const adv: any = {};
-    if (caps.torch) adv.torch = flash;
-    if (caps.zoom) adv.zoom = zoom;
-    if (Object.keys(adv).length) {
-      track.applyConstraints({ advanced: [adv] } as any).catch(() => {});
+    if (caps.zoom) {
+      track.applyConstraints({ advanced: [{ zoom }] } as any).catch(() => {});
     }
-  }, [flash, zoom]);
+  }, [zoom]);
 
   const switchLens = async (deviceId: string) => {
     try {
@@ -125,8 +122,21 @@ export function CameraModal({ onClose, onPhotosCaptured }: CameraModalProps) {
   const capture = async () => {
     const v = videoRef.current;
     if (!v || !v.videoWidth) return;
-    setFlashing(true);
-    setTimeout(() => setFlashing(false), 150);
+    const track = trackRef.current;
+    const caps = (track?.getCapabilities?.() ?? {}) as any;
+    const hasTorch = !!caps.torch;
+
+    // Aciona torch real do aparelho se disponível e flash ON
+    if (flash && hasTorch && track) {
+      try {
+        await track.applyConstraints({ advanced: [{ torch: true }] } as any);
+        await new Promise((r) => setTimeout(r, 80)); // estabiliza exposição
+      } catch {}
+    } else if (flash && !hasTorch) {
+      // Fallback visual quando o aparelho não expõe torch
+      setFlashing(true);
+      setTimeout(() => setFlashing(false), 150);
+    }
 
     const canvas = document.createElement("canvas");
     canvas.width = v.videoWidth;
@@ -135,6 +145,9 @@ export function CameraModal({ onClose, onPhotosCaptured }: CameraModalProps) {
     ctx.drawImage(v, 0, 0);
     canvas.toBlob(
       async (blob) => {
+        if (track && hasTorch && flash) {
+          try { await track.applyConstraints({ advanced: [{ torch: false }] } as any); } catch {}
+        }
         if (!blob) return;
         const id = await salvarFoto(blob);
         setCapturedPhotos((prev) => [...prev, id]);
