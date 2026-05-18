@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
   db,
@@ -8,6 +8,7 @@ import {
   type ItemAmbiente,
   type Cliente,
   AMBIENTES_PADRAO,
+  MATERIAIS_PADRAO,
   SERVICOS_PADRAO,
   FORMAS_PAGAMENTO,
   formatBRL,
@@ -32,13 +33,15 @@ import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf"
 import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
 import { PhotoEditor } from "@/components/photo-editor";
+import { persistOrcamento } from "@/lib/orcamentos";
 
-type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number };
+type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number; draftKey?: string };
 
 export const Route = createFileRoute("/orcamentos/novo")({
   validateSearch: (s: Record<string, unknown>): SearchParams => ({
     modo: (s.modo as SearchParams["modo"]) ?? "detalhado",
     editId: s.editId ? Number(s.editId) : undefined,
+    draftKey: s.draftKey ? String(s.draftKey) : undefined,
   }),
   head: () => ({
     meta: [{ title: "Novo orçamento — Pintor Plus" }],
@@ -51,17 +54,25 @@ const PASSOS_RAPIDO = ["Cliente", "Itens", "Revisão"] as const;
 
 function NovoOrcamento() {
   const nav = useNavigate();
-  const { editId, modo } = Route.useSearch();
+  const { editId, modo, draftKey } = Route.useSearch();
   const [passo, setPasso] = useState(0);
   const [carregado, setCarregado] = useState(!editId);
   const rapido = modo === "flash" || modo === "foto";
   const PASSOS = rapido ? PASSOS_RAPIDO : PASSOS_DETALHADO;
   const [orc, setOrc] = useState<Orcamento>({
     ambientes: [],
+    formatoMensagem: "completo",
+    historico: [],
     status: "rascunho",
     criadoEm: Date.now(),
     atualizadoEm: Date.now(),
   });
+
+  const config = useLiveQuery(() => db.config.get(1), [], undefined);
+  const ambientesPadrao = useMemo(
+    () => config?.ambientesPadrao?.length ? config.ambientesPadrao : AMBIENTES_PADRAO,
+    [config?.ambientesPadrao],
+  );
 
   // Carrega orçamento existente para edição
   useEffect(() => {
@@ -72,12 +83,26 @@ function NovoOrcamento() {
     });
   }, [editId]);
 
+  useEffect(() => {
+    if (editId) return;
+    setOrc({
+      ambientes: [],
+      formatoMensagem: "completo",
+      historico: [],
+      status: "rascunho",
+      criadoEm: Date.now(),
+      atualizadoEm: Date.now(),
+    });
+    setPasso(0);
+    setCarregado(true);
+  }, [draftKey, editId, modo]);
+
   // autosave (debounced 1500ms, sem JSON.stringify em deps)
   useEffect(() => {
     if (!carregado) return;
     const t = setTimeout(async () => {
-      const id = await db.orcamentos.put({ ...orc, atualizadoEm: Date.now() });
-      if (!orc.id) setOrc((p) => ({ ...p, id: id as number }));
+      const saved = await persistOrcamento(orc);
+      if (saved.id !== orc.id || saved.atualizadoEm !== orc.atualizadoEm) setOrc(saved);
     }, 1500);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,11 +139,11 @@ function NovoOrcamento() {
         {passo === 0 && <PassoCliente orc={orc} setOrc={setOrc} />}
         {passo === 1 &&
           (modo === "foto" ? (
-            <PassoAmbientesFoto orc={orc} setOrc={setOrc} autoOpenCamera />
+            <PassoAmbientesFoto orc={orc} setOrc={setOrc} ambientesPadrao={ambientesPadrao} autoOpenCamera />
           ) : modo === "flash" ? (
             <PassoItensFlash orc={orc} setOrc={setOrc} />
           ) : (
-            <PassoAmbientes orc={orc} setOrc={setOrc} />
+            <PassoAmbientes orc={orc} setOrc={setOrc} ambientesPadrao={ambientesPadrao} />
           ))}
         {!rapido && passo === 2 && <PassoPagamento orc={orc} setOrc={setOrc} />}
         {((rapido && passo === 2) || (!rapido && passo === 3)) && (
@@ -145,12 +170,14 @@ function NovoOrcamento() {
         ) : (
           <button
             onClick={async () => {
-              await db.orcamentos.update(orc.id!, {
+              const saved = await persistOrcamento({
                 ...orc,
                 status: orc.status === "rascunho" ? "enviado" : orc.status,
-                atualizadoEm: Date.now(),
+              }, {
+                forceLog: "Orçamento finalizado",
               });
-              nav({ to: "/orcamentos/$id", params: { id: String(orc.id) } });
+              setOrc(saved);
+              nav({ to: "/orcamentos/$id", params: { id: String(saved.id) } });
             }}
             className="bg-success text-ink brutal-border-thin brutal-shadow-sm brutal-press px-5 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-1"
           >
