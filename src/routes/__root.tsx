@@ -12,7 +12,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 
 import appCss from "../styles.css?url";
-import { Sidebar, BottomNav } from "@/components/app-shell";
+import { Sidebar, SidebarProvider, MenuButton } from "@/components/app-shell";
 
 
 
