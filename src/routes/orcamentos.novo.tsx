@@ -46,7 +46,8 @@ export const Route = createFileRoute("/orcamentos/novo")({
   component: NovoOrcamento,
 });
 
-const PASSOS = ["Cliente", "Ambientes", "Pagamento", "Revisão"] as const;
+const PASSOS_DETALHADO = ["Cliente", "Ambientes", "Pagamento", "Revisão"] as const;
+const PASSOS_RAPIDO = ["Cliente", "Itens", "Revisão"] as const;
 
 function NovoOrcamento() {
   const nav = useNavigate();
