@@ -588,7 +588,7 @@ function PassoAmbientesFoto({
       )}
 
       {editandoItem && (
-        <div className="fixed inset-0 z-50 bg-black/70  flex flex-col animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-midnight  flex flex-col animate-fade-in">
           <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
             <h3 className="text-display text-lg">
               Item · {orc.ambientes.find((a) => a.id === editandoItem.ambId)?.nome}
@@ -661,7 +661,7 @@ function ItensModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70  flex flex-col animate-fade-in">
+    <div className="fixed inset-0 z-50 bg-midnight  flex flex-col animate-fade-in">
       <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
         <h3 className="text-display text-lg">Itens · {ambiente.nome}</h3>
         <button onClick={onClose} className="text-brand" aria-label="Fechar">
