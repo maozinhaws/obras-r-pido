@@ -868,6 +868,9 @@ function ItemEditor({
                   removerFoto(fid);
                   setIt({ ...it, fotos: it.fotos.filter((x) => x !== fid) });
                 }}
+                onReplace={(newId) => {
+                  setIt({ ...it, fotos: it.fotos.map((x) => (x === fid ? newId : x)) });
+                }}
               />
             ))}
             <button 
