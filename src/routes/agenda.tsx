@@ -131,6 +131,14 @@ function EventoCard({
   );
 }
 
+function escapeICS(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,")
+    .replace(/\r\n|\r|\n/g, "\\n");
+}
+
 function baixarICS(e: EventoAgenda) {
   const dtStart = e.data.replace(/-/g, "") + "T" + (e.hora ?? "08:00").replace(":", "") + "00";
   const dtEnd = e.data.replace(/-/g, "") + "T" + (e.hora ?? "09:00").replace(":", "") + "00";
