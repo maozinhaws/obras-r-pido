@@ -31,6 +31,7 @@ import {
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
+import { PhotoEditor } from "@/components/photo-editor";
 
 type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number };
 
