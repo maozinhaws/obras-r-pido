@@ -34,6 +34,7 @@ export interface ItemAmbiente {
   altura?: number;
   comprimento?: number;
   servicos: string[];
+  materiais?: string[];
   preco: number;
   observacao?: string;
   fotos: string[]; // ids de fotos
