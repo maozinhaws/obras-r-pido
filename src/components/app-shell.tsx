@@ -13,6 +13,7 @@ import {
   FileSignature,
   Menu,
   X,
+  Plus,
 } from "lucide-react";
 
 const NAV_PRIMARY = [
@@ -40,12 +41,21 @@ const Ctx = createContext<SidebarCtx | null>(null);
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false); // mobile drawer
-  const [collapsed, setCollapsed] = useState(false); // desktop mini
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("pp.sidebar.collapsed") === "1";
+  }); // desktop mini
   const path = useRouterState({ select: (r) => r.location.pathname });
   // fecha drawer ao mudar de rota
   useEffect(() => {
     setOpen(false);
   }, [path]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("pp.sidebar.collapsed", collapsed ? "1" : "0");
+  }, [collapsed]);
+
   return (
     <Ctx.Provider
       value={{
@@ -180,10 +190,11 @@ export const Sidebar = memo(() => {
         <div className="p-3 border-t border-white/10">
           <Link
             to="/orcamentos/novo"
+            search={{ modo: "flash" }}
             className="flex items-center justify-center gap-2 glass-brand rounded-xl glass-press py-3 text-xs font-bold uppercase tracking-widest text-white"
             title={!showLabel ? "Novo Orçamento" : undefined}
           >
-            <Zap className="size-4" strokeWidth={3} />
+            <Plus className="size-4" strokeWidth={3} />
             {showLabel && <span>Novo Orçamento</span>}
           </Link>
         </div>
