@@ -31,6 +31,7 @@ import {
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
+import { PhotoEditor } from "@/components/photo-editor";
 
 type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number };
 
@@ -868,6 +869,9 @@ function ItemEditor({
                   removerFoto(fid);
                   setIt({ ...it, fotos: it.fotos.filter((x) => x !== fid) });
                 }}
+                onReplace={(newId) => {
+                  setIt({ ...it, fotos: it.fotos.map((x) => (x === fid ? newId : x)) });
+                }}
               />
             ))}
             <button 
@@ -915,8 +919,17 @@ function ItemEditor({
   );
 }
 
-function FotoThumb({ id, onRemove }: { id: string; onRemove: () => void }) {
+function FotoThumb({
+  id,
+  onRemove,
+  onReplace,
+}: {
+  id: string;
+  onRemove: () => void;
+  onReplace?: (newId: string) => void;
+}) {
   const [url, setUrl] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
   useEffect(() => {
     urlFoto(id).then(setUrl);
   }, [id]);
@@ -930,6 +943,25 @@ function FotoThumb({ id, onRemove }: { id: string; onRemove: () => void }) {
       >
         <X className="size-3" strokeWidth={3} />
       </button>
+      {onReplace && (
+        <button
+          onClick={() => setEditing(true)}
+          className="absolute bottom-1 right-1 bg-brand text-ink px-1.5 py-0.5 brutal-border-thin text-[9px] font-black uppercase"
+          aria-label="Editar foto"
+        >
+          Editar
+        </button>
+      )}
+      {editing && onReplace && (
+        <PhotoEditor
+          photoId={id}
+          onClose={() => setEditing(false)}
+          onSave={(newId) => {
+            onReplace(newId);
+            setEditing(false);
+          }}
+        />
+      )}
     </div>
   );
 }
