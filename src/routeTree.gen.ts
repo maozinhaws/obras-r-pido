@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as OrcamentosRouteImport } from './routes/orcamentos'
 import { Route as MaisRouteImport } from './routes/mais'
 import { Route as FornecedoresRouteImport } from './routes/fornecedores'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
@@ -25,6 +26,11 @@ import { Route as OrcamentosIdReciboRouteImport } from './routes/orcamentos.$id.
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrcamentosRoute = OrcamentosRouteImport.update({
+  id: '/orcamentos',
+  path: '/orcamentos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MaisRoute = MaisRouteImport.update({
@@ -63,9 +69,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrcamentosIndexRoute = OrcamentosIndexRouteImport.update({
-  id: '/orcamentos/',
-  path: '/orcamentos/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => OrcamentosRoute,
 } as any)
 const OrcamentosNovoRoute = OrcamentosNovoRouteImport.update({
   id: '/novo',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/configuracoes': typeof ConfiguracoesRoute
   '/fornecedores': typeof FornecedoresRoute
   '/mais': typeof MaisRoute
+  '/orcamentos': typeof OrcamentosRouteWithChildren
   '/termos': typeof TermosRoute
   '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
@@ -120,6 +127,7 @@ export interface FileRoutesById {
   '/configuracoes': typeof ConfiguracoesRoute
   '/fornecedores': typeof FornecedoresRoute
   '/mais': typeof MaisRoute
+  '/orcamentos': typeof OrcamentosRouteWithChildren
   '/termos': typeof TermosRoute
   '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
@@ -136,6 +144,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/fornecedores'
     | '/mais'
+    | '/orcamentos'
     | '/termos'
     | '/orcamentos/$id'
     | '/orcamentos/novo'
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/fornecedores'
     | '/mais'
+    | '/orcamentos'
     | '/termos'
     | '/orcamentos/$id'
     | '/orcamentos/novo'
@@ -179,8 +189,8 @@ export interface RootRouteChildren {
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   FornecedoresRoute: typeof FornecedoresRoute
   MaisRoute: typeof MaisRoute
+  OrcamentosRoute: typeof OrcamentosRouteWithChildren
   TermosRoute: typeof TermosRoute
-  OrcamentosIndexRoute: typeof OrcamentosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -190,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/termos'
       fullPath: '/termos'
       preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orcamentos': {
+      id: '/orcamentos'
+      path: '/orcamentos'
+      fullPath: '/orcamentos'
+      preLoaderRoute: typeof OrcamentosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mais': {
@@ -243,10 +260,10 @@ declare module '@tanstack/react-router' {
     }
     '/orcamentos/': {
       id: '/orcamentos/'
-      path: '/orcamentos'
+      path: '/'
       fullPath: '/orcamentos/'
       preLoaderRoute: typeof OrcamentosIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof OrcamentosRoute
     }
     '/orcamentos/novo': {
       id: '/orcamentos/novo'
@@ -272,6 +289,34 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface OrcamentosIdRouteChildren {
+  OrcamentosIdReciboRoute: typeof OrcamentosIdReciboRoute
+}
+
+const OrcamentosIdRouteChildren: OrcamentosIdRouteChildren = {
+  OrcamentosIdReciboRoute: OrcamentosIdReciboRoute,
+}
+
+const OrcamentosIdRouteWithChildren = OrcamentosIdRoute._addFileChildren(
+  OrcamentosIdRouteChildren,
+)
+
+interface OrcamentosRouteChildren {
+  OrcamentosIdRoute: typeof OrcamentosIdRouteWithChildren
+  OrcamentosNovoRoute: typeof OrcamentosNovoRoute
+  OrcamentosIndexRoute: typeof OrcamentosIndexRoute
+}
+
+const OrcamentosRouteChildren: OrcamentosRouteChildren = {
+  OrcamentosIdRoute: OrcamentosIdRouteWithChildren,
+  OrcamentosNovoRoute: OrcamentosNovoRoute,
+  OrcamentosIndexRoute: OrcamentosIndexRoute,
+}
+
+const OrcamentosRouteWithChildren = OrcamentosRoute._addFileChildren(
+  OrcamentosRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgendaRoute: AgendaRoute,
@@ -280,8 +325,8 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiguracoesRoute: ConfiguracoesRoute,
   FornecedoresRoute: FornecedoresRoute,
   MaisRoute: MaisRoute,
+  OrcamentosRoute: OrcamentosRouteWithChildren,
   TermosRoute: TermosRoute,
-  OrcamentosIndexRoute: OrcamentosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
