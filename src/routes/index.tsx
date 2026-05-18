@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { uid } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -247,14 +248,15 @@ function Home() {
 
         {/* Atalhos rápidos */}
         {[
-          { to: "/orcamentos/novo", icon: Camera, l1: "Foto", l2: "Rápida" },
+          { to: "/orcamentos/novo", search: { modo: "flash" as const, draftKey: uid() }, icon: Camera, l1: "Foto", l2: "Rápida" },
           { to: "/agenda", icon: CalendarCheck, l1: "Novo", l2: "Evento" },
           { to: "/orcamentos", icon: FileText, l1: "Gerar", l2: "PDF" },
           { to: "/backup", icon: Database, l1: "Backup", l2: "Dados" },
-        ].map(({ to, icon: Icon, l1, l2 }) => (
+        ].map(({ to, search, icon: Icon, l1, l2 }) => (
           <Link
             key={to}
             to={to}
+            search={search}
             className="col-span-12 sm:col-span-6 lg:col-span-3 glass rounded-2xl p-5 glass-press flex items-center gap-3 hover:bg-white/[0.08]"
           >
             <div className="size-11 rounded-xl glass-brand grid place-items-center shrink-0">
@@ -322,7 +324,7 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
             <Link
               key={modo}
               to="/orcamentos/novo"
-              search={{ modo }}
+              search={{ modo, draftKey: uid() }}
               onClick={onClose}
               className="glass rounded-2xl p-5 hover:bg-white/10 glass-press group"
             >
