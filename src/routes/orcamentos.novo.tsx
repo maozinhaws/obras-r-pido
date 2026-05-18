@@ -464,9 +464,11 @@ function PassoItensFlash({
 function PassoAmbientes({
   orc,
   setOrc,
+  ambientesPadrao,
 }: {
   orc: Orcamento;
   setOrc: React.Dispatch<React.SetStateAction<Orcamento>>;
+  ambientesPadrao: string[];
 }) {
   const [editandoAmb, setEditandoAmb] = useState<string | null>(null);
 
@@ -495,7 +497,7 @@ function PassoAmbientes({
         {"> Adicionar ambiente"}
       </div>
       <div className="flex flex-wrap gap-2">
-        {AMBIENTES_PADRAO.map((n) => (
+        {ambientesPadrao.map((n) => (
           <button
             key={n}
             onClick={() => addAmbiente(n)}
@@ -510,7 +512,11 @@ function PassoAmbientes({
         {orc.ambientes.map((a) => (
           <div key={a.id} className="bg-surface brutal-border p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-display text-xl italic">{a.nome}</h3>
+              <input
+                value={a.nome}
+                onChange={(e) => updateAmb(a.id, (amb) => ({ ...amb, nome: e.target.value || "Outros" }))}
+                className="bg-transparent text-display text-xl italic focus:outline-none min-w-0 flex-1"
+              />
               <div className="flex gap-2">
                 <button
                   onClick={() => setEditandoAmb(a.id)}
@@ -558,10 +564,12 @@ function PassoAmbientes({
 function PassoAmbientesFoto({
   orc,
   setOrc,
+  ambientesPadrao,
   autoOpenCamera,
 }: {
   orc: Orcamento;
   setOrc: React.Dispatch<React.SetStateAction<Orcamento>>;
+  ambientesPadrao: string[];
   autoOpenCamera?: boolean;
 }) {
   // Garante 1 ambiente "Geral" no modo foto pra usuário focar nos itens
@@ -676,7 +684,7 @@ function PassoAmbientesFoto({
           {"> Adicionar ambiente"}
         </div>
         <div className="flex flex-wrap gap-2">
-          {AMBIENTES_PADRAO.map((n) => (
+          {ambientesPadrao.map((n) => (
             <button
               key={n}
               onClick={() => criarAmbiente(n)}
@@ -691,6 +699,21 @@ function PassoAmbientesFoto({
       {/* CTA câmera */}
       {ambienteAtivo ? (
         <>
+          <Field label="Nome do ambiente">
+            <input
+              value={ambienteAtivo.nome}
+              onChange={(e) =>
+                setOrc({
+                  ...orc,
+                  ambientes: orc.ambientes.map((a) =>
+                    a.id === ambienteAtivo.id ? { ...a, nome: e.target.value || "Outros" } : a,
+                  ),
+                })
+              }
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+            />
+          </Field>
+
           <button
             onClick={() => setCameraOpen(true)}
             className="w-full glass-brand text-white p-6 flex flex-col items-center gap-2 glass-press"
