@@ -16,7 +16,7 @@ import { ptBR } from "date-fns/locale";
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
 
-export const Route = createFileRoute("/orcamentos")({
+export const Route = createFileRoute("/orcamentos/")({
   head: () => ({
     meta: [
       { title: "Orçamentos — Pintor Plus" },
