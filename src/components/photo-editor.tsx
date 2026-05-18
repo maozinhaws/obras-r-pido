@@ -185,10 +185,14 @@ export function PhotoEditor({ photoId, onClose, onSave }: Props) {
         if (s.kind === "text") return { ...s, x: nx, y: ny };
         if (s.kind === "rect") return { ...s, x: nx, y: ny };
         if (s.kind === "circle") return { ...s, cx: nx, cy: ny };
+        if (s.kind === "arrow") {
+          const dx = nx - s.x1;
+          const dy = ny - s.y1;
+          return { ...s, x1: nx, y1: ny, x2: s.x2 + dx, y2: s.y2 + dy };
+        }
         return s;
       }),
     );
-    // hit-test trash em coordenadas de tela
     const trash = trashRef.current?.getBoundingClientRect();
     if (trash) {
       const inside =
