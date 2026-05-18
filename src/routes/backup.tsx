@@ -58,42 +58,67 @@ function BackupPage() {
 
   async function importar(file: File) {
     if (!confirm("Isso vai substituir os dados atuais. Continuar?")) return;
-    const text = await file.text();
-    const dump = JSON.parse(text);
-    await db.transaction(
-      "rw",
-      [db.clientes, db.fornecedores, db.orcamentos, db.eventos, db.recibos, db.config, db.fotos],
-      async () => {
-        await Promise.all([
-          db.clientes.clear(),
-          db.fornecedores.clear(),
-          db.orcamentos.clear(),
-          db.eventos.clear(),
-          db.recibos.clear(),
-          db.config.clear(),
-          db.fotos.clear(),
-        ]);
-        if (dump.clientes) await db.clientes.bulkAdd(dump.clientes);
-        if (dump.fornecedores) await db.fornecedores.bulkAdd(dump.fornecedores);
-        if (dump.orcamentos) await db.orcamentos.bulkAdd(dump.orcamentos);
-        if (dump.eventos) await db.eventos.bulkAdd(dump.eventos);
-        if (dump.recibos) await db.recibos.bulkAdd(dump.recibos);
-        if (dump.config) await db.config.bulkAdd(dump.config);
-        if (dump.fotos) {
-          for (const f of dump.fotos) {
-            const bin = atob(f.dataB64);
-            const arr = new Uint8Array(bin.length);
-            for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-            await db.fotos.put({
-              id: f.id,
-              criadoEm: f.criadoEm,
-              blob: new Blob([arr], { type: "image/jpeg" }),
-            });
+    try {
+      const text = await file.text();
+      let dump: any;
+      try {
+        dump = JSON.parse(text);
+      } catch {
+        setMsg("Arquivo inválido: não é um JSON válido.");
+        return;
+      }
+      if (!dump || typeof dump !== "object") {
+        setMsg("Arquivo de backup inválido.");
+        return;
+      }
+      if (dump.versao !== 1) {
+        setMsg("Versão de backup não suportada.");
+        return;
+      }
+      const isArr = (v: unknown): v is any[] => Array.isArray(v);
+      await db.transaction(
+        "rw",
+        [db.clientes, db.fornecedores, db.orcamentos, db.eventos, db.recibos, db.config, db.fotos],
+        async () => {
+          await Promise.all([
+            db.clientes.clear(),
+            db.fornecedores.clear(),
+            db.orcamentos.clear(),
+            db.eventos.clear(),
+            db.recibos.clear(),
+            db.config.clear(),
+            db.fotos.clear(),
+          ]);
+          if (isArr(dump.clientes)) await db.clientes.bulkAdd(dump.clientes);
+          if (isArr(dump.fornecedores)) await db.fornecedores.bulkAdd(dump.fornecedores);
+          if (isArr(dump.orcamentos)) await db.orcamentos.bulkAdd(dump.orcamentos);
+          if (isArr(dump.eventos)) await db.eventos.bulkAdd(dump.eventos);
+          if (isArr(dump.recibos)) await db.recibos.bulkAdd(dump.recibos);
+          if (isArr(dump.config)) await db.config.bulkAdd(dump.config);
+          if (isArr(dump.fotos)) {
+            for (const f of dump.fotos) {
+              if (!f || typeof f.id !== "string" || typeof f.dataB64 !== "string") continue;
+              try {
+                const bin = atob(f.dataB64);
+                const arr = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+                await db.fotos.put({
+                  id: f.id,
+                  criadoEm: typeof f.criadoEm === "number" ? f.criadoEm : Date.now(),
+                  blob: new Blob([arr], { type: "image/jpeg" }),
+                });
+              } catch {
+                // skip invalid photo entry
+              }
+            }
           }
-        }
-      },
-    );
-    setMsg("Backup restaurado!");
+        },
+      );
+      setMsg("Backup restaurado!");
+    } catch (err) {
+      console.error(err);
+      setMsg("Falha ao restaurar backup.");
+    }
   }
 
   return (

@@ -131,6 +131,14 @@ function EventoCard({
   );
 }
 
+function escapeICS(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,")
+    .replace(/\r\n|\r|\n/g, "\\n");
+}
+
 function baixarICS(e: EventoAgenda) {
   const dtStart = e.data.replace(/-/g, "") + "T" + (e.hora ?? "08:00").replace(":", "") + "00";
   const dtEnd = e.data.replace(/-/g, "") + "T" + (e.hora ?? "09:00").replace(":", "") + "00";
@@ -143,8 +151,8 @@ function baixarICS(e: EventoAgenda) {
     `DTSTAMP:${new Date().toISOString().replace(/[-:.]/g, "").slice(0, 15)}Z`,
     `DTSTART:${dtStart}`,
     `DTEND:${dtEnd}`,
-    `SUMMARY:${e.titulo}`,
-    `DESCRIPTION:${e.observacao ?? ""}`,
+    `SUMMARY:${escapeICS(e.titulo)}`,
+    `DESCRIPTION:${escapeICS(e.observacao ?? "")}`,
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
@@ -152,7 +160,8 @@ function baixarICS(e: EventoAgenda) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${e.titulo.replace(/\s+/g, "-")}.ics`;
+  const safeName = (e.titulo.replace(/[^a-zA-Z0-9_-]+/g, "-").replace(/^-+|-+$/g, "") || "evento").slice(0, 80);
+  a.download = `${safeName}.ics`;
   a.click();
   URL.revokeObjectURL(url);
 }
