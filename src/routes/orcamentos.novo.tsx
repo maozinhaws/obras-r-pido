@@ -317,6 +317,123 @@ function PassoCliente({
   );
 }
 
+function PassoItensFlash({
+  orc,
+  setOrc,
+}: {
+  orc: Orcamento;
+  setOrc: React.Dispatch<React.SetStateAction<Orcamento>>;
+}) {
+  // Modo Flash: 1 ambiente "Geral" implícito, foco total em adicionar itens
+  useEffect(() => {
+    if (orc.ambientes.length === 0) {
+      const a: Ambiente = { id: uid(), nome: "Geral", itens: [] };
+      setOrc((p) => ({ ...p, ambientes: [a] }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const amb = orc.ambientes[0];
+  const [editando, setEditando] = useState<ItemAmbiente | null>(null);
+
+  function novoItem() {
+    setEditando({
+      id: uid(),
+      nome: "Parede",
+      servicos: [],
+      preco: 0,
+      fotos: [],
+    });
+  }
+
+  function salvar(it: ItemAmbiente) {
+    if (!amb) return;
+    const exists = amb.itens.some((i) => i.id === it.id);
+    setOrc({
+      ...orc,
+      ambientes: orc.ambientes.map((a) =>
+        a.id === amb.id
+          ? {
+              ...a,
+              itens: exists ? a.itens.map((i) => (i.id === it.id ? it : i)) : [...a.itens, it],
+            }
+          : a,
+      ),
+    });
+    setEditando(null);
+  }
+
+  function remover(id: string) {
+    if (!amb) return;
+    setOrc({
+      ...orc,
+      ambientes: orc.ambientes.map((a) =>
+        a.id === amb.id ? { ...a, itens: a.itens.filter((i) => i.id !== id) } : a,
+      ),
+    });
+  }
+
+  if (!amb) return null;
+
+  return (
+    <div className="space-y-4 py-6">
+      <div className="text-mono text-[10px] uppercase tracking-widest text-foreground/40">
+        {`> ${amb.itens.length} item(ns) adicionados`}
+      </div>
+
+      <div className="space-y-2">
+        {amb.itens.map((it) => (
+          <button
+            key={it.id}
+            onClick={() => setEditando(it)}
+            className="w-full bg-surface brutal-border-thin p-4 text-left brutal-press flex justify-between items-center"
+          >
+            <div>
+              <p className="font-black uppercase text-sm">{it.nome}</p>
+              {it.altura && it.comprimento && (
+                <p className="text-[10px] text-foreground/50 font-mono">
+                  {it.altura}m × {it.comprimento}m
+                </p>
+              )}
+            </div>
+            <p className="text-display text-lg text-brand">
+              {formatBRL(it.preco || 0).replace(",00", "")}
+            </p>
+          </button>
+        ))}
+      </div>
+
+      <button
+        onClick={novoItem}
+        className="w-full glass-brand text-white p-5 flex items-center justify-center gap-2 glass-press"
+      >
+        <Plus className="size-5" strokeWidth={3} />
+        <span className="text-display text-lg">Adicionar item</span>
+      </button>
+
+      {editando && (
+        <div className="fixed inset-0 z-50 bg-midnight flex flex-col animate-fade-in">
+          <div className="bg-surface border-b-2 border-white/10 p-5 flex items-center justify-between">
+            <h3 className="text-display text-lg">Item</h3>
+            <button onClick={() => setEditando(null)} className="text-brand" aria-label="Fechar">
+              <X className="size-6" strokeWidth={3} />
+            </button>
+          </div>
+          <ItemEditor
+            item={editando}
+            onSave={salvar}
+            onCancel={() => setEditando(null)}
+            onDelete={() => {
+              remover(editando.id);
+              setEditando(null);
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PassoAmbientes({
   orc,
   setOrc,
