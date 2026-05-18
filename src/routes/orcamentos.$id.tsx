@@ -24,6 +24,7 @@ export const Route = createFileRoute("/orcamentos/$id")({
 function OrcamentoDetalhe() {
   const { id } = useParams({ from: "/orcamentos/$id" });
   const [o, setO] = useState<Orcamento | undefined>();
+  const [showHist, setShowHist] = useState(false);
 
   useEffect(() => {
     db.orcamentos.get(Number(id)).then(setO);
@@ -42,12 +43,21 @@ function OrcamentoDetalhe() {
         eyebrow={`Orçamento · #${o.id}`}
         title={o.clienteSnapshot?.nome ?? "Sem cliente"}
         actions={
-          <Link
-            to="/orcamentos"
-            className="glass glass-press px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
-          >
-            <ArrowLeft className="size-3" /> Voltar
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowHist(true)}
+              title="Histórico de alterações"
+              className="glass glass-press px-3 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
+            >
+              <ScrollText className="size-3" /> Histórico
+            </button>
+            <Link
+              to="/orcamentos"
+              className="glass glass-press px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
+            >
+              <ArrowLeft className="size-3" /> Voltar
+            </Link>
+          </div>
         }
       />
       <div className="px-5 lg:px-10 py-6 grid grid-cols-12 gap-3 lg:gap-4">
