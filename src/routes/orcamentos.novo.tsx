@@ -414,17 +414,32 @@ function PassoAmbientes({
 function PassoAmbientesFoto({
   orc,
   setOrc,
+  autoOpenCamera,
 }: {
   orc: Orcamento;
   setOrc: React.Dispatch<React.SetStateAction<Orcamento>>;
+  autoOpenCamera?: boolean;
 }) {
+  // Garante 1 ambiente "Geral" no modo foto pra usuário focar nos itens
+  useEffect(() => {
+    if (autoOpenCamera && orc.ambientes.length === 0) {
+      const a: Ambiente = { id: uid(), nome: "Geral", itens: [] };
+      setOrc((p) => ({ ...p, ambientes: [a] }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [ambienteAtivoId, setAmbienteAtivoId] = useState<string | null>(
     orc.ambientes[0]?.id ?? null,
   );
-  const [cameraOpen, setCameraOpen] = useState(false);
+  const [cameraOpen, setCameraOpen] = useState(!!autoOpenCamera);
   const [editandoItem, setEditandoItem] = useState<{ ambId: string; item: ItemAmbiente } | null>(
     null,
   );
+
+  useEffect(() => {
+    if (!ambienteAtivoId && orc.ambientes[0]) setAmbienteAtivoId(orc.ambientes[0].id);
+  }, [orc.ambientes, ambienteAtivoId]);
 
   function criarAmbiente(nome: string) {
     const a: Ambiente = { id: uid(), nome, itens: [] };
