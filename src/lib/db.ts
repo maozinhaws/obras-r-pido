@@ -45,6 +45,12 @@ export interface Ambiente {
   itens: ItemAmbiente[];
 }
 
+export interface HistoricoOrcamentoEntry {
+  id: string;
+  timestamp: number;
+  descricao: string;
+}
+
 export interface Orcamento {
   id?: number;
   clienteId?: number;
@@ -55,12 +61,14 @@ export interface Orcamento {
   inicio?: string;
   tipoServico?: string;
   observacoes?: string;
+  formatoMensagem?: "completo" | "area" | "simples";
   totalManual?: number;
   precoAdicionalM2?: number;
   pagadorDiferente?: boolean;
   pagadorNome?: string;
   pagadorTelefone?: string;
   pagadorEndereco?: string;
+  historico?: HistoricoOrcamentoEntry[];
   status: StatusOrcamento;
   criadoEm: number;
   atualizadoEm: number;
@@ -103,6 +111,9 @@ export interface ConfigEmpresa {
   assinatura?: string;
   mensagemPadraoWhats?: string;
   servicosPadrao?: string[];
+  flashServicos?: string[];
+  flashMateriais?: string[];
+  materiaisPadrao?: string[];
   formasPagamento?: string[];
   ambientesPadrao?: string[];
   tema?: "moderno" | "brutalista" | "minimalista";
@@ -151,6 +162,7 @@ export const SERVICOS_PADRAO = [
 ];
 
 export const AMBIENTES_PADRAO = [
+  "Outros",
   "Sala",
   "Quarto",
   "Cozinha",
@@ -161,6 +173,19 @@ export const AMBIENTES_PADRAO = [
   "Área externa",
   "Garagem",
   "Escada",
+];
+
+export const MATERIAIS_PADRAO = [
+  "Tinta látex",
+  "Tinta acrílica",
+  "Tinta esmalte",
+  "Massa corrida",
+  "Selador/Primer",
+  "Lixa",
+  "Fita crepe",
+  "Rolo de lã",
+  "Pincel",
+  "Textura",
 ];
 
 export const FORMAS_PAGAMENTO = [
