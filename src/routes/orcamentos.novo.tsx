@@ -114,12 +114,16 @@ function NovoOrcamento() {
         {passo === 0 && <PassoCliente orc={orc} setOrc={setOrc} />}
         {passo === 1 &&
           (modo === "foto" ? (
-            <PassoAmbientesFoto orc={orc} setOrc={setOrc} />
+            <PassoAmbientesFoto orc={orc} setOrc={setOrc} autoOpenCamera />
+          ) : modo === "flash" ? (
+            <PassoItensFlash orc={orc} setOrc={setOrc} />
           ) : (
             <PassoAmbientes orc={orc} setOrc={setOrc} />
           ))}
-        {passo === 2 && <PassoPagamento orc={orc} setOrc={setOrc} />}
-        {passo === 3 && <PassoRevisao orc={orc} setOrc={setOrc} />}
+        {!rapido && passo === 2 && <PassoPagamento orc={orc} setOrc={setOrc} />}
+        {((rapido && passo === 2) || (!rapido && passo === 3)) && (
+          <PassoRevisao orc={orc} setOrc={setOrc} />
+        )}
       </div>
 
       {/* Footer nav */}
