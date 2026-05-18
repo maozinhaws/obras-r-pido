@@ -69,16 +69,16 @@ function NovoOrcamento() {
     });
   }, [editId]);
 
-  // autosave
+  // autosave (debounced 1500ms, sem JSON.stringify em deps)
   useEffect(() => {
     if (!carregado) return;
     const t = setTimeout(async () => {
       const id = await db.orcamentos.put({ ...orc, atualizadoEm: Date.now() });
       if (!orc.id) setOrc((p) => ({ ...p, id: id as number }));
-    }, 800);
+    }, 1500);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(orc), carregado]);
+  }, [orc, carregado]);
 
   return (
     <div>
@@ -588,7 +588,7 @@ function PassoAmbientesFoto({
       )}
 
       {editandoItem && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xl flex flex-col animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-black/70  flex flex-col animate-fade-in">
           <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
             <h3 className="text-display text-lg">
               Item · {orc.ambientes.find((a) => a.id === editandoItem.ambId)?.nome}
@@ -661,7 +661,7 @@ function ItensModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xl flex flex-col animate-fade-in">
+    <div className="fixed inset-0 z-50 bg-black/70  flex flex-col animate-fade-in">
       <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
         <h3 className="text-display text-lg">Itens · {ambiente.nome}</h3>
         <button onClick={onClose} className="text-brand" aria-label="Fechar">
