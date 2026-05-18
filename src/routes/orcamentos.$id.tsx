@@ -173,12 +173,6 @@ function OrcamentoDetalhe() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-        </div>
-      </div>
 
       {showHist && (
         <div className="fixed inset-0 z-50 bg-midnight flex items-stretch justify-center p-4 overflow-auto">
@@ -229,7 +223,4 @@ function Thumb({ id }: { id: string }) {
     </div>
   );
 }
-      {url && <img src={url} alt="Foto" className="size-full object-cover" />}
-    </div>
-  );
-}
+
