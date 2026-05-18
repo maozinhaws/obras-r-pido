@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
+import { updateStatusWithLog } from "@/lib/orcamentos";
 
 export const Route = createFileRoute("/orcamentos/")({
   head: () => ({
@@ -55,10 +56,7 @@ const OrcamentoCard = memo(({ o, STATUSES }: { o: any, STATUSES: StatusOrcamento
     <select
       value={o.status}
       onChange={(e) =>
-        db.orcamentos.update(o.id!, {
-          status: e.target.value as StatusOrcamento,
-          atualizadoEm: Date.now(),
-        })
+        updateStatusWithLog(o.id!, e.target.value as StatusOrcamento)
       }
       className={`glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status as StatusOrcamento]}`}
     >
@@ -139,6 +137,7 @@ function OrcamentosPage() {
         actions={
           <Link
             to="/orcamentos/novo"
+              search={{ modo: "flash", draftKey: String(Date.now()) }}
             className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
           >
             <Plus className="size-4" strokeWidth={3} /> Novo
@@ -179,6 +178,7 @@ function OrcamentosPage() {
             </p>
             <Link
               to="/orcamentos/novo"
+              search={{ modo: "flash", draftKey: String(Date.now()) }}
               className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest"
             >
               Criar primeiro
