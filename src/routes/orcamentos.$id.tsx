@@ -12,7 +12,7 @@ import { PageHeader } from "@/components/app-shell";
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
 import { urlFoto } from "@/lib/fotos";
-import { FileText, MessageCircle, Receipt, Edit3, ArrowLeft } from "lucide-react";
+import { FileText, MessageCircle, Receipt, Edit3, ArrowLeft, ScrollText, X } from "lucide-react";
 
 export const Route = createFileRoute("/orcamentos/$id")({
   head: ({ params }) => ({
@@ -24,6 +24,7 @@ export const Route = createFileRoute("/orcamentos/$id")({
 function OrcamentoDetalhe() {
   const { id } = useParams({ from: "/orcamentos/$id" });
   const [o, setO] = useState<Orcamento | undefined>();
+  const [showHist, setShowHist] = useState(false);
 
   useEffect(() => {
     db.orcamentos.get(Number(id)).then(setO);
@@ -42,12 +43,21 @@ function OrcamentoDetalhe() {
         eyebrow={`Orçamento · #${o.id}`}
         title={o.clienteSnapshot?.nome ?? "Sem cliente"}
         actions={
-          <Link
-            to="/orcamentos"
-            className="glass glass-press px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
-          >
-            <ArrowLeft className="size-3" /> Voltar
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowHist(true)}
+              title="Histórico de alterações"
+              className="glass glass-press px-3 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
+            >
+              <ScrollText className="size-3" /> Histórico
+            </button>
+            <Link
+              to="/orcamentos"
+              className="glass glass-press px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
+            >
+              <ArrowLeft className="size-3" /> Voltar
+            </Link>
+          </div>
         }
       />
       <div className="px-5 lg:px-10 py-6 grid grid-cols-12 gap-3 lg:gap-4">
@@ -163,6 +173,41 @@ function OrcamentoDetalhe() {
           </div>
         </div>
       </div>
+
+      {showHist && (
+        <div className="fixed inset-0 z-50 bg-midnight flex items-stretch justify-center p-4 overflow-auto">
+          <div className="w-full max-w-2xl bg-surface brutal-border brutal-shadow p-6 my-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-mono text-[10px] uppercase text-brand">{"> Histórico"}</div>
+                <h2 className="text-display text-2xl italic">Log de alterações</h2>
+              </div>
+              <button
+                onClick={() => setShowHist(false)}
+                className="glass glass-press p-2"
+                aria-label="Fechar"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            {(!o.historico || o.historico.length === 0) ? (
+              <p className="text-mono text-sm text-foreground/50">Nenhuma alteração registrada.</p>
+            ) : (
+              <ul className="space-y-2 text-mono text-xs max-h-[70vh] overflow-auto">
+                {[...o.historico].reverse().map((h) => {
+                  const d = new Date(h.timestamp);
+                  const ts = `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getFullYear()).slice(2)};${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
+                  return (
+                    <li key={h.id} className="border-l-2 border-brand pl-3 py-1">
+                      <span className="text-brand">{ts}</span> — {h.descricao}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -178,3 +223,4 @@ function Thumb({ id }: { id: string }) {
     </div>
   );
 }
+

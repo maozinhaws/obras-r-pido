@@ -1,72 +1,183 @@
-## Diagnóstico
+# Pintor Plus — Plano e System Design
 
-Mapeei as causas mais prováveis da lentidão percebida (preview em `/orcamentos`, mas vale para o app inteiro):
+## Visão geral
 
-### 1. GPU sobrecarregada por efeitos "glass"
-- `index.tsx` sozinho usa **7 `blur-3xl`** + várias camadas `glass`/`glass-strong` (que são `backdrop-blur`). Cada `backdrop-blur` força o navegador a recompor a árvore inteira a cada scroll/animação.
-- `__root.tsx` aplica `transition-colors duration-500` no wrapper raiz → toda mudança de tema/atributo dispara transição em toda a árvore.
-- Modal `NovoOrcamentoModal` empilha `backdrop-blur-md` + 2 `blur-3xl` em cima da página já blurada.
+App **mobile-first, 100% offline-local** para pintores e pequenos prestadores de obra. Foco: criar orçamentos no canteiro de obra em segundos, sem depender de internet, sem cadastro, sem nuvem.
 
-### 2. Fontes Google bloqueando render
-- `__root.tsx` carrega `Inter + Syne + JetBrains Mono` (3 famílias, 7 pesos) via `<link rel="stylesheet">` síncrono no Google Fonts. Isso bloqueia o first paint e a CSS aguarda a rede mesmo offline (PWA).
-
-### 3. `useLiveQuery` excessivo no Dashboard
-- `index.tsx` dispara **5 queries Dexie** independentes (`config`, `orcamentos`, `eventos`, `clientes.count`, `aprovados.count`). Cada `db.put/update` em qualquer tabela observada dispara re-render do dashboard inteiro.
-- `BottomNav` chama `useActive()` **dentro de `.map`** — viola regras de hooks só por sorte (array constante) e re-renderiza a navbar a cada mudança de rota.
-
-### 4. Sem preload de rotas / queries
-- `router.tsx` tem `defaultPreloadStaleTime: 0` e nenhum `defaultPreload: "intent"`. Navegação só começa a carregar chunk no clique.
-- `routeTree.gen.ts` mostra rotas grandes (`orcamentos.novo`, `recibo`, `configuracoes`) sem code-split intencional além do automático.
-
-### 5. Bundle não otimizado
-- Importa `recharts`, `embla-carousel-react`, `vaul`, `react-day-picker`, `cmdk` no `package.json` mesmo sem serem usados nas telas atuais → entram no bundle se algum `ui/*` for importado.
-- `lucide-react` está sendo importado com vários ícones por arquivo — bom, já tree-shake amigável, mantém.
+- **Plataforma**: PWA instalável (TanStack Start + Vite, renderiza como SPA no cliente).
+- **Persistência**: Dexie/IndexedDB local. Zero Supabase, zero backend remoto. Backup manual via export/import JSON+ZIP.
+- **Idioma**: PT-BR.
+- **Performance**: prioridade absoluta no mobile.
 
 ---
 
-## Plano de otimização
+## Stack técnica
 
-### A. Reduzir efeitos visuais caros (maior ganho)
-1. Trocar todos os `blur-3xl` decorativos por gradientes estáticos (`bg-gradient-radial` ou simples `bg-brand/20`) — manter no máximo **1 blur por viewport**.
-2. Substituir `backdrop-blur-md/xl` das `glass-strong` por `bg-surface/80` opaco. Sidebar e BottomNav ficam com fundo sólido (mais legíveis e ~10× mais baratos).
-3. Remover `transition-colors duration-500` do wrapper raiz em `__root.tsx`.
-4. No modal: remover os 2 `blur-3xl` internos, manter só o overlay escuro.
-
-### B. Autohospedar fontes
-1. Trocar o `<link>` do Google Fonts por `@font-face` local (ou usar `fontsource`) com `font-display: swap` e apenas pesos realmente usados (Inter 400/700, Syne 800, JetBrains Mono 400).
-2. Remover os 2 `preconnect` do Google Fonts.
-
-### C. Consolidar live queries do Dashboard
-1. Unir os 5 `useLiveQuery` do `index.tsx` em **1 só** que faz `Promise.all` e retorna um objeto. Reduz re-renders e roundtrips ao IndexedDB.
-2. Em `BottomNav`, calcular `pathname` uma vez com `useRouterState` e comparar dentro do `.map` (sem hook por item).
-3. Em `orcamentos.tsx`, o `useLiveQuery` já refaz o filtro em memória — remover o `where("status")` duplicado e deixar só `orderBy("atualizadoEm").reverse()` (já é index).
-
-### D. Router/preload
-1. No `router.tsx`: ativar `defaultPreload: "intent"` e `defaultPreloadStaleTime: 30_000`. Hover/touch começa a baixar o chunk antes do clique.
-2. Adicionar `defaultPendingMs: 100` e um `pendingComponent` global leve (skeleton) para feedback imediato.
-
-### E. Bundle hygiene
-1. Remover dependências não usadas após auditoria rápida: `embla-carousel-react`, `vaul`, `react-day-picker`, `cmdk`, `recharts`, `input-otp`, `react-resizable-panels` (confirmar 0 imports antes de remover).
-2. Deletar os arquivos `src/components/ui/*` correspondentes para evitar imports acidentais.
-
-### F. PWA / cache (bônus pequeno)
-1. Conferir `manifest.webmanifest` + adicionar `Cache-Control: immutable` nos assets versionados (já é padrão do Vite, só validar build).
-2. Lazy-load do `jspdf` e `jszip` — só importar dentro das funções `gerarPdfOrcamento` / backup (`await import("jspdf")`), tirando ~200KB do bundle inicial.
+| Camada | Tecnologia |
+|---|---|
+| Framework | TanStack Start v1 + TanStack Router (file-based) |
+| Build | Vite 7 |
+| UI | React 19, Tailwind v4, shadcn/ui (parcial) |
+| Estado servidor | TanStack Query (apenas para integração com Dexie via live queries) |
+| Dados | Dexie 4 (IndexedDB), `dexie-react-hooks` (`useLiveQuery`) |
+| PDF | jsPDF (lazy import) |
+| Backup | jszip (lazy import) |
+| Câmera | `getUserMedia` + `ImageCapture` (torch hardware) |
+| Editor de foto | Canvas 2D nativo (sem libs externas) |
 
 ---
 
-## Ordem de execução proposta
+## Modelo de dados (Dexie — `src/lib/db.ts`)
 
-1. **A + B** (impacto visual instantâneo na fluidez)
-2. **C** (re-renders)
-3. **F.2** (lazy PDF/ZIP)
-4. **D** (preload)
-5. **E** (depende de auditoria, mais arriscado)
+### Tabelas
 
-Etapas independentes — posso parar depois de A+B+C se quiser ver o ganho antes de mexer no resto.
+- **clientes** — `id, nome, telefone, email, documento, endereço, apelido, criadoEm`
+- **fornecedores** — `id, nome, telefone, categoria, observação, criadoEm`
+- **orcamentos** — núcleo do app. Campos:
+  - `clienteId`, `clienteSnapshot` (cópia inline do cliente no momento)
+  - `ambientes: Ambiente[]` — cada ambiente tem `itens: ItemAmbiente[]`
+  - `ItemAmbiente`: `id, nome, altura, comprimento, servicos[], materiais[], preco, observação, fotos[]`
+  - `formaPagamento, validade, inicio, tipoServico, observações`
+  - `formatoMensagem`: `"completo" | "area" | "simples"` (controla WhatsApp/PDF)
+  - `totalManual, precoAdicionalM2, pagadorDiferente, pagadorNome/Telefone/Endereco`
+  - `historico: HistoricoOrcamentoEntry[]` — log auditável
+  - `status: StatusOrcamento` (`rascunho|enviado|aprovado|em_andamento|finalizado|cancelado`)
+  - `criadoEm, atualizadoEm`
+- **fotos** — `id, blob (Blob), criadoEm` (armazena Blob original; thumbs via `URL.createObjectURL`)
+- **eventos** — agenda (`titulo, data ISO, hora, observação, orcamentoId`)
+- **recibos** — `orcamentoId, valor, data, formaPagamento, observação`
+- **config** — singleton (`id=1`): empresa, logo, assinatura, mensagem padrão WhatsApp, listas customizadas (`servicosPadrao, flashServicos, flashMateriais, materiaisPadrao, formasPagamento, ambientesPadrao`), tema/contraste/fonte.
 
-## Confirmações antes de começar
+### Persistência com log automático
 
-- Posso **alterar o visual** removendo a maioria dos blurs (vai ficar mais "flat", menos vidro) — ok?
-- Posso **autohospedar fontes** baixando os `.woff2` para `/public/fonts/`?
-- Posso **remover deps não usadas** (vou listar cada uma antes de apagar)?
+`src/lib/orcamentos.ts → persistOrcamento(next, { forceLog? })`:
+1. Lê snapshot anterior do Dexie.
+2. Faz `diff` campo a campo (cliente, pagamento, datas, itens, ambientes, observações, status).
+3. Anexa `HistoricoOrcamentoEntry[]` (id, timestamp, descrição amigável tipo `Alterado Nome do item de "X" para "Y"`).
+4. Faz `db.orcamentos.put` com `atualizadoEm = Date.now()`.
+
+`updateStatusWithLog(id, status)` é o atalho para mudança de status com log.
+
+---
+
+## Funcionalidades
+
+### 1. Dashboard (`/`)
+- Cards: total de clientes, orçamentos aprovados, próximos eventos, faturamento estimado.
+- Atalho rápido: **Novo orçamento** → abre modal com 3 modos (Flash / Foto / Detalhado).
+- Lista dos últimos orçamentos.
+
+### 2. Orçamentos
+- `/orcamentos` — lista filtrável por status, ordenada por `atualizadoEm`. Cada card permite mudar status (com log).
+- `/orcamentos/novo?modo=flash|foto|detalhado&editId?&draftKey?`
+  - **Flash** (3 passos): Cliente → Itens (ambiente implícito "Geral", chips de serviços/materiais configuráveis) → Revisão.
+  - **Foto** (3 passos): Cliente → Itens (câmera abre automaticamente, cada foto vira item) → Revisão.
+  - **Detalhado** (4 passos): Cliente → Ambientes (escolhe presets ou cria) → Pagamento → Revisão.
+  - `draftKey` força state limpo entre invocações (resolve botão "preso" da dashboard).
+  - Nome do item, ambiente, observações são editáveis inline.
+  - Revisão tem: data prevista de início, formato de mensagem (completo/área/simples), observações globais.
+- `/orcamentos/$id` — detalhe + ações:
+  - **Botão Histórico** (ícone `ScrollText` no topo) abre overlay com log auditável: `DD-MM-AA;HH:mm:ss — descrição`.
+  - Editar (volta ao wizard com `editId`), Baixar PDF, Enviar WhatsApp (mensagem segundo `formatoMensagem`), gerar Recibo.
+- `/orcamentos/$id/recibo` — gera recibo de pagamento, PDF.
+
+### 3. Clientes (`/clientes`)
+CRUD simples: nome, apelido, telefone, e-mail, documento, endereço. Busca local.
+
+### 4. Fornecedores (`/fornecedores`)
+CRUD com categoria.
+
+### 5. Agenda (`/agenda`)
+Eventos vinculáveis a orçamentos. Lista cronológica.
+
+### 6. Configurações (`/configuracoes`)
+- Dados da empresa, logo, assinatura (dataURL).
+- Listas customizadas (serviços/materiais padrão para flash e detalhado, formas de pagamento, ambientes).
+- Mensagem padrão WhatsApp.
+- Tema (`moderno|brutalista|minimalista`), tamanho de fonte, alto contraste.
+
+### 7. Backup (`/backup`)
+Export ZIP (JSON + fotos) e import. Sem nuvem.
+
+### 8. Mais (`/mais`) e Termos (`/termos`)
+Atalhos secundários.
+
+---
+
+## Câmera e editor de foto
+
+- **`src/components/camera-modal.tsx`**: usa `MediaTrackCapabilities.torch` para flash de hardware real (pulso de 80ms antes do `getImageData`). Fallback: flash de tela.
+- **`src/components/photo-editor.tsx`**: anotações (seta, retângulo, círculo, texto). Todas as formas são arrastáveis (correção: antes só `text` arrastava). Seta move os dois pontos juntos.
+
+---
+
+## Navegação e Sidebar
+
+- `src/components/app-shell.tsx`:
+  - `SidebarProvider` com estado `collapsed` persistido em `localStorage` (`pp.sidebar.collapsed`). Inicializa lendo a chave antes do primeiro render → respeita escolha entre páginas.
+  - `MenuButton` (hambúrguer) flutuante sempre visível.
+  - `PageHeader` reutilizável (eyebrow, título, actions).
+- `src/routes/__root.tsx`: aplica `data-theme`, `data-fonte`, `data-contraste` no `<html>` a partir do `db.config.get(1)` via `useLiveQuery`.
+
+---
+
+## Performance (mobile first)
+
+1. **Sem `backdrop-blur` pesado**: substituído por `bg-surface/80` opaco e `bg-midnight` sólido em overlays.
+2. **Sem `transition-colors` no root**.
+3. **Fontes locais via `@font-face`** (sem Google Fonts bloqueante).
+4. **Live queries consolidadas** no dashboard (`Promise.all` em um único `useLiveQuery`).
+5. **Lazy imports**: `jspdf` e `jszip` só são importados dentro das funções que os usam.
+6. **`defaultPreload: "intent"`** no router para baixar chunk antes do clique.
+7. **Bundle hygiene**: remoção de deps não usadas (`embla, vaul, react-day-picker, cmdk, recharts, input-otp, react-resizable-panels`).
+
+---
+
+## System design (resumo)
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│  Browser (PWA, offline-first)                                │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │  React 19 + TanStack Router (file-based, SPA client)     │ │
+│ │ ┌────────────┐  ┌────────────┐  ┌─────────────────────┐  │ │
+│ │ │ Dashboard  │  │ Orçamentos │  │ Clientes/Forn/Ag.   │  │ │
+│ │ └────────────┘  └────────────┘  └─────────────────────┘  │ │
+│ │           │            │                  │              │ │
+│ │           ▼            ▼                  ▼              │ │
+│ │     ┌────────────────────────────────────────────┐       │ │
+│ │     │ Camada de domínio: lib/orcamentos.ts       │       │ │
+│ │     │  persistOrcamento (diff → historico)       │       │ │
+│ │     │  updateStatusWithLog                       │       │ │
+│ │     └────────────────────────────────────────────┘       │ │
+│ │                            │                             │ │
+│ │                            ▼                             │ │
+│ │     ┌────────────────────────────────────────────┐       │ │
+│ │     │  Dexie (IndexedDB)  —  pintor_plus v2      │       │ │
+│ │     │  clientes · fornecedores · orcamentos      │       │ │
+│ │     │  fotos (Blob) · eventos · recibos · config │       │ │
+│ │     └────────────────────────────────────────────┘       │ │
+│ │                            │                             │ │
+│ │                            ▼                             │ │
+│ │     ┌────────────────────────────────────────────┐       │ │
+│ │     │ Export/Import ZIP (jszip lazy) ─ Backup    │       │ │
+│ │     │ PDF (jspdf lazy) ─ WhatsApp (wa.me deeplnk)│       │ │
+│ │     │ Câmera (getUserMedia + torch hw)           │       │ │
+│ │     └────────────────────────────────────────────┘       │ │
+│ └──────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Princípios invariantes**:
+- Nenhum dado sai do dispositivo sem ação explícita (PDF/WhatsApp/Backup).
+- Toda mutação de orçamento passa por `persistOrcamento` → log automático.
+- Toda lista observada usa `useLiveQuery` para reatividade Dexie → UI.
+- Roteamento file-based; novos features = novo arquivo em `src/routes/`.
+
+---
+
+## Roadmap próximo (não bloqueante)
+
+- Migração opcional para SQLite (sql.js + OPFS) quando volume justificar.
+- Sincronização P2P opcional via WebRTC (sem servidor central).
+- Assinatura digital do cliente no recibo (canvas).
