@@ -164,6 +164,7 @@ function RootComponent() {
           <ThemeHandler />
           <Sidebar />
           <MenuButton />
+          <ThemeToggle />
           <main className="flex-1 min-w-0">
             <Outlet />
           </main>
