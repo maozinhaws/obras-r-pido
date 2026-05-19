@@ -21,6 +21,7 @@ import { db } from "@/lib/db";
 
 import appCss from "../styles.css?url";
 import { Sidebar, SidebarProvider, MenuButton } from "@/components/app-shell";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 
 
@@ -163,6 +164,7 @@ function RootComponent() {
           <ThemeHandler />
           <Sidebar />
           <MenuButton />
+          <ThemeToggle />
           <main className="flex-1 min-w-0">
             <Outlet />
           </main>

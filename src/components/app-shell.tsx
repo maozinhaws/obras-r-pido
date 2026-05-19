@@ -106,7 +106,7 @@ function NavRow({
         "flex items-center gap-3 px-3 py-2.5 rounded-2xl text-[12px] font-semibold transition-colors",
         active
           ? "bg-[#0a0a0a] text-white"
-          : "text-gray-600 hover:text-gray-900 hover:bg-[#f4f4f6]",
+          : "text-muted-foreground hover:text-foreground hover:bg-muted",
       )}
     >
       <Icon className="size-5 shrink-0" strokeWidth={2.25} />
@@ -124,12 +124,12 @@ export const MenuButton = memo(() => {
         else toggleOpen();
       }}
       aria-label="Menu"
-      className="fixed top-3 left-3 z-50 size-11 bg-white rounded-2xl grid place-items-center shadow-[0_4px_14px_rgba(0,0,0,0.06)] border border-[#ececef] glass-press md:hidden"
+      className="fixed top-3 left-3 z-50 size-11 bg-card rounded-2xl grid place-items-center shadow-[0_4px_14px_rgba(0,0,0,0.06)] border border-border glass-press md:hidden"
     >
       {open ? (
-        <X className="size-5 text-gray-900" strokeWidth={2.5} />
+        <X className="size-5 text-foreground" strokeWidth={2.5} />
       ) : (
-        <Menu className="size-5 text-gray-900" strokeWidth={2.5} />
+        <Menu className="size-5 text-foreground" strokeWidth={2.5} />
       )}
     </button>
   );
@@ -150,19 +150,19 @@ export const Sidebar = memo(() => {
       )}
       <aside
         className={cn(
-          "fixed md:sticky top-0 left-0 z-40 h-dvh shrink-0 flex flex-col bg-white border-r border-[#ececef] transition-[width,transform] duration-300 ease-out overflow-hidden",
+          "fixed md:sticky top-0 left-0 z-40 h-dvh shrink-0 flex flex-col bg-card border-r border-border transition-[width,transform] duration-300 ease-out overflow-hidden",
           collapsed ? "md:w-20" : "md:w-64",
           "w-64",
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
       >
-        <div className="p-4 border-b border-[#ececef] flex items-center gap-3 pl-16 md:pl-4">
+        <div className="p-4 border-b border-border flex items-center gap-3 pl-16 md:pl-4">
           <div className="size-10 rounded-2xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center text-display text-base text-white shrink-0">
             P+
           </div>
           {showLabel && (
             <div className="min-w-0">
-              <div className="text-display text-base leading-none text-gray-900">
+              <div className="text-display text-base leading-none text-foreground">
                 Pintor
               </div>
               <div className="text-display text-base leading-none text-brand-2">
@@ -174,7 +174,7 @@ export const Sidebar = memo(() => {
 
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {showLabel && (
-            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-2 mt-1 px-3">
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.18em] mb-2 mt-1 px-3">
               Principal
             </div>
           )}
@@ -183,7 +183,7 @@ export const Sidebar = memo(() => {
           ))}
 
           {showLabel && (
-            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-2 mt-6 px-3">
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.18em] mb-2 mt-6 px-3">
               Sistema
             </div>
           )}
@@ -192,7 +192,7 @@ export const Sidebar = memo(() => {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-[#ececef]">
+        <div className="p-3 border-t border-border">
           <Link
             to="/orcamentos/novo"
             search={{ modo: "flash" }}
@@ -218,14 +218,14 @@ export const PageHeader = memo(({
   actions?: React.ReactNode;
 }) => {
   return (
-    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-[#ececef] bg-white/60">
+    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-border bg-card/60">
       <div>
         {eyebrow && (
-          <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-[0.2em] mb-2">
+          <p className="text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.2em] mb-2">
             {eyebrow}
           </p>
         )}
-        <h1 className="text-display text-2xl lg:text-4xl leading-none text-gray-900">
+        <h1 className="text-display text-2xl lg:text-4xl leading-none text-foreground">
           {title}
         </h1>
       </div>

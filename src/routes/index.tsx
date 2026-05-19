@@ -58,10 +58,10 @@ function Home() {
         {/* Header */}
         <header className="px-2">
           <div className="mb-4">
-            <p className="text-gray-500 text-[11px] font-semibold uppercase tracking-[0.2em]">
+            <p className="text-muted-foreground text-[11px] font-semibold uppercase tracking-[0.2em]">
               Painel · System Active
             </p>
-            <h1 className="text-display text-3xl text-gray-900 mt-1 leading-none">
+            <h1 className="text-display text-3xl text-foreground mt-1 leading-none">
               Performance Hub
             </h1>
           </div>
@@ -86,7 +86,7 @@ function Home() {
         >
           <div className="glass-brand p-7">
             <div className="flex justify-between items-start mb-12">
-              <div className="size-12 rounded-2xl bg-white/20 backdrop-blur-md grid place-items-center">
+              <div className="size-12 rounded-2xl bg-card/20 backdrop-blur-md grid place-items-center">
                 <Plus className="size-6 text-white" strokeWidth={2.75} />
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[0.18em] bg-black/15 text-white px-3 py-1.5 rounded-full">
@@ -107,7 +107,7 @@ function Home() {
         {/* Fluxo de Orçamentos */}
         <div className="glass p-6">
           <div className="flex justify-between items-center mb-5">
-            <h3 className="text-display text-base text-gray-900 uppercase tracking-tight">
+            <h3 className="text-display text-base text-foreground uppercase tracking-tight">
               Fluxo de Orçamentos
             </h3>
             <Link
@@ -120,10 +120,10 @@ function Home() {
 
           {orcamentos.length === 0 ? (
             <div className="flex flex-col items-center justify-center text-center py-6">
-              <div className="size-16 bg-[#f4f4f6] rounded-2xl grid place-items-center mb-4">
-                <FileText className="size-7 text-gray-400" strokeWidth={1.5} />
+              <div className="size-16 bg-muted rounded-2xl grid place-items-center mb-4">
+                <FileText className="size-7 text-muted-foreground" strokeWidth={1.5} />
               </div>
-              <p className="text-gray-400 font-semibold text-sm mb-5">
+              <p className="text-muted-foreground font-semibold text-sm mb-5">
                 Nenhum orçamento ainda
               </p>
               <button
@@ -140,23 +140,23 @@ function Home() {
                   key={o.id}
                   to="/orcamentos/$id"
                   params={{ id: String(o.id) }}
-                  className="flex items-center justify-between p-3 rounded-2xl bg-[#fafafb] hover:bg-[#f4f4f6] glass-press"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="size-10 rounded-xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center text-white font-bold text-sm shrink-0">
                       $
                     </div>
                     <div className="min-w-0">
-                      <p className="font-bold text-sm text-gray-900 truncate">
+                      <p className="font-bold text-sm text-foreground truncate">
                         {o.clienteSnapshot?.nome ?? "Sem cliente"}
                       </p>
-                      <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">
+                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-0.5">
                         {STATUS_LABELS[o.status]} ·{" "}
                         {format(o.atualizadoEm, "dd MMM", { locale: ptBR })}
                       </p>
                     </div>
                   </div>
-                  <p className="text-display text-sm text-gray-900 shrink-0">
+                  <p className="text-display text-sm text-foreground shrink-0">
                     {formatBRL(calcularTotal(o)).replace(",00", "")}
                   </p>
                 </Link>
@@ -175,19 +175,19 @@ function Home() {
               <div
                 className={`size-1.5 rounded-full ${proximoEvento ? "bg-[#ff6b35]" : "bg-green-500"}`}
               />
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
                 {proximoEvento ? "Próximo evento" : "Sem eventos"}
               </span>
             </div>
-            <h3 className="text-display text-xl text-gray-900 uppercase leading-none truncate">
+            <h3 className="text-display text-xl text-foreground uppercase leading-none truncate">
               {proximoEvento ? proximoEvento.titulo : "Agenda Livre"}
             </h3>
             <span className="text-brand text-[10px] font-bold uppercase tracking-widest pt-2 inline-flex items-center gap-1">
               Ver agenda <ArrowUpRight className="size-3" strokeWidth={3} />
             </span>
           </div>
-          <div className="size-20 bg-[#f4f4f6] rounded-2xl grid place-items-center shrink-0 ml-3">
-            <Calendar className="size-10 text-gray-300" strokeWidth={1.5} />
+          <div className="size-20 bg-muted rounded-2xl grid place-items-center shrink-0 ml-3">
+            <Calendar className="size-10 text-muted-foreground/60" strokeWidth={1.5} />
           </div>
         </Link>
       </div>
@@ -199,12 +199,12 @@ function Home() {
 
 function MetricPill({ dotColor, label }: { dotColor: string; label: string }) {
   return (
-    <div className="flex-none bg-white border border-[#ececef] px-3.5 py-2 rounded-full flex items-center gap-2">
+    <div className="flex-none bg-card border border-border px-3.5 py-2 rounded-full flex items-center gap-2">
       <div
         className="size-2 rounded-full"
         style={{ backgroundColor: dotColor }}
       />
-      <span className="text-[11px] font-semibold text-gray-700 whitespace-nowrap">
+      <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
         {label}
       </span>
     </div>
@@ -224,15 +224,15 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
   ];
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white rounded-[32px] w-full max-w-md overflow-hidden animate-scale-in shadow-2xl">
-        <div className="p-5 flex justify-between items-center border-b border-gray-100">
-          <h3 className="text-display text-xl text-gray-900">Tipo de Orçamento</h3>
+      <div className="bg-card rounded-[32px] w-full max-w-md overflow-hidden animate-scale-in shadow-2xl">
+        <div className="p-5 flex justify-between items-center border-b border-border">
+          <h3 className="text-display text-xl text-foreground">Tipo de Orçamento</h3>
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="size-9 rounded-full bg-[#f4f4f6] grid place-items-center hover:bg-[#ececef] transition-colors"
+            className="size-9 rounded-full bg-muted grid place-items-center hover:bg-muted transition-colors"
           >
-            <X className="size-5 text-gray-700" strokeWidth={2.5} />
+            <X className="size-5 text-foreground" strokeWidth={2.5} />
           </button>
         </div>
         <div className="p-5 space-y-3">
@@ -242,14 +242,14 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
               to="/orcamentos/novo"
               search={{ modo, draftKey: uid() }}
               onClick={onClose}
-              className="flex items-center gap-4 p-4 rounded-2xl bg-[#fafafb] hover:bg-[#f4f4f6] glass-press"
+              className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
             >
               <div className="size-12 rounded-2xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center shrink-0">
                 <Icon className="size-6 text-white" strokeWidth={2.25} />
               </div>
               <div className="min-w-0">
-                <h4 className="font-bold text-gray-900">{title}</h4>
-                <p className="text-xs text-gray-500 font-medium">{desc}</p>
+                <h4 className="font-bold text-foreground">{title}</h4>
+                <p className="text-xs text-muted-foreground font-medium">{desc}</p>
               </div>
             </Link>
           ))}

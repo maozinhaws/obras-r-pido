@@ -112,6 +112,36 @@
 
 .dark { /* unused — app is light-first */ }
 
+/* Dark mode tokens */
+:root[data-theme="escuro"] {
+  --background: #0f1115;
+  --foreground: #f5f5f7;
+  --card: #1a1d24;
+  --card-foreground: #f5f5f7;
+  --popover: #1a1d24;
+  --popover-foreground: #f5f5f7;
+  --primary: #ffffff;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1a1d24;
+  --secondary-foreground: #f5f5f7;
+  --muted: #1a1d24;
+  --muted-foreground: #9ca3af;
+  --accent: #1a1d24;
+  --accent-foreground: #f5f5f7;
+  --border: #262932;
+  --input: #1a1d24;
+  --sidebar: #0f1115;
+  --sidebar-foreground: #f5f5f7;
+  --sidebar-accent: #1a1d24;
+  --sidebar-accent-foreground: #f5f5f7;
+  --sidebar-border: #262932;
+}
+:root[data-theme="escuro"] .btn-dark {
+  background: #ffffff;
+  color: #0a0a0a;
+}
+:root[data-theme="escuro"] .btn-dark:hover { background: #e5e5e5; }
+
 /* Accessibility */
 :root[data-fonte="pequeno"] { font-size: 14px; }
 :root[data-fonte="normal"]  { font-size: 16px; }
@@ -155,25 +185,25 @@
   }
   .text-mono { font-family: var(--font-mono); }
 
-  /* Card surfaces — white, soft floating */
+  /* Card surfaces — white, soft floating, one sharp corner (top-left) */
   .glass {
-    background: #ffffff;
-    border: 1px solid #f0f0f2;
-    border-radius: 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0 32px 32px 32px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
   }
   .glass-strong {
-    background: #ffffff;
-    border: 1px solid #ececef;
-    border-radius: 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0 32px 32px 32px;
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.06);
   }
 
-  /* Vibrant gradient hero card */
+  /* Vibrant gradient hero card — sharp top-right corner for contrast */
   .glass-brand {
     background: linear-gradient(135deg, #ff6b35 0%, #ff6b35 45%, #7b5cff 100%);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 36px;
+    border-radius: 36px 0 36px 36px;
     color: #ffffff;
     box-shadow: 0 20px 50px -15px rgba(123, 92, 255, 0.35);
   }
