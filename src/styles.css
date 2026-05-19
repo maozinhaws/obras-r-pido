@@ -375,7 +375,7 @@ body {
   color: var(--foreground);
 }
 
-/* =============== LIQUID GLASS PANELS =============== */
+/* =============== LIQUID GLASS PANELS — flat & modern =============== */
 .glass,
 .glass-strong,
 .glass-brand {
@@ -384,55 +384,26 @@ body {
   color: var(--neu-ink) !important;
   border: 1px solid var(--lg-border) !important;
   border-radius: var(--radius);
-  backdrop-filter: blur(var(--lg-blur)) saturate(160%);
-  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%);
+  backdrop-filter: blur(var(--lg-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(140%);
   box-shadow:
-    /* outer neumorphic depth */
-    -10px -10px 24px var(--neu-shadow-light),
-    14px 14px 32px var(--neu-shadow-dark),
-    /* inner glass refraction */
-    inset 0 1px 0 var(--lg-highlight),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
-    inset 1px 0 0 rgba(255, 255, 255, 0.08),
-    inset -1px 0 0 rgba(0, 0, 0, 0.18) !important;
-  overflow: hidden;
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 8px 24px rgba(0, 0, 0, 0.25) !important;
 }
-
-/* Specular highlight sweep on glass panels */
-.glass::before,
-.glass-strong::before,
-.glass-brand::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(255, 255, 255, 0.04) 18%,
-    transparent 45%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-.glass > *,
-.glass-strong > *,
-.glass-brand > * { position: relative; z-index: 1; }
 
 .glass-strong {
   background: var(--lg-bg-strong) !important;
   border-color: var(--lg-border-strong) !important;
-  backdrop-filter: blur(var(--lg-blur-strong)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--lg-blur-strong)) saturate(180%);
+  backdrop-filter: blur(var(--lg-blur-strong)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--lg-blur-strong)) saturate(160%);
 }
 
 .glass-brand {
   background:
     linear-gradient(135deg,
-      rgba(138, 180, 255, 0.22) 0%,
-      rgba(182, 166, 255, 0.16) 50%,
-      rgba(255, 255, 255, 0.06) 100%) !important;
-  border-color: rgba(138, 180, 255, 0.35) !important;
+      rgba(138, 180, 255, 0.16) 0%,
+      rgba(182, 166, 255, 0.10) 100%) !important;
+  border-color: rgba(138, 180, 255, 0.25) !important;
 }
 
 .glass *,
@@ -442,84 +413,50 @@ body {
 .glass-brand .text-ink,
 .glass-brand .text-primary-foreground { color: var(--neu-accent) !important; }
 
-/* =============== BUTTONS — liquid glass pills =============== */
+/* =============== BUTTONS — flat glass pills =============== */
 button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"]) {
-  position: relative;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.14) 0%,
-    rgba(255, 255, 255, 0.04) 100%
-  );
+  background: rgba(255, 255, 255, 0.06);
   color: var(--neu-ink) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 16px !important;
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
-  box-shadow:
-    -4px -4px 10px var(--neu-shadow-light),
-    6px 6px 16px var(--neu-shadow-dark),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-  transition: transform 100ms ease, box-shadow 150ms ease, filter 150ms ease, background 150ms ease;
-  overflow: hidden;
-}
-button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"])::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%);
-  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  transition: background 150ms ease, border-color 150ms ease, transform 100ms ease;
 }
 button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"]):hover {
-  filter: brightness(1.12);
-  background: linear-gradient(145deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.06) 100%);
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.18) !important;
 }
 button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"]):active {
   transform: translateY(1px);
-  box-shadow:
-    inset 4px 4px 10px rgba(0, 0, 0, 0.55),
-    inset -3px -3px 8px rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.04);
 }
 
-/* Primary/brand — luminous liquid glass */
+/* Primary/brand — subtle tinted glass */
 .bg-primary,
 .glass-brand button:not([data-skeu-skip]),
 button.bg-brand,
 button[data-variant="brand"] {
   background: linear-gradient(
     145deg,
-    rgba(138, 180, 255, 0.32) 0%,
-    rgba(182, 166, 255, 0.22) 100%
+    rgba(138, 180, 255, 0.22) 0%,
+    rgba(182, 166, 255, 0.16) 100%
   ) !important;
   color: #f5f8ff !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
-  border: 1px solid rgba(138, 180, 255, 0.45) !important;
-  box-shadow:
-    -4px -4px 12px var(--neu-shadow-light),
-    6px 6px 18px var(--neu-shadow-dark),
-    0 0 24px rgba(138, 180, 255, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(138, 180, 255, 0.30) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset !important;
 }
 
-/* =============== INPUTS — inset glass wells =============== */
+/* =============== INPUTS — flat glass fields =============== */
 input, textarea, select {
-  background: linear-gradient(
-    145deg,
-    rgba(0, 0, 0, 0.28) 0%,
-    rgba(255, 255, 255, 0.04) 100%
-  ) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
   color: var(--neu-ink) !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow:
-    inset 4px 4px 10px rgba(0, 0, 0, 0.55),
-    inset -2px -2px 6px rgba(255, 255, 255, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  box-shadow: none !important;
 }
 input::placeholder, textarea::placeholder {
   color: var(--neu-ink-soft) !important;
@@ -527,28 +464,20 @@ input::placeholder, textarea::placeholder {
 input:focus, textarea:focus, select:focus {
   outline: none !important;
   border-color: rgba(138, 180, 255, 0.45) !important;
-  box-shadow:
-    inset 4px 4px 10px rgba(0, 0, 0, 0.55),
-    inset -2px -2px 6px rgba(255, 255, 255, 0.04),
-    0 0 0 3px rgba(138, 180, 255, 0.18) !important;
+  box-shadow: 0 0 0 3px rgba(138, 180, 255, 0.14) !important;
 }
 
-/* Headings — soft emboss */
+/* Headings — clean, no emboss */
 h1, h2, h3, h4 {
   color: var(--neu-ink);
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px rgba(0, 0, 0, 0.45);
+  text-shadow: none;
 }
 
-/* Bordas — glass-edged */
+/* Bordas — flat glass-edged */
 .brutal-border,
 .brutal-border-thin {
-  border-color: rgba(255, 255, 255, 0.12) !important;
-  box-shadow:
-    -4px -4px 12px var(--neu-shadow-light),
-    6px 6px 16px var(--neu-shadow-dark),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
 }
 
 /* Texto brand */
