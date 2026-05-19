@@ -319,6 +319,147 @@
   }
 }
 
+/* ============================================================
+   SKEUOMORPHIC OVERRIDES — leather, brushed metal, glossy plastic
+   Aplica-se globalmente sobre o tema base.
+   ============================================================ */
+:root {
+  --skeu-leather: #2b1d12;
+  --skeu-leather-2: #3d2a18;
+  --skeu-stitch: #c9a86b;
+  --skeu-metal-1: #f4f1ea;
+  --skeu-metal-2: #b8b2a6;
+  --skeu-metal-3: #6b6358;
+  --skeu-gloss-top: rgba(255, 255, 255, 0.55);
+  --skeu-gloss-mid: rgba(255, 255, 255, 0.12);
+  --skeu-bevel-light: rgba(255, 255, 255, 0.45);
+  --skeu-bevel-dark: rgba(0, 0, 0, 0.55);
+
+  --radius: 14px;
+  --foreground: #f5ead2;
+  --card-foreground: #1a1208;
+  --popover-foreground: #1a1208;
+  --muted-foreground: #d9c9a6;
+}
+
+body {
+  background-color: #1a1208 !important;
+  /* Textura de couro: ruído sutil + gradiente quente */
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255, 220, 160, 0.08), transparent 50%),
+    radial-gradient(circle at 80% 90%, rgba(0, 0, 0, 0.4), transparent 60%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 3px),
+    linear-gradient(135deg, var(--skeu-leather) 0%, var(--skeu-leather-2) 100%) !important;
+  background-attachment: fixed !important;
+  color: var(--foreground);
+}
+
+/* Cards — placas de metal escovado com bisel e brilho */
+.glass,
+.glass-strong {
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 45%,
+      rgba(0, 0, 0, 0.12) 100%),
+    linear-gradient(180deg, #e8e2d4 0%, #c7bfae 50%, #a89e88 100%) !important;
+  color: #1a1208 !important;
+  border: 1px solid rgba(0, 0, 0, 0.35) !important;
+  border-radius: var(--radius);
+  box-shadow:
+    inset 0 1px 0 var(--skeu-bevel-light),
+    inset 0 -1px 0 var(--skeu-bevel-dark),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 2px 0 rgba(0, 0, 0, 0.35),
+    0 8px 18px rgba(0, 0, 0, 0.55),
+    0 16px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+.glass *,
+.glass-strong * {
+  color: inherit;
+}
+
+/* Cards com brand: laranja envernizado tipo plástico brilhante */
+.glass-brand {
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.15) 40%,
+      rgba(0, 0, 0, 0.15) 60%,
+      rgba(0, 0, 0, 0.05) 100%),
+    linear-gradient(180deg, #ffb347 0%, #f08a2c 50%, #c45a14 100%) !important;
+  color: #2a1000 !important;
+  border: 1px solid rgba(80, 30, 0, 0.7) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.35),
+    0 2px 0 rgba(0, 0, 0, 0.4),
+    0 10px 24px rgba(196, 90, 20, 0.45),
+    0 18px 36px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Botões — gloss + bevel + press físico */
+button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"]) {
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(0, 0, 0, 0.15) 100%),
+    linear-gradient(180deg, #f0c674 0%, #d99840 55%, #a86820 100%);
+  color: #2a1000 !important;
+  border: 1px solid rgba(60, 25, 0, 0.7) !important;
+  border-radius: 12px !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+    0 2px 0 rgba(0, 0, 0, 0.4),
+    0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 80ms ease;
+}
+button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"]):hover {
+  filter: brightness(1.05);
+}
+button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"]):active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    0 0 0 rgba(0, 0, 0, 0);
+}
+
+/* Inputs — vidro fosco encaixado (inset) */
+input, textarea, select {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.04) 100%),
+    #fdf7e7 !important;
+  color: #1a1208 !important;
+  border: 1px solid rgba(0, 0, 0, 0.45) !important;
+  border-radius: 10px !important;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.15);
+}
+input::placeholder, textarea::placeholder {
+  color: rgba(26, 18, 8, 0.45) !important;
+}
+
+/* Headings — emboss */
+h1, h2, h3, h4 {
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55), 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Bordas internas mais marcadas para sensação de painel */
+.brutal-border,
+.brutal-border-thin {
+  border-color: rgba(0, 0, 0, 0.5) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+}
+
 /* Hide Lovable badge */
 #lovable-badge,
 #lovable-badge-v2,
