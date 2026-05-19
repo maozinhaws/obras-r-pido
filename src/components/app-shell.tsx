@@ -103,13 +103,13 @@ function NavRow({
       to={to}
       title={!showLabel ? label : undefined}
       className={cn(
-        "flex items-center gap-3 px-3 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-colors",
+        "flex items-center gap-3 px-3 py-2.5 rounded-2xl text-[12px] font-semibold transition-colors",
         active
-          ? "glass-brand text-white"
-          : "text-foreground/60 hover:text-white hover:bg-white/10",
+          ? "bg-[#0a0a0a] text-white"
+          : "text-gray-600 hover:text-gray-900 hover:bg-[#f4f4f6]",
       )}
     >
-      <Icon className="size-5 shrink-0" strokeWidth={2.5} />
+      <Icon className="size-5 shrink-0" strokeWidth={2.25} />
       {showLabel && <span className="truncate">{label}</span>}
     </Link>
   );
@@ -120,14 +120,17 @@ export const MenuButton = memo(() => {
   return (
     <button
       onClick={() => {
-        // mobile abre drawer, desktop colapsa
         if (window.matchMedia("(min-width: 768px)").matches) toggleCollapsed();
         else toggleOpen();
       }}
       aria-label="Menu"
-      className="fixed top-3 left-3 z-50 size-11 glass-strong rounded-xl grid place-items-center glass-press"
+      className="fixed top-3 left-3 z-50 size-11 bg-white rounded-2xl grid place-items-center shadow-[0_4px_14px_rgba(0,0,0,0.06)] border border-[#ececef] glass-press md:hidden"
     >
-      {open ? <X className="size-5" strokeWidth={3} /> : <Menu className="size-5" strokeWidth={3} />}
+      {open ? (
+        <X className="size-5 text-gray-900" strokeWidth={2.5} />
+      ) : (
+        <Menu className="size-5 text-gray-900" strokeWidth={2.5} />
+      )}
     </button>
   );
 });
@@ -138,39 +141,41 @@ export const Sidebar = memo(() => {
 
   return (
     <>
-      {/* overlay mobile */}
       {open && (
         <button
           aria-label="Fechar menu"
           onClick={close}
-          className="md:hidden fixed inset-0 z-40 bg-black/60 animate-fade-in"
+          className="md:hidden fixed inset-0 z-40 bg-black/40 animate-fade-in"
         />
       )}
       <aside
         className={cn(
-          "fixed md:sticky top-0 left-0 z-40 h-dvh shrink-0 flex flex-col glass-strong rounded-none border-l-0 border-y-0 transition-[width,transform] duration-300 ease-out overflow-hidden",
+          "fixed md:sticky top-0 left-0 z-40 h-dvh shrink-0 flex flex-col bg-white border-r border-[#ececef] transition-[width,transform] duration-300 ease-out overflow-hidden",
           collapsed ? "md:w-20" : "md:w-64",
-          // mobile drawer
           "w-64",
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
       >
-        <div className="p-4 border-b border-white/10 flex items-center gap-3 pl-16 md:pl-4">
-          <div className="size-10 glass-brand rounded-xl grid place-items-center text-display text-xl text-white shrink-0">
+        <div className="p-4 border-b border-[#ececef] flex items-center gap-3 pl-16 md:pl-4">
+          <div className="size-10 rounded-2xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center text-display text-base text-white shrink-0">
             P+
           </div>
           {showLabel && (
             <div className="min-w-0">
-              <div className="text-display text-lg leading-none">Pintor</div>
-              <div className="text-display text-lg leading-none text-brand">Plus</div>
+              <div className="text-display text-base leading-none text-gray-900">
+                Pintor
+              </div>
+              <div className="text-display text-base leading-none text-brand-2">
+                Plus
+              </div>
             </div>
           )}
         </div>
 
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {showLabel && (
-            <div className="text-[9px] font-mono text-foreground/40 uppercase tracking-widest mb-2 mt-1 px-2">
-              {"> Principal"}
+            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-2 mt-1 px-3">
+              Principal
             </div>
           )}
           {NAV_PRIMARY.map((n) => (
@@ -178,8 +183,8 @@ export const Sidebar = memo(() => {
           ))}
 
           {showLabel && (
-            <div className="text-[9px] font-mono text-foreground/40 uppercase tracking-widest mb-2 mt-6 px-2">
-              {"> Sistema"}
+            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.18em] mb-2 mt-6 px-3">
+              Sistema
             </div>
           )}
           {NAV_SECONDARY.map((n) => (
@@ -187,14 +192,14 @@ export const Sidebar = memo(() => {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-white/10">
+        <div className="p-3 border-t border-[#ececef]">
           <Link
             to="/orcamentos/novo"
             search={{ modo: "flash" }}
-            className="flex items-center justify-center gap-2 glass-brand rounded-xl glass-press py-3 text-xs font-bold uppercase tracking-widest text-white"
+            className="flex items-center justify-center gap-2 bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] rounded-full glass-press py-3 text-xs font-bold uppercase tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(123,92,255,0.5)]"
             title={!showLabel ? "Novo Orçamento" : undefined}
           >
-            <Plus className="size-4" strokeWidth={3} />
+            <Plus className="size-4" strokeWidth={2.75} />
             {showLabel && <span>Novo Orçamento</span>}
           </Link>
         </div>
@@ -213,14 +218,14 @@ export const PageHeader = memo(({
   actions?: React.ReactNode;
 }) => {
   return (
-    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-white/10">
+    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-[#ececef] bg-white/60">
       <div>
         {eyebrow && (
-          <div className="inline-block px-2.5 py-1 rounded-full glass text-brand text-[10px] font-black uppercase tracking-widest mb-3">
+          <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-[0.2em] mb-2">
             {eyebrow}
-          </div>
+          </p>
         )}
-        <h1 className="text-display text-2xl lg:text-4xl leading-none text-white">
+        <h1 className="text-display text-2xl lg:text-4xl leading-none text-gray-900">
           {title}
         </h1>
       </div>
