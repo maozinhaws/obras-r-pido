@@ -103,10 +103,10 @@ function NavRow({
       to={to}
       title={!showLabel ? label : undefined}
       className={cn(
-        "flex items-center gap-3 px-3 py-2.5 rounded-2xl text-[12px] font-semibold transition-colors",
+        "flex items-center gap-3 px-3 py-2.5 rounded-2xl text-[12px] font-semibold transition-all",
         active
-          ? "bg-[#0a0a0a] text-white"
-          : "text-muted-foreground hover:text-foreground hover:bg-muted",
+          ? "neu-inset text-foreground"
+          : "text-muted-foreground hover:text-foreground",
       )}
     >
       <Icon className="size-5 shrink-0" strokeWidth={2.25} />

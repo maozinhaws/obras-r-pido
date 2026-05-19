@@ -108,21 +108,25 @@
   --sidebar-accent-foreground: #111111;
   --sidebar-border: #ececef;
   --sidebar-ring: #7b5cff;
+
+  /* Neumorphism */
+  --neu-light: rgba(255, 255, 255, 0.95);
+  --neu-dark: rgba(174, 178, 196, 0.45);
 }
 
 .dark { /* unused — app is light-first */ }
 
 /* Dark mode tokens */
 :root[data-theme="escuro"] {
-  --background: #0f1115;
+  --background: #1a1d24;
   --foreground: #f5f5f7;
-  --card: #1a1d24;
+  --card: #1e2129;
   --card-foreground: #f5f5f7;
-  --popover: #1a1d24;
+  --popover: #1e2129;
   --popover-foreground: #f5f5f7;
   --primary: #ffffff;
   --primary-foreground: #0a0a0a;
-  --secondary: #1a1d24;
+  --secondary: #1e2129;
   --secondary-foreground: #f5f5f7;
   --muted: #1a1d24;
   --muted-foreground: #9ca3af;
@@ -135,6 +139,9 @@
   --sidebar-accent: #1a1d24;
   --sidebar-accent-foreground: #f5f5f7;
   --sidebar-border: #262932;
+
+  --neu-light: rgba(255, 255, 255, 0.045);
+  --neu-dark: rgba(0, 0, 0, 0.55);
 }
 :root[data-theme="escuro"] .btn-dark {
   background: #ffffff;
@@ -185,18 +192,22 @@
   }
   .text-mono { font-family: var(--font-mono); }
 
-  /* Card surfaces — white, soft floating, one sharp corner (top-left) */
+  /* Card surfaces — neumorphic, soft sculpted, one sharp corner (top-left) */
   .glass {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: 0 32px 32px 32px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    box-shadow:
+      -8px -8px 18px var(--neu-light),
+      10px 12px 26px var(--neu-dark);
   }
   .glass-strong {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: 0 32px 32px 32px;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      -10px -10px 22px var(--neu-light),
+      14px 16px 34px var(--neu-dark);
   }
 
   /* Vibrant gradient hero card — sharp top-right corner for contrast */
@@ -205,7 +216,10 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 36px 0 36px 36px;
     color: #ffffff;
-    box-shadow: 0 20px 50px -15px rgba(123, 92, 255, 0.35);
+    box-shadow:
+      -8px -8px 20px var(--neu-light),
+      14px 18px 38px var(--neu-dark),
+      0 22px 50px -18px rgba(123, 92, 255, 0.45);
   }
   .glass-brand-glow {
     position: relative;
@@ -223,12 +237,26 @@
     pointer-events: none;
   }
 
-  .glass-press {
-    transition: transform 150ms cubic-bezier(.2,.8,.2,1), box-shadow 150ms ease;
+  /* Inset / pressed neumorphic surface */
+  .neu-inset {
+    background: var(--card);
+    box-shadow:
+      inset 4px 4px 8px var(--neu-dark),
+      inset -4px -4px 8px var(--neu-light);
+    border: 1px solid transparent;
   }
-  .glass-press:active { transform: scale(0.98); }
 
-  /* Brand pill (dark) — primary CTA */
+  .glass-press {
+    transition: transform 150ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms ease;
+  }
+  .glass-press:active {
+    transform: scale(0.98);
+    box-shadow:
+      inset 3px 3px 6px var(--neu-dark),
+      inset -3px -3px 6px var(--neu-light);
+  }
+
+  /* Brand pill (dark) — primary CTA, neumorphic */
   .btn-dark {
     background: #0a0a0a;
     color: #ffffff;
@@ -236,10 +264,19 @@
     padding: 0.75rem 1.5rem;
     font-weight: 700;
     font-size: 0.8rem;
-    transition: background 150ms ease, transform 100ms ease;
+    box-shadow:
+      -4px -4px 10px var(--neu-light),
+      6px 8px 18px var(--neu-dark);
+    transition: background 150ms ease, transform 100ms ease, box-shadow 200ms ease;
   }
   .btn-dark:hover { background: #1f1f1f; }
-  .btn-dark:active { transform: scale(0.97); }
+  .btn-dark:active {
+    transform: scale(0.97);
+    box-shadow:
+      inset 3px 3px 6px rgba(0,0,0,0.5),
+      inset -2px -2px 5px rgba(255,255,255,0.08);
+  }
+
 
   /* Legacy brutalist (kept for any pages still using it) */
   .brutal-border       { border: 1px solid var(--border); border-radius: var(--radius); }
@@ -256,20 +293,26 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
-/* Inputs — clean, light */
+/* Inputs — neumorphic inset */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea, select {
-  background: #ffffff;
+  background: var(--card);
   color: var(--foreground);
-  border: 1px solid #e5e7eb;
+  border: 1px solid transparent;
   border-radius: 14px;
+  box-shadow:
+    inset 3px 3px 6px var(--neu-dark),
+    inset -3px -3px 6px var(--neu-light);
 }
-input::placeholder, textarea::placeholder { color: #9ca3af; }
+input::placeholder, textarea::placeholder { color: var(--muted-foreground); }
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #7b5cff;
-  box-shadow: 0 0 0 3px rgba(123, 92, 255, 0.15);
+  box-shadow:
+    inset 3px 3px 6px var(--neu-dark),
+    inset -3px -3px 6px var(--neu-light),
+    0 0 0 3px rgba(123, 92, 255, 0.25);
 }
+
 
 /* Brand text helpers */
 .text-brand   { color: var(--brand); }
