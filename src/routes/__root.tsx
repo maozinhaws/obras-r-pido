@@ -107,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "viewport",
         content: "width=device-width, initial-scale=1, viewport-fit=cover",
       },
-      { name: "theme-color", content: "#020617" },
+      { name: "theme-color", content: "#f4f4f6" },
       { title: "Pintor Plus — Orçamentos no canteiro de obra" },
       {
         name: "description",
