@@ -108,21 +108,25 @@
   --sidebar-accent-foreground: #111111;
   --sidebar-border: #ececef;
   --sidebar-ring: #7b5cff;
+
+  /* Neumorphism */
+  --neu-light: rgba(255, 255, 255, 0.95);
+  --neu-dark: rgba(174, 178, 196, 0.45);
 }
 
 .dark { /* unused — app is light-first */ }
 
 /* Dark mode tokens */
 :root[data-theme="escuro"] {
-  --background: #0f1115;
+  --background: #1a1d24;
   --foreground: #f5f5f7;
-  --card: #1a1d24;
+  --card: #1e2129;
   --card-foreground: #f5f5f7;
-  --popover: #1a1d24;
+  --popover: #1e2129;
   --popover-foreground: #f5f5f7;
   --primary: #ffffff;
   --primary-foreground: #0a0a0a;
-  --secondary: #1a1d24;
+  --secondary: #1e2129;
   --secondary-foreground: #f5f5f7;
   --muted: #1a1d24;
   --muted-foreground: #9ca3af;
