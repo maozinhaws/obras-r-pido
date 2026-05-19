@@ -259,19 +259,35 @@
 /* Inputs — Lovable style, themed via tokens */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea, select {
-  background: var(--card);
-  color: var(--foreground);
+  background: var(--input-bg, var(--card));
+  color: var(--input-fg, var(--foreground));
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
 }
 input::placeholder, textarea::placeholder { color: var(--muted-foreground); opacity: 0.7; }
-input:focus, textarea:focus, select:focus {
+input:focus, textarea:focus, select:focus,
+input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: none;
-  border-color: var(--ring);
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 18%, transparent);
+  background: var(--input-bg-focus, #ffffff);
+  color: var(--input-fg-focus, #0a0a0a);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 28%, transparent);
+}
+
+:root {
+  --input-bg: #ffffff;
+  --input-fg: #0a0a0a;
+  --input-bg-focus: #ffffff;
+  --input-fg-focus: #0a0a0a;
+}
+:root[data-theme="escuro"] {
+  --input-bg: #2a2f38;
+  --input-fg: #ffffff;
+  --input-bg-focus: #ffffff;
+  --input-fg-focus: #0a0a0a;
 }
 
 /* Brand text helpers */
