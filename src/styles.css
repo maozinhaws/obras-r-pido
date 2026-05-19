@@ -324,15 +324,15 @@
    translucent, refractive glass panels floating above.
    ============================================================ */
 :root {
-  --neu-bg: #0f1320;
-  --neu-bg-2: #161b2b;
-  --neu-surface: #1b2030;
-  --neu-ink: #eaf0fb;
-  --neu-ink-soft: #9aa6c2;
+  --neu-bg: #1a1d24;
+  --neu-bg-2: #22262f;
+  --neu-surface: #2a2e38;
+  --neu-ink: #f0ede4;
+  --neu-ink-soft: #9a9689;
   --neu-shadow-dark: rgba(0, 0, 0, 0.6);
   --neu-shadow-light: rgba(255, 255, 255, 0.05);
-  --neu-accent: #8ab4ff;
-  --neu-accent-2: #b6a6ff;
+  --neu-accent: #c5f74f;
+  --neu-accent-2: #ff7a59;
 
   /* Liquid glass tokens */
   --lg-bg: linear-gradient(
