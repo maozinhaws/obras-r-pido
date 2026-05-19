@@ -324,15 +324,15 @@
    translucent, refractive glass panels floating above.
    ============================================================ */
 :root {
-  --neu-bg: #0f1320;
-  --neu-bg-2: #161b2b;
-  --neu-surface: #1b2030;
-  --neu-ink: #eaf0fb;
-  --neu-ink-soft: #9aa6c2;
+  --neu-bg: #1a1d24;
+  --neu-bg-2: #22262f;
+  --neu-surface: #2a2e38;
+  --neu-ink: #f0ede4;
+  --neu-ink-soft: #9a9689;
   --neu-shadow-dark: rgba(0, 0, 0, 0.6);
   --neu-shadow-light: rgba(255, 255, 255, 0.05);
-  --neu-accent: #8ab4ff;
-  --neu-accent-2: #b6a6ff;
+  --neu-accent: #c5f74f;
+  --neu-accent-2: #ff7a59;
 
   /* Liquid glass tokens */
   --lg-bg: linear-gradient(
@@ -367,10 +367,10 @@
 body {
   background-color: var(--neu-bg) !important;
   background-image:
-    radial-gradient(60vmax 50vmax at 0% 0%, rgba(138, 180, 255, 0.22) 0%, transparent 60%),
-    radial-gradient(55vmax 45vmax at 100% 10%, rgba(182, 166, 255, 0.20) 0%, transparent 60%),
-    radial-gradient(70vmax 60vmax at 50% 100%, rgba(94, 234, 212, 0.12) 0%, transparent 65%),
-    linear-gradient(180deg, #0f1320 0%, #0a0d18 100%) !important;
+    radial-gradient(60vmax 50vmax at 0% 0%, rgba(197, 247, 79, 0.10) 0%, transparent 60%),
+    radial-gradient(55vmax 45vmax at 100% 10%, rgba(255, 122, 89, 0.10) 0%, transparent 60%),
+    radial-gradient(70vmax 60vmax at 50% 100%, rgba(255, 255, 255, 0.04) 0%, transparent 65%),
+    linear-gradient(180deg, #1a1d24 0%, #131519 100%) !important;
   background-attachment: fixed !important;
   color: var(--foreground);
 }
@@ -414,14 +414,14 @@ body {
 .glass-brand {
   background:
     linear-gradient(155deg,
-      rgba(138, 180, 255, 0.20) 0%,
-      rgba(138, 180, 255, 0.10) 50%,
-      rgba(56, 80, 140, 0.20) 100%) !important;
-  border-color: rgba(138, 180, 255, 0.22) !important;
+      rgba(197, 247, 79, 0.22) 0%,
+      rgba(197, 247, 79, 0.10) 50%,
+      rgba(120, 150, 50, 0.18) 100%) !important;
+  border-color: rgba(197, 247, 79, 0.28) !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.12) inset,
     0 -1px 0 rgba(0, 0, 0, 0.25) inset,
-    0 14px 32px -16px rgba(138, 180, 255, 0.30) !important;
+    0 14px 32px -16px rgba(197, 247, 79, 0.30) !important;
 }
 
 .glass *,
@@ -429,7 +429,8 @@ body {
 .glass-brand * { color: inherit; }
 
 .glass-brand .text-ink,
-.glass-brand .text-primary-foreground { color: var(--neu-accent) !important; }
+.glass-brand .text-ink,
+.glass-brand .text-primary-foreground { color: #1a1d24 !important; }
 
 /* =============== BUTTONS — soft tactile pills =============== */
 button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"]) {
@@ -471,16 +472,16 @@ button.bg-brand,
 button[data-variant="brand"] {
   background: linear-gradient(
     160deg,
-    rgba(160, 195, 255, 0.32) 0%,
-    rgba(138, 180, 255, 0.22) 55%,
-    rgba(80, 110, 180, 0.28) 100%
+    rgba(210, 250, 110, 0.95) 0%,
+    rgba(197, 247, 79, 0.92) 55%,
+    rgba(160, 210, 50, 0.95) 100%
   ) !important;
-  color: #f5f8ff !important;
-  border: 1px solid rgba(160, 195, 255, 0.32) !important;
+  color: #1a1d24 !important;
+  border: 1px solid rgba(220, 255, 130, 0.55) !important;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.18) inset,
-    0 -1px 0 rgba(0, 0, 0, 0.20) inset,
-    0 8px 18px -8px rgba(138, 180, 255, 0.40) !important;
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 10px 22px -8px rgba(197, 247, 79, 0.45) !important;
 }
 
 /* =============== INPUTS — gently inset =============== */
@@ -502,10 +503,10 @@ input::placeholder, textarea::placeholder {
 }
 input:focus, textarea:focus, select:focus {
   outline: none !important;
-  border-color: rgba(138, 180, 255, 0.40) !important;
+  border-color: rgba(197, 247, 79, 0.45) !important;
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.30) inset,
-    0 0 0 3px rgba(138, 180, 255, 0.14) !important;
+    0 0 0 3px rgba(197, 247, 79, 0.16) !important;
 }
 
 /* Headings — clean, no emboss */
