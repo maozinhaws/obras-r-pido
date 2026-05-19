@@ -472,16 +472,16 @@ button.bg-brand,
 button[data-variant="brand"] {
   background: linear-gradient(
     160deg,
-    rgba(160, 195, 255, 0.32) 0%,
-    rgba(138, 180, 255, 0.22) 55%,
-    rgba(80, 110, 180, 0.28) 100%
+    rgba(210, 250, 110, 0.95) 0%,
+    rgba(197, 247, 79, 0.92) 55%,
+    rgba(160, 210, 50, 0.95) 100%
   ) !important;
-  color: #f5f8ff !important;
-  border: 1px solid rgba(160, 195, 255, 0.32) !important;
+  color: #1a1d24 !important;
+  border: 1px solid rgba(220, 255, 130, 0.55) !important;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.18) inset,
-    0 -1px 0 rgba(0, 0, 0, 0.20) inset,
-    0 8px 18px -8px rgba(138, 180, 255, 0.40) !important;
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 10px 22px -8px rgba(197, 247, 79, 0.45) !important;
 }
 
 /* =============== INPUTS — gently inset =============== */
