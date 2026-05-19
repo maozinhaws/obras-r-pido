@@ -429,7 +429,8 @@ body {
 .glass-brand * { color: inherit; }
 
 .glass-brand .text-ink,
-.glass-brand .text-primary-foreground { color: var(--neu-accent) !important; }
+.glass-brand .text-ink,
+.glass-brand .text-primary-foreground { color: #1a1d24 !important; }
 
 /* =============== BUTTONS — soft tactile pills =============== */
 button:not([data-skeu-skip]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]):not([role="switch"]) {
