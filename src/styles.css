@@ -112,35 +112,35 @@
 
 .dark { /* unused — app is light-first */ }
 
-/* Dark mode tokens */
+/* Dark mode tokens — unified surfaces, Lovable-like */
 :root[data-theme="escuro"] {
-  --background: #0f1115;
-  --foreground: #f5f5f7;
-  --card: #1a1d24;
-  --card-foreground: #f5f5f7;
-  --popover: #1a1d24;
-  --popover-foreground: #f5f5f7;
-  --primary: #ffffff;
-  --primary-foreground: #0a0a0a;
-  --secondary: #1a1d24;
-  --secondary-foreground: #f5f5f7;
-  --muted: #1a1d24;
-  --muted-foreground: #9ca3af;
-  --accent: #1a1d24;
-  --accent-foreground: #f5f5f7;
+  --background: #0b0d12;
+  --foreground: #ededf0;
+  --card: #14171d;
+  --card-foreground: #ededf0;
+  --popover: #14171d;
+  --popover-foreground: #ededf0;
+  --primary: #ededf0;
+  --primary-foreground: #0b0d12;
+  --secondary: #1c2027;
+  --secondary-foreground: #ededf0;
+  --muted: #1c2027;
+  --muted-foreground: #9aa0aa;
+  --accent: #1c2027;
+  --accent-foreground: #ededf0;
   --border: #262932;
-  --input: #1a1d24;
-  --sidebar: #0f1115;
-  --sidebar-foreground: #f5f5f7;
-  --sidebar-accent: #1a1d24;
-  --sidebar-accent-foreground: #f5f5f7;
+  --input: #14171d;
+  --ring: #7b5cff;
+  --sidebar: #0b0d12;
+  --sidebar-foreground: #ededf0;
+  --sidebar-accent: #1c2027;
+  --sidebar-accent-foreground: #ededf0;
   --sidebar-border: #262932;
 }
-:root[data-theme="escuro"] .btn-dark {
-  background: #ffffff;
-  color: #0a0a0a;
-}
-:root[data-theme="escuro"] .btn-dark:hover { background: #e5e5e5; }
+:root[data-theme="escuro"] .btn-dark { background: #ededf0; color: #0b0d12; }
+:root[data-theme="escuro"] .btn-dark:hover { background: #ffffff; }
+:root[data-theme="escuro"] .glass { box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+:root[data-theme="escuro"] .glass-strong { box-shadow: 0 14px 40px rgba(0,0,0,0.5); }
 
 /* Accessibility */
 :root[data-fonte="pequeno"] { font-size: 14px; }
@@ -256,19 +256,22 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
-/* Inputs — clean, light */
+/* Inputs — Lovable style, themed via tokens */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea, select {
-  background: #ffffff;
+  background: var(--card);
   color: var(--foreground);
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
-input::placeholder, textarea::placeholder { color: #9ca3af; }
+input::placeholder, textarea::placeholder { color: var(--muted-foreground); opacity: 0.7; }
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #7b5cff;
-  box-shadow: 0 0 0 3px rgba(123, 92, 255, 0.15);
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 18%, transparent);
 }
 
 /* Brand text helpers */
