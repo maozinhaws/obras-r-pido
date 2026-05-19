@@ -139,6 +139,9 @@
   --sidebar-accent: #1a1d24;
   --sidebar-accent-foreground: #f5f5f7;
   --sidebar-border: #262932;
+
+  --neu-light: rgba(255, 255, 255, 0.045);
+  --neu-dark: rgba(0, 0, 0, 0.55);
 }
 :root[data-theme="escuro"] .btn-dark {
   background: #ffffff;
