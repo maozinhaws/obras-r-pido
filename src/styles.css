@@ -293,20 +293,26 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
-/* Inputs — clean, light */
+/* Inputs — neumorphic inset */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea, select {
-  background: #ffffff;
+  background: var(--card);
   color: var(--foreground);
-  border: 1px solid #e5e7eb;
+  border: 1px solid transparent;
   border-radius: 14px;
+  box-shadow:
+    inset 3px 3px 6px var(--neu-dark),
+    inset -3px -3px 6px var(--neu-light);
 }
-input::placeholder, textarea::placeholder { color: #9ca3af; }
+input::placeholder, textarea::placeholder { color: var(--muted-foreground); }
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #7b5cff;
-  box-shadow: 0 0 0 3px rgba(123, 92, 255, 0.15);
+  box-shadow:
+    inset 3px 3px 6px var(--neu-dark),
+    inset -3px -3px 6px var(--neu-light),
+    0 0 0 3px rgba(123, 92, 255, 0.25);
 }
+
 
 /* Brand text helpers */
 .text-brand   { color: var(--brand); }
