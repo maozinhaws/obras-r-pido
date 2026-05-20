@@ -244,7 +244,7 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
               onClick={onClose}
               className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
             >
-              <div className="size-12 rounded-2xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center shrink-0">
+              <div className="mode-avatar">
                 <Icon className="size-6 text-white" strokeWidth={2.25} />
               </div>
               <div className="min-w-0">
