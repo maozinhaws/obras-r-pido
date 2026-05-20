@@ -330,6 +330,112 @@
 
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* CTA pill — gradient action button (sidebar + page headers) */
+  .cta-pill {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff6b35 35%, #ec4899 65%, #a78bfa 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    padding: 0.625rem 1.125rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 10px 30px -10px rgba(123, 92, 255, 0.5);
+    cursor: pointer;
+    transition: transform 150ms ease;
+  }
+  .cta-pill:active { transform: scale(0.97); }
+
+  /* Eyebrow with `>` command-prompt prefix — signature motif */
+  .eyebrow-cmd {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand);
+  }
+  .eyebrow-cmd::before { content: "> "; color: var(--brand); }
+
+  /* Status filter chip */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    background: var(--card);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    padding: 0.4375rem 0.875rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+  }
+  .chip:hover { background: var(--muted); }
+  .chip.active {
+    background: linear-gradient(135deg, #ff6b35, #7b5cff);
+    color: #ffffff;
+    border-color: transparent;
+  }
+
+  /* Wizard stepper segment */
+  .stepper-seg {
+    flex: 1;
+    height: 8px;
+    border-radius: 9999px;
+    background: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .stepper-seg.active {
+    background: linear-gradient(90deg, #ff6b35, #7b5cff);
+    border-color: transparent;
+  }
+
+  /* Modal "mode" avatar (Tipo de Orçamento) */
+  .mode-avatar {
+    width: 48px; height: 48px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #7b5cff, #ff6b35);
+    display: flex; align-items: center; justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  /* Hero lens-flare animation — diagonal white gleam every 5s */
+  .hero-lens-flare { position: relative; overflow: hidden; isolation: isolate; }
+  .hero-lens-flare::before {
+    content: "";
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 60%; height: 200%;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255,255,255,0) 40%,
+      rgba(255,255,255,0.35) 50%,
+      rgba(255,255,255,0) 60%,
+      transparent 70%
+    );
+    transform: translateX(-150%) rotate(8deg);
+    animation: lensFlare 5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: screen;
+  }
+  @keyframes lensFlare {
+    0%   { transform: translateX(-150%) rotate(8deg); }
+    60%  { transform: translateX(350%) rotate(8deg); }
+    100% { transform: translateX(350%) rotate(8deg); }
+  }
 }
 
 /* Inputs — Lovable style, themed via tokens */
