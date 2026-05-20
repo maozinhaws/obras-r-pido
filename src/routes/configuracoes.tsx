@@ -64,23 +64,26 @@ function ConfigPage() {
         <Card titulo="Aparência">
           <div className="grid grid-cols-3 gap-3">
             {[
-              { id: "moderno", label: "Moderno", desc: "Glass & Cores" },
-              { id: "brutalista", label: "Brutalista", desc: "Sólido & Direto" },
-              { id: "minimalista", label: "Minimalista", desc: "Contraste Alto" },
-            ].map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setForm({ ...form, tema: t.id as any })}
-                className={`p-4 rounded-xl border-2 transition-all text-left ${
-                  form.tema === t.id || (!form.tema && t.id === "moderno")
-                    ? "border-brand bg-brand/10"
-                    : "border-white/10 hover:border-white/20"
-                }`}
-              >
-                <div className="font-bold text-xs uppercase tracking-widest mb-1">{t.label}</div>
-                <div className="text-[10px] opacity-50">{t.desc}</div>
-              </button>
-            ))}
+              { id: "suave", label: "Suave", desc: "Glass & cores · padrão" },
+              { id: "minimalista", label: "Minimalista", desc: "Sólido & direto" },
+              { id: "brutalista", label: "Brutalista", desc: "Acessível · sem degradê" },
+            ].map((t) => {
+              const ativo =
+                form.tema === t.id || (!form.tema && t.id === "suave") ||
+                (form.tema === "moderno" && t.id === "suave");
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setForm({ ...form, tema: t.id as any })}
+                  className={`p-4 rounded-xl border-2 transition-all text-left ${
+                    ativo ? "border-brand bg-brand/10" : "border-border hover:border-brand/40"
+                  }`}
+                >
+                  <div className="font-bold text-xs uppercase tracking-widest mb-1">{t.label}</div>
+                  <div className="text-[10px] opacity-60">{t.desc}</div>
+                </button>
+              );
+            })}
           </div>
         </Card>
 
