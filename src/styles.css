@@ -465,6 +465,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   --input-bg-focus: #ffffff;
   --input-fg-focus: #0a0a0a;
 }
+.dark,
 :root[data-theme="escuro"] {
   --input-bg: #2a2f38;
   --input-fg: #ffffff;
