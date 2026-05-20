@@ -84,7 +84,7 @@ function Home() {
           onClick={() => setModalOpen(true)}
           className="block w-full text-left glass-brand-glow glass-press group"
         >
-          <div className="glass-brand p-7">
+          <div className="glass-brand hero-lens-flare p-7">
             <div className="flex justify-between items-start mb-12">
               <div className="size-12 rounded-2xl bg-card/20 backdrop-blur-md grid place-items-center">
                 <Plus className="size-6 text-white" strokeWidth={2.75} />
@@ -244,7 +244,7 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
               onClick={onClose}
               className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
             >
-              <div className="size-12 rounded-2xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center shrink-0">
+              <div className="mode-avatar">
                 <Icon className="size-6 text-white" strokeWidth={2.25} />
               </div>
               <div className="min-w-0">
