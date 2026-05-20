@@ -6,8 +6,8 @@ const KEY = "pp.theme";
 
 function applyTheme(mode: Mode) {
   const root = document.documentElement;
-  if (mode === "escuro") root.setAttribute("data-theme", "escuro");
-  else root.removeAttribute("data-theme");
+  if (mode === "escuro") root.classList.add("dark");
+  else root.classList.remove("dark");
 }
 
 export function ThemeToggle() {
