@@ -196,7 +196,7 @@ export const Sidebar = memo(() => {
           <Link
             to="/orcamentos/novo"
             search={{ modo: "flash" }}
-            className="flex items-center justify-center gap-2 bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] rounded-full glass-press py-3 text-xs font-bold uppercase tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(123,92,255,0.5)]"
+            className="cta-pill w-full justify-center"
             title={!showLabel ? "Novo Orçamento" : undefined}
           >
             <Plus className="size-4" strokeWidth={2.75} />
