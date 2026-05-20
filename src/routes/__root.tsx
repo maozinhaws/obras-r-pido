@@ -30,8 +30,13 @@ function ThemeHandler() {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (config?.tema) root.setAttribute("data-theme", config.tema);
-    else root.removeAttribute("data-theme");
+    // Aesthetic mode (orthogonal to light/dark): suave | minimalista | brutalista
+    const tema = config?.tema;
+    if (tema === "minimalista" || tema === "brutalista") {
+      root.setAttribute("data-tema", tema);
+    } else {
+      root.removeAttribute("data-tema");
+    }
 
     if (config?.fonteTamanho) root.setAttribute("data-fonte", config.fonteTamanho);
     else root.removeAttribute("data-fonte");
