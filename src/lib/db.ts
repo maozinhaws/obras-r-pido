@@ -117,7 +117,7 @@ export interface ConfigEmpresa {
   materiaisPadrao?: string[];
   formasPagamento?: string[];
   ambientesPadrao?: string[];
-  tema?: "moderno" | "brutalista" | "minimalista";
+  tema?: "suave" | "moderno" | "brutalista" | "minimalista";
   fonteTamanho?: "pequeno" | "normal" | "grande";
   altoContraste?: boolean;
 }
