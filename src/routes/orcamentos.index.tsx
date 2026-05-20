@@ -157,14 +157,12 @@ function OrcamentosPage() {
           />
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="chip-row flex flex-wrap gap-2">
           {(["todos", ...STATUSES] as const).map((s) => (
             <button
               key={s}
               onClick={() => setFiltro(s)}
-              className={`glass px-4 py-2 text-[10px] font-bold uppercase tracking-widest glass-press ${
-                filtro === s ? "glass-brand text-white" : "text-foreground/60"
-              }`}
+              className={`chip ${filtro === s ? "active" : ""}`}
             >
               {s === "todos" ? "Todos" : STATUS_LABELS[s]}
             </button>
