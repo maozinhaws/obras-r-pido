@@ -110,9 +110,9 @@
   --sidebar-ring: #7b5cff;
 }
 
-.dark { /* unused — app is light-first */ }
-
-/* Dark mode tokens — unified surfaces, Lovable-like */
+/* Dark mode — toggle via .dark class on <html> (preferred).
+   data-theme="escuro" kept as alias for backwards compatibility. */
+.dark,
 :root[data-theme="escuro"] {
   --background: #0b0d12;
   --foreground: #ededf0;
@@ -137,10 +137,86 @@
   --sidebar-accent-foreground: #ededf0;
   --sidebar-border: #262932;
 }
+.dark .btn-dark,
 :root[data-theme="escuro"] .btn-dark { background: #ededf0; color: #0b0d12; }
+.dark .btn-dark:hover,
 :root[data-theme="escuro"] .btn-dark:hover { background: #ffffff; }
+.dark .glass,
 :root[data-theme="escuro"] .glass { box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+.dark .glass-strong,
 :root[data-theme="escuro"] .glass-strong { box-shadow: 0 14px 40px rgba(0,0,0,0.5); }
+
+/* ===========================================================
+   Aesthetic modes — data-tema on <html>
+   Default = suave (no attribute needed).
+   Orthogonal to light/dark.
+   =========================================================== */
+
+/* MINIMALISTA — square corners, animations preserved */
+:root[data-tema="minimalista"],
+:root[data-tema="minimalista"] * {
+  --radius: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+}
+:root[data-tema="minimalista"] .glass,
+:root[data-tema="minimalista"] .glass-strong,
+:root[data-tema="minimalista"] .glass-brand,
+:root[data-tema="minimalista"] .cta-pill,
+:root[data-tema="minimalista"] .chip,
+:root[data-tema="minimalista"] .btn-dark,
+:root[data-tema="minimalista"] .metric-pill,
+:root[data-tema="minimalista"] input,
+:root[data-tema="minimalista"] textarea,
+:root[data-tema="minimalista"] select {
+  border-radius: 2px !important;
+}
+
+/* BRUTALISTA — high contrast, no gradients, no animations */
+:root[data-tema="brutalista"] {
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --muted: #ffffff;
+  --muted-foreground: #1a1a1a;
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
+  --accent: #ffffff;
+  --accent-foreground: #000000;
+  --border: #000000;
+  --input: #ffffff;
+  --ink: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+}
+:root[data-tema="brutalista"] *,
+:root[data-tema="brutalista"] *::before,
+:root[data-tema="brutalista"] *::after {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+}
+:root[data-tema="brutalista"] .glass,
+:root[data-tema="brutalista"] .glass-strong { border-width: 2px; }
+:root[data-tema="brutalista"] .glass-brand,
+:root[data-tema="brutalista"] .cta-pill,
+:root[data-tema="brutalista"] .sb-cta,
+:root[data-tema="brutalista"] .chip.active,
+:root[data-tema="brutalista"] .stepper-seg.active,
+:root[data-tema="brutalista"] .mode-avatar {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+:root[data-tema="brutalista"] .glass-brand-glow::before { display: none !important; }
+:root[data-tema="brutalista"] .hero-lens-flare::before { display: none !important; }
 
 /* Accessibility */
 :root[data-fonte="pequeno"] { font-size: 14px; }
