@@ -79,32 +79,53 @@ function Home() {
           </div>
         </header>
 
-        {/* Hero CTA — gradient */}
+        {/* Hero CTA — Liquid Glass iOS */}
         <button
           onClick={() => setModalOpen(true)}
-          className="block w-full text-left glass-brand-glow glass-press group"
+          className="relative group w-full aspect-[16/10] overflow-hidden rounded-[40px] transition-all duration-500 hover:scale-[1.02] active:scale-95 text-left focus:outline-none focus:ring-4 focus:ring-brand-2/30"
+          aria-label="Novo Orçamento"
         >
-          <div className="glass-brand hero-lens-flare p-7 py-10 my-4 text-white">
-            <div className="flex justify-end mb-10">
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] bg-black/30 px-3 py-1.5 rounded-full">
-                Toque para iniciar
-              </span>
+          {/* Liquid blobs */}
+          <div className="absolute inset-0 bg-white dark:bg-ink" />
+          <div className="absolute -top-1/4 -left-1/4 w-full h-full bg-brand opacity-60 rounded-full blur-[80px] animate-pulse" />
+          <div
+            className="absolute -bottom-1/4 -right-1/4 w-full h-full bg-brand-2 opacity-60 rounded-full blur-[80px] animate-pulse"
+            style={{ animationDelay: "1s" }}
+          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-brand/20 rounded-full blur-[100px]" />
+
+          {/* Liquid Glass surface */}
+          <div className="absolute inset-0 backdrop-blur-3xl bg-white/20 dark:bg-white/10 border border-white/40 dark:border-white/15 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1),inset_0_1px_1px_rgba(255,255,255,0.5)]">
+            {/* Gleam */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent opacity-50" />
+
+            <div className="relative h-full w-full p-7 flex flex-col justify-between">
+              <div className="flex justify-between items-start">
+                <div className="px-4 py-1.5 rounded-full bg-white/40 dark:bg-white/15 backdrop-blur-md border border-white/40 dark:border-white/20 shadow-sm">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground">
+                    Toque para iniciar
+                  </span>
+                </div>
+                <div className="size-14 rounded-3xl bg-white/50 dark:bg-white/15 backdrop-blur-lg border border-white/40 dark:border-white/20 shadow-xl grid place-items-center transition-transform duration-500 group-hover:rotate-90">
+                  <Plus className="size-7 text-foreground" strokeWidth={2.5} />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h2 className="text-display text-4xl uppercase tracking-tight leading-[0.9] text-foreground">
+                  Novo
+                  <br />
+                  Orçamento
+                </h2>
+                <p className="font-medium text-sm text-foreground/75 max-w-[220px] leading-snug">
+                  Comece a transformar um novo ambiente hoje.
+                </p>
+              </div>
             </div>
-            <h2 className="text-display text-3xl uppercase leading-[0.95] tracking-tight flex items-center gap-3 flex-wrap">
-              <span>
-                Novo
-                <br />
-                Orçamento
-              </span>
-              <span className="size-12 rounded-2xl bg-white/20 backdrop-blur-md grid place-items-center shrink-0">
-                <Plus className="size-6" strokeWidth={2.75} />
-              </span>
-            </h2>
-            <p className="font-medium text-sm mt-2 opacity-85">
-              Comece a transformar um novo ambiente hoje.
-            </p>
           </div>
 
+          {/* Inner rim */}
+          <div className="absolute inset-0 rounded-[40px] pointer-events-none ring-1 ring-inset ring-white/30" />
         </button>
 
         {/* Fluxo de Orçamentos */}
