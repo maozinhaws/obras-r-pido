@@ -954,26 +954,21 @@ function ItemEditor({
   return (
     <>
       <div className="flex-1 overflow-y-auto p-5 space-y-5">
-        <div>
-          <div className="flex items-center justify-between mb-2">
+        <button
+          type="button"
+          onClick={() => setShowNomeSug(true)}
+          className="w-full text-left rounded-2xl border-2 border-slate-300 bg-white p-4 shadow-sm active:scale-[0.99] transition"
+        >
+          <div className="flex items-center justify-between gap-3 mb-2">
             <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60">
               Nome do item
             </div>
-            <button
-              type="button"
-              onClick={() => setShowNomeSug(true)}
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold text-[#7b5cff] bg-[#7b5cff]/10 border border-[#7b5cff]/30 active:scale-95 transition"
-            >
+            <span className="inline-flex items-center gap-1 rounded-full border border-brand-2/30 bg-brand-2/10 px-3 py-1 text-[11px] font-bold text-brand-2">
               ≡ Sugestões
-            </button>
+            </span>
           </div>
-          <input
-            value={it.nome}
-            onChange={(e) => setIt({ ...it, nome: e.target.value })}
-            placeholder="Ex.: Janela da sala"
-            className="w-full"
-          />
-        </div>
+          <div className="text-lg font-semibold text-slate-950">{it.nome || "Toque para escolher"}</div>
+        </button>
 
         <div className="grid grid-cols-2 gap-3">
           <Field label="Altura (m)">
@@ -1016,47 +1011,35 @@ function ItemEditor({
           />
         </Field>
 
-        <div>
-          <div className="flex items-center justify-between mb-2">
+        <button
+          type="button"
+          onClick={() => setShowServSug(true)}
+          className="w-full text-left rounded-2xl border-2 border-slate-300 bg-white p-4 shadow-sm active:scale-[0.99] transition"
+        >
+          <div className="flex items-center justify-between gap-3 mb-2">
             <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60">
               Observação
             </div>
-            <button
-              type="button"
-              onClick={() => setShowServSug(true)}
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold text-emerald-700 bg-emerald-500/10 border border-emerald-500/30 active:scale-95 transition"
-            >
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-700">
               ≡ Serviços
-            </button>
+            </span>
           </div>
-          <textarea
-            rows={2}
-            value={it.observacao ?? ""}
-            onChange={(e) => setIt({ ...it, observacao: e.target.value })}
-            placeholder="Ex.: precisa lixar, remover ferragem, corrigir trinca..."
-            className="w-full resize-none"
-          />
+          <div className="min-h-[60px] text-base text-slate-950">
+            {it.observacao?.trim() || "Toque para adicionar observações, serviços e materiais"}
+          </div>
           {it.servicos.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {it.servicos.map((s) => (
                 <span
                   key={s}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#7b5cff]/15 text-[#7b5cff] border border-[#7b5cff]/30"
+                  className="inline-flex items-center gap-1 rounded-full border border-brand-2/30 bg-brand-2/15 px-2.5 py-1 text-[10px] font-bold text-brand-2"
                 >
                   {s}
-                  <button
-                    type="button"
-                    onClick={() => toggleServico(s)}
-                    aria-label={`Remover ${s}`}
-                    className="opacity-70 hover:opacity-100"
-                  >
-                    <X className="size-3" strokeWidth={3} />
-                  </button>
                 </span>
               ))}
             </div>
           )}
-        </div>
+        </button>
 
         <div>
           <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60 mb-2">
@@ -1123,20 +1106,41 @@ function ItemEditor({
           title="Selecione o item"
           onClose={() => setShowNomeSug(false)}
         >
-          <div className="grid grid-cols-3 gap-2">
-            {NOMES_ITEM.map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => {
-                  setIt({ ...it, nome: n });
-                  setShowNomeSug(false);
-                }}
-                className="px-3 py-3 rounded-xl border-2 border-slate-300 bg-white text-slate-900 font-bold text-sm active:scale-95 hover:border-[#7b5cff] hover:bg-[#7b5cff]/5 transition"
-              >
-                {n}
-              </button>
-            ))}
+          <div className="space-y-4">
+            <Field label="Nome do item">
+              <input
+                value={it.nome}
+                onChange={(e) => setIt({ ...it, nome: e.target.value })}
+                placeholder="Ex.: Janela da sala"
+                className="w-full"
+                autoFocus
+              />
+            </Field>
+            <div className="text-[11px] font-black uppercase tracking-widest text-brand-2">
+              Sugestões rápidas
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {NOMES_ITEM.map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => {
+                    setIt({ ...it, nome: n });
+                    setShowNomeSug(false);
+                  }}
+                  className="rounded-xl border-2 border-slate-300 bg-white px-3 py-3 text-sm font-bold text-slate-900 transition active:scale-95 hover:border-brand-2 hover:bg-brand-2/5"
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowNomeSug(false)}
+              className="w-full rounded-full bg-brand px-4 py-3 text-sm font-bold uppercase tracking-wider text-ink"
+            >
+              Usar este nome
+            </button>
           </div>
         </SugestoesSheet>
       )}
@@ -1147,8 +1151,17 @@ function ItemEditor({
           onClose={() => setShowServSug(false)}
         >
           <div className="space-y-4">
+            <Field label="Observação">
+              <textarea
+                rows={4}
+                value={it.observacao ?? ""}
+                onChange={(e) => setIt({ ...it, observacao: e.target.value })}
+                placeholder="Ex.: precisa lixar, remover ferragem, corrigir trinca..."
+                className="w-full resize-none"
+              />
+            </Field>
             <div>
-              <div className="text-[11px] font-black uppercase tracking-widest text-[#7b5cff] mb-2">
+              <div className="text-[11px] font-black uppercase tracking-widest text-brand-2 mb-2">
                 Serviços
               </div>
               <div className="flex flex-wrap gap-2">
