@@ -53,182 +53,210 @@ function Home() {
   const proximoEvento = eventos[0];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="w-full max-w-md mx-auto px-4 pt-14 pb-10 space-y-6">
-        {/* Header */}
-        <header className="px-2">
-          <div className="mb-4">
-            <p className="text-muted-foreground text-[11px] font-semibold uppercase tracking-[0.2em]">
-              Painel · System Active
-            </p>
-            <h1 className="text-display text-3xl text-foreground mt-1 leading-none">
-              Performance Hub
-            </h1>
-          </div>
-
-          {/* Inline metrics */}
-          <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-            <MetricPill
-              dotColor="#ff6b35"
-              label={`${formatBRL(faturamento).replace(",00", "")} Faturamento`}
-            />
-            <MetricPill
-              dotColor="#7b5cff"
-              label={`${totalClientes} Cliente${totalClientes === 1 ? "" : "s"}`}
-            />
-          </div>
-        </header>
-
-        {/* Hero CTA — Liquid Glass + cores Material Expressive */}
-        <button
-          onClick={() => setModalOpen(true)}
-          className="relative group w-full aspect-[16/10] overflow-hidden rounded-[40px] transition-all duration-500 hover:scale-[1.02] active:scale-95 text-left focus:outline-none focus:ring-4 focus:ring-brand-2/30 shadow-[0_32px_64px_-16px_rgba(255,107,53,0.45)]"
-          aria-label="Novo Orçamento"
-        >
-          {/* Solid brand gradient base */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#ff6b35] via-[#ff6b35] to-[#7b5cff]" />
-
-          {/* Soft halo for liquid depth */}
-          <div className="absolute -top-12 -right-12 w-64 h-64 bg-white/15 rounded-full blur-3xl" />
-          <div className="absolute -bottom-16 -left-10 w-56 h-56 bg-white/10 rounded-full blur-3xl" />
-
-          {/* Glass surface overlay (subtle, keeps brand colors vibrant) */}
-          <div className="absolute inset-0 backdrop-blur-[2px] bg-white/5 border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]">
-            {/* Gleam */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-60" />
-
-            <div className="relative h-full w-full p-7 flex flex-col justify-between">
-              <div className="flex justify-between items-start">
-                <div className="px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 shadow-sm inline-flex items-center gap-2">
-                  <span className="size-1.5 rounded-full bg-white animate-pulse" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white">
-                    Toque para iniciar
-                  </span>
-                </div>
-                <div className="size-14 rounded-3xl bg-white/25 backdrop-blur-lg border border-white/40 shadow-xl grid place-items-center transition-transform duration-500 group-hover:rotate-90">
-                  <Plus className="size-7 text-white" strokeWidth={2.75} />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h2 className="text-display text-4xl uppercase tracking-tight leading-[0.9] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.15)]">
-                  Novo
-                  <br />
-                  Orçamento
-                </h2>
-                <p className="font-medium text-sm text-white/90 max-w-[220px] leading-snug">
-                  Comece a transformar um novo ambiente hoje.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Inner rim */}
-          <div className="absolute inset-0 rounded-[40px] pointer-events-none ring-1 ring-inset ring-white/30" />
-        </button>
-
-        {/* Fluxo de Orçamentos — Liquid Glass */}
-        <div className="glass relative overflow-hidden p-6">
-          {/* Liquid halos */}
-          <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#ff6b35]/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -left-12 w-44 h-44 bg-[#7b5cff]/15 rounded-full blur-3xl pointer-events-none" />
-          {/* Gleam */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent opacity-50 pointer-events-none" />
-          {/* Inner rim */}
-          <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/40 rounded-[inherit]" />
-
-          <div className="relative">
-            <div className="flex justify-between items-center mb-5">
-              <h3 className="text-display text-base text-foreground uppercase tracking-tight">
-                Fluxo de Orçamentos
-              </h3>
-              <Link
-                to="/orcamentos"
-                className="text-brand-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 hover:underline"
-              >
-                Histórico <ArrowUpRight className="size-3" strokeWidth={3} />
-              </Link>
-            </div>
-
-            {orcamentos.length === 0 ? (
-              <div className="flex flex-col items-center justify-center text-center py-6">
-                <div className="size-16 rounded-2xl backdrop-blur-xl bg-white/40 dark:bg-white/10 ring-1 ring-inset ring-white/50 grid place-items-center mb-4 shadow-sm">
-                  <FileText className="size-7 text-muted-foreground" strokeWidth={1.5} />
-                </div>
-                <p className="text-muted-foreground font-semibold text-sm mb-5">
-                  Nenhum orçamento ainda
-                </p>
-                <button
-                  onClick={() => setModalOpen(true)}
-                  className="btn-dark glass-press"
-                >
-                  Criar Primeiro
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {orcamentos.map((o) => (
-                  <Link
-                    key={o.id}
-                    to="/orcamentos/$id"
-                    params={{ id: String(o.id) }}
-                    className="relative flex items-center justify-between p-3 rounded-2xl backdrop-blur-xl bg-white/50 dark:bg-white/5 ring-1 ring-inset ring-white/60 dark:ring-white/10 hover:bg-white/70 dark:hover:bg-white/10 glass-press transition-all"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="size-10 rounded-xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center text-white font-bold text-sm shrink-0 shadow-[0_8px_16px_-4px_rgba(255,107,53,0.4)]">
-                        $
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-bold text-sm text-foreground truncate">
-                          {o.clienteSnapshot?.nome ?? "Sem cliente"}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-0.5">
-                          {STATUS_LABELS[o.status]} ·{" "}
-                          {format(o.atualizadoEm, "dd MMM", { locale: ptBR })}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-display text-sm text-foreground shrink-0">
-                      {formatBRL(calcularTotal(o)).replace(",00", "")}
-                    </p>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+    <div
+      className="min-h-screen relative"
+      style={{
+        background:
+          "radial-gradient(80% 50% at 50% 0%, rgba(255,107,53,0.5), transparent 70%), radial-gradient(60% 50% at 100% 100%, rgba(123,92,255,0.6), transparent 70%), #0b0d12",
+      }}
+    >
+      <div className="w-full max-w-md mx-auto px-6 pt-14 pb-10 space-y-4 text-white">
+        {/* Top row */}
+        <div className="flex justify-between items-center">
+          <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60">
+            Painel · System Active
+          </span>
         </div>
 
-        {/* Agenda — Liquid Glass */}
+        {/* Title */}
+        <h1 className="text-display text-[32px] font-extrabold tracking-tight leading-none">
+          Performance Hub
+        </h1>
+
+        {/* Metrics pills */}
+        <div className="flex gap-2 flex-wrap">
+          <GlassMetric dotColor="#ff6b35" label={`${formatBRL(faturamento).replace(",00", "")} Faturamento`} />
+          <GlassMetric dotColor="#7b5cff" label={`${totalClientes} Cliente${totalClientes === 1 ? "" : "s"}`} />
+        </div>
+
+        {/* Hero CTA — Apple Glass */}
+        <button
+          onClick={() => setModalOpen(true)}
+          className="relative w-full overflow-hidden text-left transition-transform active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-brand-2/30"
+          style={{
+            background:
+              "linear-gradient(135deg, #ff6b35 0%, #ff6b35 45%, #7b5cff 100%)",
+            border: "1px solid rgba(255,255,255,0.18)",
+            borderRadius: "36px 0 36px 36px",
+            padding: "28px 24px",
+            boxShadow: "0 20px 60px -15px rgba(123,92,255,0.5)",
+          }}
+          aria-label="Novo Orçamento"
+        >
+          {/* Lens flare */}
+          <span className="hero-flare pointer-events-none absolute inset-0" />
+          <div className="relative z-10 flex justify-between items-center mb-6">
+            <span
+              className="text-[9px] font-bold uppercase tracking-[0.14em] text-white px-3 py-[5px] rounded-full"
+              style={{ background: "rgba(0,0,0,0.32)", backdropFilter: "blur(10px)" }}
+            >
+              Toque para iniciar
+            </span>
+            <div
+              className="size-[52px] rounded-full grid place-items-center"
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.35)",
+              }}
+            >
+              <Plus className="size-7 text-white" strokeWidth={2} />
+            </div>
+          </div>
+          <h2
+            className="relative z-10 text-display font-extrabold uppercase tracking-tight leading-[1] mb-2"
+            style={{ fontSize: 36, textShadow: "0 2px 4px rgba(0,0,0,0.18)" }}
+          >
+            Novo
+            <br />
+            Orçamento
+          </h2>
+          <p className="relative z-10 text-[13px] font-medium text-white/85">
+            Comece a transformar um novo ambiente hoje.
+          </p>
+        </button>
+
+        {/* Fluxo de Orçamentos — Glass card */}
+        <div
+          className="relative"
+          style={{
+            background: "rgba(20,23,29,0.5)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "0 24px 24px 24px",
+            padding: 20,
+            boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+          }}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-[14px] font-extrabold uppercase tracking-[0.04em]">
+              Fluxo de Orçamentos
+            </span>
+            <Link
+              to="/orcamentos"
+              className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#a78bfa] inline-flex items-center gap-1"
+            >
+              Histórico <ArrowUpRight className="size-3" strokeWidth={3} />
+            </Link>
+          </div>
+
+          {orcamentos.length === 0 ? (
+            <div className="flex flex-col items-center justify-center text-center py-4">
+              <div
+                className="size-14 rounded-2xl grid place-items-center mb-3"
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                <FileText className="size-6 text-white/60" strokeWidth={1.5} />
+              </div>
+              <p className="text-white/60 text-[13px] mb-4">Nenhum orçamento registrado ainda.</p>
+              <button
+                onClick={() => setModalOpen(true)}
+                className="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] bg-white text-[#0b0d12] active:scale-95 transition"
+              >
+                Criar Primeiro
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {orcamentos.map((o) => (
+                <Link
+                  key={o.id}
+                  to="/orcamentos/$id"
+                  params={{ id: String(o.id) }}
+                  className="relative flex items-center justify-between p-3 rounded-2xl transition-all active:scale-[0.98]"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className="size-10 rounded-xl grid place-items-center text-white font-bold text-sm shrink-0"
+                      style={{
+                        background: "linear-gradient(135deg, #ff6b35, #7b5cff)",
+                        boxShadow: "0 8px 16px -4px rgba(255,107,53,0.4)",
+                      }}
+                    >
+                      $
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-bold text-[13px] text-white truncate">
+                        {o.clienteSnapshot?.nome ?? "Sem cliente"}
+                      </p>
+                      <p className="text-[10px] text-white/55 font-semibold uppercase tracking-wider mt-0.5">
+                        {STATUS_LABELS[o.status]} ·{" "}
+                        {format(o.atualizadoEm, "dd MMM", { locale: ptBR })}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-display text-[13px] text-white shrink-0">
+                    {formatBRL(calcularTotal(o)).replace(",00", "")}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Agenda — Glass card */}
         <Link
           to="/agenda"
-          className="glass relative overflow-hidden p-6 flex justify-between items-center glass-press"
+          className="relative block active:scale-[0.99] transition"
+          style={{
+            background: "rgba(20,23,29,0.5)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "0 24px 24px 24px",
+            padding: 20,
+            boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+          }}
         >
-          {/* Liquid halos com tom roxo dominante */}
-          <div className="absolute -top-16 -left-16 w-48 h-48 bg-[#7b5cff]/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-16 -right-10 w-40 h-40 bg-[#ff6b35]/15 rounded-full blur-3xl pointer-events-none" />
-          {/* Gleam */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-transparent opacity-50 pointer-events-none" />
-          {/* Inner rim */}
-          <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/40 rounded-[inherit]" />
-
-          <div className="relative space-y-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <div
-                className={`size-1.5 rounded-full ${proximoEvento ? "bg-[#ff6b35] animate-pulse" : "bg-green-500"}`}
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-[14px] font-extrabold uppercase tracking-[0.04em] inline-flex items-center gap-2">
+              <span
+                className={`size-2 rounded-full ${proximoEvento ? "bg-[#ff6b35] animate-pulse" : "bg-[#4ade80]"}`}
               />
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
-                {proximoEvento ? "Próximo evento" : "Sem eventos"}
-              </span>
-            </div>
-            <h3 className="text-display text-xl text-foreground uppercase leading-none truncate">
-              {proximoEvento ? proximoEvento.titulo : "Agenda Livre"}
-            </h3>
-            <span className="text-brand text-[10px] font-bold uppercase tracking-widest pt-2 inline-flex items-center gap-1">
+              {proximoEvento ? "Próximo Evento" : "Próximos Eventos"}
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#a78bfa] inline-flex items-center gap-1">
               Ver agenda <ArrowUpRight className="size-3" strokeWidth={3} />
             </span>
           </div>
-          <div className="relative size-20 rounded-2xl backdrop-blur-xl bg-white/40 dark:bg-white/10 ring-1 ring-inset ring-white/50 grid place-items-center shrink-0 ml-3 shadow-sm">
-            <Calendar className="size-10 text-[#7b5cff]/70" strokeWidth={1.5} />
+          <div className="flex justify-between items-center gap-3">
+            <div className="min-w-0">
+              <h3 className="text-display text-xl text-white uppercase leading-none truncate">
+                {proximoEvento ? proximoEvento.titulo : "Agenda Livre"}
+              </h3>
+              {proximoEvento && (
+                <p className="text-[11px] text-white/55 mt-1">
+                  {format(new Date(proximoEvento.data), "dd 'de' MMM", { locale: ptBR })}
+                </p>
+              )}
+            </div>
+            <div
+              className="size-16 rounded-2xl grid place-items-center shrink-0"
+              style={{
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              <Calendar className="size-8 text-[#a78bfa]" strokeWidth={1.5} />
+            </div>
           </div>
         </Link>
       </div>
@@ -238,19 +266,23 @@ function Home() {
   );
 }
 
-function MetricPill({ dotColor, label }: { dotColor: string; label: string }) {
+function GlassMetric({ dotColor, label }: { dotColor: string; label: string }) {
   return (
-    <div className="flex-none bg-card border border-border px-3.5 py-2 rounded-full flex items-center gap-2">
-      <div
-        className="size-2 rounded-full"
-        style={{ backgroundColor: dotColor }}
-      />
-      <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
-        {label}
-      </span>
-    </div>
+    <span
+      className="inline-flex items-center gap-2 px-[14px] py-[7px] rounded-full text-[12px] font-semibold text-white"
+      style={{
+        background: "rgba(255,255,255,0.06)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
+      <span className="size-[7px] rounded-full" style={{ background: dotColor }} />
+      {label}
+    </span>
   );
 }
+
 
 export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) => {
   const modos: Array<{
