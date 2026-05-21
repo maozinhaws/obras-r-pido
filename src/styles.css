@@ -276,6 +276,103 @@
 :root[data-tema="brutalista"] .glass-brand-glow::before,
 :root[data-tema="brutalista"] .hero-lens-flare::before { display: none !important; }
 
+/* BRUTALISTA + DARK — invert: black bg, white text, white borders */
+:root[data-tema="brutalista"].dark,
+:root[data-tema="brutalista"][data-theme="escuro"] {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #000000;
+  --card-foreground: #ffffff;
+  --popover: #000000;
+  --popover-foreground: #ffffff;
+  --muted: #000000;
+  --muted-foreground: #e5e5e5;
+  --secondary: #000000;
+  --secondary-foreground: #ffffff;
+  --accent: #000000;
+  --accent-foreground: #ffffff;
+  --border: #ffffff;
+  --input: #000000;
+  --ink: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+  --brand: #ffffff;
+  --brand-2: #ffffff;
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-accent: #000000;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #ffffff;
+  --input-bg: #000000;
+  --input-fg: #ffffff;
+  --input-bg-focus: #000000;
+  --input-fg-focus: #ffffff;
+}
+:root[data-tema="brutalista"].dark .glass,
+:root[data-tema="brutalista"].dark .glass-strong,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-strong {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+:root[data-tema="brutalista"].dark .glass-brand,
+:root[data-tema="brutalista"].dark .cta-pill,
+:root[data-tema="brutalista"].dark .sb-cta,
+:root[data-tema="brutalista"].dark .chip.active,
+:root[data-tema="brutalista"].dark .stepper-seg.active,
+:root[data-tema="brutalista"].dark .mode-avatar,
+:root[data-tema="brutalista"].dark .btn-dark,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand,
+:root[data-tema="brutalista"][data-theme="escuro"] .cta-pill,
+:root[data-tema="brutalista"][data-theme="escuro"] .sb-cta,
+:root[data-tema="brutalista"][data-theme="escuro"] .chip.active,
+:root[data-tema="brutalista"][data-theme="escuro"] .stepper-seg.active,
+:root[data-tema="brutalista"][data-theme="escuro"] .mode-avatar,
+:root[data-tema="brutalista"][data-theme="escuro"] .btn-dark {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+:root[data-tema="brutalista"].dark .chip,
+:root[data-tema="brutalista"][data-theme="escuro"] .chip {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+:root[data-tema="brutalista"].dark .stepper-seg,
+:root[data-tema="brutalista"][data-theme="escuro"] .stepper-seg {
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+/* Override the "white on colored bg" forced rule for inverted brutalist */
+:root[data-tema="brutalista"].dark .glass-brand h1,
+:root[data-tema="brutalista"].dark .glass-brand h2,
+:root[data-tema="brutalista"].dark .glass-brand h3,
+:root[data-tema="brutalista"].dark .glass-brand h4,
+:root[data-tema="brutalista"].dark .glass-brand p,
+:root[data-tema="brutalista"].dark .glass-brand span,
+:root[data-tema="brutalista"].dark .cta-pill,
+:root[data-tema="brutalista"].dark .cta-pill *,
+:root[data-tema="brutalista"].dark .mode-avatar,
+:root[data-tema="brutalista"].dark .mode-avatar *,
+:root[data-tema="brutalista"].dark .chip.active,
+:root[data-tema="brutalista"].dark .chip.active *,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand h1,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand h2,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand h3,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand h4,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand p,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand span,
+:root[data-tema="brutalista"][data-theme="escuro"] .cta-pill,
+:root[data-tema="brutalista"][data-theme="escuro"] .cta-pill *,
+:root[data-tema="brutalista"][data-theme="escuro"] .mode-avatar,
+:root[data-tema="brutalista"][data-theme="escuro"] .mode-avatar *,
+:root[data-tema="brutalista"][data-theme="escuro"] .chip.active,
+:root[data-tema="brutalista"][data-theme="escuro"] .chip.active * {
+  color: #000000 !important;
+}
+
 /* Accessibility */
 :root[data-fonte="pequeno"] { font-size: 14px; }
 :root[data-fonte="normal"]  { font-size: 16px; }
