@@ -14,7 +14,7 @@ import {
   formatBRL,
   calcularTotal,
 } from "@/lib/db";
-import { PageHeader } from "@/components/app-shell";
+// PageHeader removido: uso header compacto inline para uso em campo
 import { Field } from "./clientes";
 import { uid } from "@/lib/utils";
 import { salvarFoto, urlFoto, removerFoto } from "@/lib/fotos";
