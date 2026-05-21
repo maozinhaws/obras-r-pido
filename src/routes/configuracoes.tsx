@@ -74,7 +74,11 @@ function ConfigPage() {
               return (
                 <button
                   key={t.id}
-                  onClick={() => setForm({ ...form, tema: t.id as any })}
+                  onClick={async () => {
+                    const next = { ...form, tema: t.id as any };
+                    setForm(next);
+                    await db.config.put(next);
+                  }}
                   className={`p-4 rounded-xl border-2 transition-all text-left ${
                     ativo ? "border-brand bg-brand/10" : "border-border hover:border-brand/40"
                   }`}

@@ -177,13 +177,17 @@
   border-radius: 2px !important;
 }
 
-/* BRUTALISTA — high contrast, no gradients, no animations */
-:root[data-tema="brutalista"] {
+/* BRUTALISTA — high contrast B&W, flat, square, no gradients, no animations.
+   Overrides .dark to keep the brutalist look consistent across modes. */
+:root[data-tema="brutalista"],
+:root[data-tema="brutalista"].dark,
+:root[data-tema="brutalista"][data-theme="escuro"] {
   --background: #ffffff;
   --foreground: #000000;
   --card: #ffffff;
   --card-foreground: #000000;
   --popover: #ffffff;
+  --popover-foreground: #000000;
   --muted: #ffffff;
   --muted-foreground: #1a1a1a;
   --secondary: #ffffff;
@@ -195,6 +199,28 @@
   --ink: #000000;
   --primary: #000000;
   --primary-foreground: #ffffff;
+  --brand: #000000;
+  --brand-2: #000000;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-accent: #ffffff;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #000000;
+  --input-bg: #ffffff;
+  --input-fg: #000000;
+  --input-bg-focus: #ffffff;
+  --input-fg-focus: #000000;
+}
+:root[data-tema="brutalista"],
+:root[data-tema="brutalista"] * {
+  --radius: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
 }
 :root[data-tema="brutalista"] *,
 :root[data-tema="brutalista"] *::before,
@@ -202,20 +228,52 @@
   animation: none !important;
   transition: none !important;
   box-shadow: none !important;
+  text-shadow: none !important;
+  background-image: none !important;
 }
 :root[data-tema="brutalista"] .glass,
-:root[data-tema="brutalista"] .glass-strong { border-width: 2px; }
+:root[data-tema="brutalista"] .glass-strong,
+:root[data-tema="brutalista"] .glass-brand,
+:root[data-tema="brutalista"] .cta-pill,
+:root[data-tema="brutalista"] .chip,
+:root[data-tema="brutalista"] .chip.active,
+:root[data-tema="brutalista"] .stepper-seg,
+:root[data-tema="brutalista"] .stepper-seg.active,
+:root[data-tema="brutalista"] .mode-avatar,
+:root[data-tema="brutalista"] .btn-dark,
+:root[data-tema="brutalista"] input,
+:root[data-tema="brutalista"] textarea,
+:root[data-tema="brutalista"] select,
+:root[data-tema="brutalista"] button {
+  border-radius: 0 !important;
+}
+:root[data-tema="brutalista"] .glass,
+:root[data-tema="brutalista"] .glass-strong {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
 :root[data-tema="brutalista"] .glass-brand,
 :root[data-tema="brutalista"] .cta-pill,
 :root[data-tema="brutalista"] .sb-cta,
 :root[data-tema="brutalista"] .chip.active,
 :root[data-tema="brutalista"] .stepper-seg.active,
-:root[data-tema="brutalista"] .mode-avatar {
+:root[data-tema="brutalista"] .mode-avatar,
+:root[data-tema="brutalista"] .btn-dark {
   background: #000000 !important;
   color: #ffffff !important;
-  border-color: #000000 !important;
+  border: 2px solid #000000 !important;
 }
-:root[data-tema="brutalista"] .glass-brand-glow::before { display: none !important; }
+:root[data-tema="brutalista"] .chip {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+:root[data-tema="brutalista"] .stepper-seg {
+  background: #ffffff !important;
+  border: 2px solid #000000 !important;
+}
+:root[data-tema="brutalista"] .glass-brand-glow::before,
 :root[data-tema="brutalista"] .hero-lens-flare::before { display: none !important; }
 
 /* Accessibility */
