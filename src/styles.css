@@ -345,6 +345,44 @@
   background: #000000 !important;
   border: 2px solid #ffffff !important;
 }
+/* Normalize utility text colors in brutalist mode so Tailwind classes
+   like text-brand/text-muted-foreground/text-white don't leak through. */
+:root[data-tema="brutalista"] [class*="text-brand"],
+:root[data-tema="brutalista"] [class*="text-muted-foreground"],
+:root[data-tema="brutalista"] [class*="text-foreground"],
+:root[data-tema="brutalista"] [class*="text-white"],
+:root[data-tema="brutalista"] [class*="text-black"] {
+  color: var(--foreground) !important;
+  --tw-text-opacity: 1 !important;
+}
+:root[data-tema="brutalista"] .glass-brand [class*="text-brand"],
+:root[data-tema="brutalista"] .glass-brand [class*="text-muted-foreground"],
+:root[data-tema="brutalista"] .glass-brand [class*="text-foreground"],
+:root[data-tema="brutalista"] .glass-brand [class*="text-white"],
+:root[data-tema="brutalista"] .glass-brand [class*="text-black"],
+:root[data-tema="brutalista"] .cta-pill [class*="text-brand"],
+:root[data-tema="brutalista"] .cta-pill [class*="text-muted-foreground"],
+:root[data-tema="brutalista"] .cta-pill [class*="text-foreground"],
+:root[data-tema="brutalista"] .cta-pill [class*="text-white"],
+:root[data-tema="brutalista"] .cta-pill [class*="text-black"],
+:root[data-tema="brutalista"] .mode-avatar [class*="text-brand"],
+:root[data-tema="brutalista"] .mode-avatar [class*="text-muted-foreground"],
+:root[data-tema="brutalista"] .mode-avatar [class*="text-foreground"],
+:root[data-tema="brutalista"] .mode-avatar [class*="text-white"],
+:root[data-tema="brutalista"] .mode-avatar [class*="text-black"],
+:root[data-tema="brutalista"] .chip.active [class*="text-brand"],
+:root[data-tema="brutalista"] .chip.active [class*="text-muted-foreground"],
+:root[data-tema="brutalista"] .chip.active [class*="text-foreground"],
+:root[data-tema="brutalista"] .chip.active [class*="text-white"],
+:root[data-tema="brutalista"] .chip.active [class*="text-black"],
+:root[data-tema="brutalista"] .stepper-seg.active [class*="text-brand"],
+:root[data-tema="brutalista"] .stepper-seg.active [class*="text-muted-foreground"],
+:root[data-tema="brutalista"] .stepper-seg.active [class*="text-foreground"],
+:root[data-tema="brutalista"] .stepper-seg.active [class*="text-white"],
+:root[data-tema="brutalista"] .stepper-seg.active [class*="text-black"] {
+  color: inherit !important;
+  --tw-text-opacity: 1 !important;
+}
 /* Force ALL text/icons inside colored surfaces to black in inverted brutalist.
    Uses universal selector to override Tailwind text-white utilities. */
 :root[data-tema="brutalista"].dark .glass-brand,
@@ -377,7 +415,9 @@
 :root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .mode-avatar,
 :root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .mode-avatar *,
 :root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .chip.active,
-:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .chip.active * {
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .chip.active *,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .stepper-seg.active,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .stepper-seg.active * {
   color: #ffffff !important;
   --tw-text-opacity: 1 !important;
 }
