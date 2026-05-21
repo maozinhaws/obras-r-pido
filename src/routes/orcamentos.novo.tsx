@@ -110,30 +110,34 @@ function NovoOrcamento() {
 
   return (
     <div>
-      <PageHeader
-        eyebrow={`Passo ${passo + 1} de ${PASSOS.length}`}
-        title={PASSOS[passo]}
-        actions={
-          <button
-            onClick={() => {
-              if (confirm("Sair? O rascunho fica salvo.")) nav({ to: "/orcamentos" });
-            }}
-            className="brutal-border-thin px-3 py-2 text-[10px] font-black uppercase tracking-widest brutal-press"
-          >
-            <X className="size-4" />
-          </button>
-        }
-      />
-
-      {/* Stepper */}
-      <div className="px-5 lg:px-10 py-4 grid grid-cols-4 gap-2">
-        {PASSOS.map((p, i) => (
-          <div
-            key={p}
-            className={`h-2.5 rounded-full transition-all duration-500 ${i <= passo ? "glass-brand" : "bg-white/5 border border-white/10"}`}
-          />
-        ))}
-      </div>
+      {/* Header compacto mobile-first para uso em campo: X no canto direito, título inline, stepper fino */}
+      <header className="relative sticky top-0 z-30 bg-card/95 backdrop-blur border-b border-border px-4 pt-3 pb-2 pl-16 pr-14">
+        <div className="flex items-baseline gap-2">
+          <h1 className="text-display text-base leading-none text-foreground truncate">
+            {PASSOS[passo]}
+          </h1>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground whitespace-nowrap">
+            · {passo + 1}/{PASSOS.length}
+          </span>
+        </div>
+        <button
+          onClick={() => {
+            if (confirm("Sair? O rascunho fica salvo.")) nav({ to: "/orcamentos" });
+          }}
+          aria-label="Fechar"
+          className="absolute top-2.5 right-3 size-9 rounded-full bg-card border border-border grid place-items-center glass-press"
+        >
+          <X className="size-4 text-foreground" strokeWidth={2.5} />
+        </button>
+        <div className="mt-2 grid gap-1" style={{ gridTemplateColumns: `repeat(${PASSOS.length}, 1fr)` }}>
+          {PASSOS.map((p, i) => (
+            <div
+              key={p}
+              className={`h-1.5 rounded-full transition-all ${i <= passo ? "glass-brand" : "bg-muted"}`}
+            />
+          ))}
+        </div>
+      </header>
 
       <div className="px-5 lg:px-10 pb-32">
         {passo === 0 && <PassoCliente orc={orc} setOrc={setOrc} />}
