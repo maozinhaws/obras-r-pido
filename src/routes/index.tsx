@@ -127,76 +127,94 @@ function Home() {
           <div className="absolute inset-0 rounded-[40px] pointer-events-none ring-1 ring-inset ring-white/30" />
         </button>
 
-        {/* Fluxo de Orçamentos */}
-        <div className="glass p-6">
-          <div className="flex justify-between items-center mb-5">
-            <h3 className="text-display text-base text-foreground uppercase tracking-tight">
-              Fluxo de Orçamentos
-            </h3>
-            <Link
-              to="/orcamentos"
-              className="text-brand-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 hover:underline"
-            >
-              Histórico <ArrowUpRight className="size-3" strokeWidth={3} />
-            </Link>
-          </div>
+        {/* Fluxo de Orçamentos — Liquid Glass */}
+        <div className="glass relative overflow-hidden p-6">
+          {/* Liquid halos */}
+          <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#ff6b35]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-12 w-44 h-44 bg-[#7b5cff]/15 rounded-full blur-3xl pointer-events-none" />
+          {/* Gleam */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent opacity-50 pointer-events-none" />
+          {/* Inner rim */}
+          <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/40 rounded-[inherit]" />
 
-          {orcamentos.length === 0 ? (
-            <div className="flex flex-col items-center justify-center text-center py-6">
-              <div className="size-16 bg-muted rounded-2xl grid place-items-center mb-4">
-                <FileText className="size-7 text-muted-foreground" strokeWidth={1.5} />
-              </div>
-              <p className="text-muted-foreground font-semibold text-sm mb-5">
-                Nenhum orçamento ainda
-              </p>
-              <button
-                onClick={() => setModalOpen(true)}
-                className="btn-dark glass-press"
+          <div className="relative">
+            <div className="flex justify-between items-center mb-5">
+              <h3 className="text-display text-base text-foreground uppercase tracking-tight">
+                Fluxo de Orçamentos
+              </h3>
+              <Link
+                to="/orcamentos"
+                className="text-brand-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 hover:underline"
               >
-                Criar Primeiro
-              </button>
+                Histórico <ArrowUpRight className="size-3" strokeWidth={3} />
+              </Link>
             </div>
-          ) : (
-            <div className="space-y-2">
-              {orcamentos.map((o) => (
-                <Link
-                  key={o.id}
-                  to="/orcamentos/$id"
-                  params={{ id: String(o.id) }}
-                  className="flex items-center justify-between p-3 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
+
+            {orcamentos.length === 0 ? (
+              <div className="flex flex-col items-center justify-center text-center py-6">
+                <div className="size-16 rounded-2xl backdrop-blur-xl bg-white/40 dark:bg-white/10 ring-1 ring-inset ring-white/50 grid place-items-center mb-4 shadow-sm">
+                  <FileText className="size-7 text-muted-foreground" strokeWidth={1.5} />
+                </div>
+                <p className="text-muted-foreground font-semibold text-sm mb-5">
+                  Nenhum orçamento ainda
+                </p>
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="btn-dark glass-press"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="size-10 rounded-xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center text-white font-bold text-sm shrink-0">
-                      $
+                  Criar Primeiro
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {orcamentos.map((o) => (
+                  <Link
+                    key={o.id}
+                    to="/orcamentos/$id"
+                    params={{ id: String(o.id) }}
+                    className="relative flex items-center justify-between p-3 rounded-2xl backdrop-blur-xl bg-white/50 dark:bg-white/5 ring-1 ring-inset ring-white/60 dark:ring-white/10 hover:bg-white/70 dark:hover:bg-white/10 glass-press transition-all"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="size-10 rounded-xl bg-gradient-to-br from-[#ff6b35] to-[#7b5cff] grid place-items-center text-white font-bold text-sm shrink-0 shadow-[0_8px_16px_-4px_rgba(255,107,53,0.4)]">
+                        $
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-sm text-foreground truncate">
+                          {o.clienteSnapshot?.nome ?? "Sem cliente"}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-0.5">
+                          {STATUS_LABELS[o.status]} ·{" "}
+                          {format(o.atualizadoEm, "dd MMM", { locale: ptBR })}
+                        </p>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <p className="font-bold text-sm text-foreground truncate">
-                        {o.clienteSnapshot?.nome ?? "Sem cliente"}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-0.5">
-                        {STATUS_LABELS[o.status]} ·{" "}
-                        {format(o.atualizadoEm, "dd MMM", { locale: ptBR })}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-display text-sm text-foreground shrink-0">
-                    {formatBRL(calcularTotal(o)).replace(",00", "")}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          )}
+                    <p className="text-display text-sm text-foreground shrink-0">
+                      {formatBRL(calcularTotal(o)).replace(",00", "")}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Agenda */}
+        {/* Agenda — Liquid Glass */}
         <Link
           to="/agenda"
-          className="glass p-6 flex justify-between items-center glass-press"
+          className="glass relative overflow-hidden p-6 flex justify-between items-center glass-press"
         >
-          <div className="space-y-1 min-w-0">
+          {/* Liquid halos com tom roxo dominante */}
+          <div className="absolute -top-16 -left-16 w-48 h-48 bg-[#7b5cff]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-16 -right-10 w-40 h-40 bg-[#ff6b35]/15 rounded-full blur-3xl pointer-events-none" />
+          {/* Gleam */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-transparent opacity-50 pointer-events-none" />
+          {/* Inner rim */}
+          <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/40 rounded-[inherit]" />
+
+          <div className="relative space-y-1 min-w-0">
             <div className="flex items-center gap-2">
               <div
-                className={`size-1.5 rounded-full ${proximoEvento ? "bg-[#ff6b35]" : "bg-green-500"}`}
+                className={`size-1.5 rounded-full ${proximoEvento ? "bg-[#ff6b35] animate-pulse" : "bg-green-500"}`}
               />
               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
                 {proximoEvento ? "Próximo evento" : "Sem eventos"}
@@ -209,8 +227,8 @@ function Home() {
               Ver agenda <ArrowUpRight className="size-3" strokeWidth={3} />
             </span>
           </div>
-          <div className="size-20 bg-muted rounded-2xl grid place-items-center shrink-0 ml-3">
-            <Calendar className="size-10 text-muted-foreground/60" strokeWidth={1.5} />
+          <div className="relative size-20 rounded-2xl backdrop-blur-xl bg-white/40 dark:bg-white/10 ring-1 ring-inset ring-white/50 grid place-items-center shrink-0 ml-3 shadow-sm">
+            <Calendar className="size-10 text-[#7b5cff]/70" strokeWidth={1.5} />
           </div>
         </Link>
       </div>
