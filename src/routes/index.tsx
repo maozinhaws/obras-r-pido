@@ -283,19 +283,6 @@ function GlassMetric({ dotColor, label }: { dotColor: string; label: string }) {
   );
 }
 
-function MetricPill({ dotColor, label }: { dotColor: string; label: string }) {
-  return (
-    <div className="flex-none bg-card border border-border px-3.5 py-2 rounded-full flex items-center gap-2">
-      <div
-        className="size-2 rounded-full"
-        style={{ backgroundColor: dotColor }}
-      />
-      <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
-        {label}
-      </span>
-    </div>
-  );
-}
 
 export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) => {
   const modos: Array<{
