@@ -133,13 +133,13 @@ function Home() {
         <div
           className="relative"
           style={{
-            background: "rgba(20,23,29,0.5)",
+            background: "var(--card-solid)",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: "1px solid var(--card-border-strong)",
             borderRadius: "0 24px 24px 24px",
             padding: 20,
-            boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
           }}
         >
           <div className="flex justify-between items-center mb-4">
@@ -148,7 +148,8 @@ function Home() {
             </span>
             <Link
               to="/orcamentos"
-              className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#a78bfa] inline-flex items-center gap-1"
+              className="text-[10px] font-bold uppercase tracking-[0.14em] inline-flex items-center gap-1"
+              style={{ color: "var(--brand-2)" }}
             >
               Histórico <ArrowUpRight className="size-3" strokeWidth={3} />
             </Link>
@@ -159,16 +160,19 @@ function Home() {
               <div
                 className="size-14 rounded-2xl grid place-items-center mb-3"
                 style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "var(--surface-2)",
+                  border: "1px solid var(--surface-2-border)",
                 }}
               >
-                <FileText className="size-6 text-white/60" strokeWidth={1.5} />
+                <FileText className="size-6" style={{ color: "var(--on-hero-muted)" }} strokeWidth={1.5} />
               </div>
-              <p className="text-white/60 text-[13px] mb-4">Nenhum orçamento registrado ainda.</p>
+              <p className="text-[13px] mb-4" style={{ color: "var(--on-hero-muted)" }}>
+                Nenhum orçamento registrado ainda.
+              </p>
               <button
                 onClick={() => setModalOpen(true)}
-                className="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] bg-white text-[#0b0d12] active:scale-95 transition"
+                className="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] active:scale-95 transition"
+                style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
               >
                 Criar Primeiro
               </button>
@@ -182,8 +186,8 @@ function Home() {
                   params={{ id: String(o.id) }}
                   className="relative flex items-center justify-between p-3 rounded-2xl transition-all active:scale-[0.98]"
                   style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "var(--surface-2)",
+                    border: "1px solid var(--surface-2-border)",
                   }}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -197,16 +201,19 @@ function Home() {
                       $
                     </div>
                     <div className="min-w-0">
-                      <p className="font-bold text-[13px] text-white truncate">
+                      <p className="font-bold text-[13px] truncate" style={{ color: "var(--on-hero)" }}>
                         {o.clienteSnapshot?.nome ?? "Sem cliente"}
                       </p>
-                      <p className="text-[10px] text-white/55 font-semibold uppercase tracking-wider mt-0.5">
+                      <p
+                        className="text-[10px] font-semibold uppercase tracking-wider mt-0.5"
+                        style={{ color: "var(--on-hero-muted)" }}
+                      >
                         {STATUS_LABELS[o.status]} ·{" "}
                         {format(o.atualizadoEm, "dd MMM", { locale: ptBR })}
                       </p>
                     </div>
                   </div>
-                  <p className="text-display text-[13px] text-white shrink-0">
+                  <p className="text-display text-[13px] shrink-0" style={{ color: "var(--on-hero)" }}>
                     {formatBRL(calcularTotal(o)).replace(",00", "")}
                   </p>
                 </Link>
@@ -214,6 +221,7 @@ function Home() {
             </div>
           )}
         </div>
+
 
         {/* Agenda — Glass card */}
         <Link
