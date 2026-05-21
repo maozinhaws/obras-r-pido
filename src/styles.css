@@ -345,6 +345,49 @@
   background: #000000 !important;
   border: 2px solid #ffffff !important;
 }
+:root[data-tema="brutalista"] button[class*="bg-"],
+:root[data-tema="brutalista"] a[class*="bg-"],
+:root[data-tema="brutalista"] button.glass-brand,
+:root[data-tema="brutalista"] a.glass-brand,
+:root[data-tema="brutalista"] button.btn-dark,
+:root[data-tema="brutalista"] a.btn-dark,
+:root[data-tema="brutalista"] button.cta-pill,
+:root[data-tema="brutalista"] a.cta-pill {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+}
+:root[data-tema="brutalista"] button[class*="bg-"] *,
+:root[data-tema="brutalista"] a[class*="bg-"] *,
+:root[data-tema="brutalista"] button.glass-brand *,
+:root[data-tema="brutalista"] a.glass-brand *,
+:root[data-tema="brutalista"] button.btn-dark *,
+:root[data-tema="brutalista"] a.btn-dark *,
+:root[data-tema="brutalista"] button.cta-pill *,
+:root[data-tema="brutalista"] a.cta-pill * {
+  color: inherit !important;
+  stroke: currentColor !important;
+}
+:root[data-tema="brutalista"].dark button[class*="bg-"],
+:root[data-tema="brutalista"].dark a[class*="bg-"],
+:root[data-tema="brutalista"].dark button.glass-brand,
+:root[data-tema="brutalista"].dark a.glass-brand,
+:root[data-tema="brutalista"].dark button.btn-dark,
+:root[data-tema="brutalista"].dark a.btn-dark,
+:root[data-tema="brutalista"].dark button.cta-pill,
+:root[data-tema="brutalista"].dark a.cta-pill,
+:root[data-tema="brutalista"][data-theme="escuro"] button[class*="bg-"],
+:root[data-tema="brutalista"][data-theme="escuro"] a[class*="bg-"],
+:root[data-tema="brutalista"][data-theme="escuro"] button.glass-brand,
+:root[data-tema="brutalista"][data-theme="escuro"] a.glass-brand,
+:root[data-tema="brutalista"][data-theme="escuro"] button.btn-dark,
+:root[data-tema="brutalista"][data-theme="escuro"] a.btn-dark,
+:root[data-tema="brutalista"][data-theme="escuro"] button.cta-pill,
+:root[data-tema="brutalista"][data-theme="escuro"] a.cta-pill {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
 /* Normalize utility text colors in brutalist mode so Tailwind classes
    like text-brand/text-muted-foreground/text-white don't leak through. */
 :root[data-tema="brutalista"] [class*="text-brand"],
