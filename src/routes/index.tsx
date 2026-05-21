@@ -55,15 +55,18 @@ function Home() {
   return (
     <div
       className="min-h-screen relative"
-      style={{
-        background:
-          "radial-gradient(80% 50% at 50% 0%, rgba(255,107,53,0.5), transparent 70%), radial-gradient(60% 50% at 100% 100%, rgba(123,92,255,0.6), transparent 70%), #0b0d12",
-      }}
+      style={{ background: "var(--bg-hero)" }}
     >
-      <div className="w-full max-w-md mx-auto px-6 pt-14 pb-10 space-y-4 text-white">
+      <div
+        className="w-full max-w-md mx-auto px-6 pt-14 pb-10 space-y-4"
+        style={{ color: "var(--on-hero)" }}
+      >
         {/* Top row */}
         <div className="flex justify-between items-center">
-          <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60">
+          <span
+            className="text-[11px] font-bold uppercase tracking-[0.14em]"
+            style={{ color: "var(--on-hero-muted)" }}
+          >
             Painel · System Active
           </span>
         </div>
@@ -130,13 +133,13 @@ function Home() {
         <div
           className="relative"
           style={{
-            background: "rgba(20,23,29,0.5)",
+            background: "var(--card-solid)",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: "1px solid var(--card-border-strong)",
             borderRadius: "0 24px 24px 24px",
             padding: 20,
-            boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
           }}
         >
           <div className="flex justify-between items-center mb-4">
@@ -145,7 +148,8 @@ function Home() {
             </span>
             <Link
               to="/orcamentos"
-              className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#a78bfa] inline-flex items-center gap-1"
+              className="text-[10px] font-bold uppercase tracking-[0.14em] inline-flex items-center gap-1"
+              style={{ color: "var(--brand-2)" }}
             >
               Histórico <ArrowUpRight className="size-3" strokeWidth={3} />
             </Link>
@@ -156,16 +160,19 @@ function Home() {
               <div
                 className="size-14 rounded-2xl grid place-items-center mb-3"
                 style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "var(--surface-2)",
+                  border: "1px solid var(--surface-2-border)",
                 }}
               >
-                <FileText className="size-6 text-white/60" strokeWidth={1.5} />
+                <FileText className="size-6" style={{ color: "var(--on-hero-muted)" }} strokeWidth={1.5} />
               </div>
-              <p className="text-white/60 text-[13px] mb-4">Nenhum orçamento registrado ainda.</p>
+              <p className="text-[13px] mb-4" style={{ color: "var(--on-hero-muted)" }}>
+                Nenhum orçamento registrado ainda.
+              </p>
               <button
                 onClick={() => setModalOpen(true)}
-                className="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] bg-white text-[#0b0d12] active:scale-95 transition"
+                className="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] active:scale-95 transition"
+                style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
               >
                 Criar Primeiro
               </button>
@@ -179,8 +186,8 @@ function Home() {
                   params={{ id: String(o.id) }}
                   className="relative flex items-center justify-between p-3 rounded-2xl transition-all active:scale-[0.98]"
                   style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "var(--surface-2)",
+                    border: "1px solid var(--surface-2-border)",
                   }}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -194,16 +201,19 @@ function Home() {
                       $
                     </div>
                     <div className="min-w-0">
-                      <p className="font-bold text-[13px] text-white truncate">
+                      <p className="font-bold text-[13px] truncate" style={{ color: "var(--on-hero)" }}>
                         {o.clienteSnapshot?.nome ?? "Sem cliente"}
                       </p>
-                      <p className="text-[10px] text-white/55 font-semibold uppercase tracking-wider mt-0.5">
+                      <p
+                        className="text-[10px] font-semibold uppercase tracking-wider mt-0.5"
+                        style={{ color: "var(--on-hero-muted)" }}
+                      >
                         {STATUS_LABELS[o.status]} ·{" "}
                         {format(o.atualizadoEm, "dd MMM", { locale: ptBR })}
                       </p>
                     </div>
                   </div>
-                  <p className="text-display text-[13px] text-white shrink-0">
+                  <p className="text-display text-[13px] shrink-0" style={{ color: "var(--on-hero)" }}>
                     {formatBRL(calcularTotal(o)).replace(",00", "")}
                   </p>
                 </Link>
@@ -212,18 +222,19 @@ function Home() {
           )}
         </div>
 
+
         {/* Agenda — Glass card */}
         <Link
           to="/agenda"
           className="relative block active:scale-[0.99] transition"
           style={{
-            background: "rgba(20,23,29,0.5)",
+            background: "var(--card-solid)",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: "1px solid var(--card-border-strong)",
             borderRadius: "0 24px 24px 24px",
             padding: 20,
-            boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
           }}
         >
           <div className="flex justify-between items-center mb-3">
@@ -233,17 +244,20 @@ function Home() {
               />
               {proximoEvento ? "Próximo Evento" : "Próximos Eventos"}
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#a78bfa] inline-flex items-center gap-1">
+            <span
+              className="text-[10px] font-bold uppercase tracking-[0.14em] inline-flex items-center gap-1"
+              style={{ color: "var(--brand-2)" }}
+            >
               Ver agenda <ArrowUpRight className="size-3" strokeWidth={3} />
             </span>
           </div>
           <div className="flex justify-between items-center gap-3">
             <div className="min-w-0">
-              <h3 className="text-display text-xl text-white uppercase leading-none truncate">
+              <h3 className="text-display text-xl uppercase leading-none truncate" style={{ color: "var(--on-hero)" }}>
                 {proximoEvento ? proximoEvento.titulo : "Agenda Livre"}
               </h3>
               {proximoEvento && (
-                <p className="text-[11px] text-white/55 mt-1">
+                <p className="text-[11px] mt-1" style={{ color: "var(--on-hero-muted)" }}>
                   {format(new Date(proximoEvento.data), "dd 'de' MMM", { locale: ptBR })}
                 </p>
               )}
@@ -251,11 +265,11 @@ function Home() {
             <div
               className="size-16 rounded-2xl grid place-items-center shrink-0"
               style={{
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "var(--surface-2)",
+                border: "1px solid var(--surface-2-border)",
               }}
             >
-              <Calendar className="size-8 text-[#a78bfa]" strokeWidth={1.5} />
+              <Calendar className="size-8" style={{ color: "var(--brand-2)" }} strokeWidth={1.5} />
             </div>
           </div>
         </Link>
@@ -266,15 +280,17 @@ function Home() {
   );
 }
 
+
 function GlassMetric({ dotColor, label }: { dotColor: string; label: string }) {
   return (
     <span
-      className="inline-flex items-center gap-2 px-[14px] py-[7px] rounded-full text-[12px] font-semibold text-white"
+      className="inline-flex items-center gap-2 px-[14px] py-[7px] rounded-full text-[12px] font-semibold"
       style={{
-        background: "rgba(255,255,255,0.06)",
+        background: "var(--card-solid)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: "1px solid var(--card-border-strong)",
+        color: "var(--on-hero)",
       }}
     >
       <span className="size-[7px] rounded-full" style={{ background: dotColor }} />
