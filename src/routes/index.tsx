@@ -93,7 +93,7 @@ function Home() {
                 Toque para iniciar
               </span>
             </div>
-            <h2 className="text-display text-3xl uppercase leading-[0.95] tracking-tight">
+            <h2 className="flex justify-between items-start mb-12 text-inherit">
               Novo
               <br />
               Orçamento
