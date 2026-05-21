@@ -284,12 +284,13 @@ function Home() {
 function GlassMetric({ dotColor, label }: { dotColor: string; label: string }) {
   return (
     <span
-      className="inline-flex items-center gap-2 px-[14px] py-[7px] rounded-full text-[12px] font-semibold text-white"
+      className="inline-flex items-center gap-2 px-[14px] py-[7px] rounded-full text-[12px] font-semibold"
       style={{
-        background: "rgba(255,255,255,0.06)",
+        background: "var(--card-solid)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: "1px solid var(--card-border-strong)",
+        color: "var(--on-hero)",
       }}
     >
       <span className="size-[7px] rounded-full" style={{ background: dotColor }} />
