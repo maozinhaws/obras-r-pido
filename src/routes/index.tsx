@@ -79,45 +79,44 @@ function Home() {
           </div>
         </header>
 
-        {/* Hero CTA — Liquid Glass iOS */}
+        {/* Hero CTA — Liquid Glass + cores Material Expressive */}
         <button
           onClick={() => setModalOpen(true)}
-          className="relative group w-full aspect-[16/10] overflow-hidden rounded-[40px] transition-all duration-500 hover:scale-[1.02] active:scale-95 text-left focus:outline-none focus:ring-4 focus:ring-brand-2/30"
+          className="relative group w-full aspect-[16/10] overflow-hidden rounded-[40px] transition-all duration-500 hover:scale-[1.02] active:scale-95 text-left focus:outline-none focus:ring-4 focus:ring-brand-2/30 shadow-[0_32px_64px_-16px_rgba(255,107,53,0.45)]"
           aria-label="Novo Orçamento"
         >
-          {/* Liquid blobs */}
-          <div className="absolute inset-0 bg-white dark:bg-ink" />
-          <div className="absolute -top-1/4 -left-1/4 w-full h-full bg-brand opacity-60 rounded-full blur-[80px] animate-pulse" />
-          <div
-            className="absolute -bottom-1/4 -right-1/4 w-full h-full bg-brand-2 opacity-60 rounded-full blur-[80px] animate-pulse"
-            style={{ animationDelay: "1s" }}
-          />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-brand/20 rounded-full blur-[100px]" />
+          {/* Solid brand gradient base */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#ff6b35] via-[#ff6b35] to-[#7b5cff]" />
 
-          {/* Liquid Glass surface */}
-          <div className="absolute inset-0 backdrop-blur-3xl bg-white/20 dark:bg-white/10 border border-white/40 dark:border-white/15 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1),inset_0_1px_1px_rgba(255,255,255,0.5)]">
+          {/* Soft halo for liquid depth */}
+          <div className="absolute -top-12 -right-12 w-64 h-64 bg-white/15 rounded-full blur-3xl" />
+          <div className="absolute -bottom-16 -left-10 w-56 h-56 bg-white/10 rounded-full blur-3xl" />
+
+          {/* Glass surface overlay (subtle, keeps brand colors vibrant) */}
+          <div className="absolute inset-0 backdrop-blur-[2px] bg-white/5 border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]">
             {/* Gleam */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent opacity-50" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-60" />
 
             <div className="relative h-full w-full p-7 flex flex-col justify-between">
               <div className="flex justify-between items-start">
-                <div className="px-4 py-1.5 rounded-full bg-white/40 dark:bg-white/15 backdrop-blur-md border border-white/40 dark:border-white/20 shadow-sm">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground">
+                <div className="px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 shadow-sm inline-flex items-center gap-2">
+                  <span className="size-1.5 rounded-full bg-white animate-pulse" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white">
                     Toque para iniciar
                   </span>
                 </div>
-                <div className="size-14 rounded-3xl bg-white/50 dark:bg-white/15 backdrop-blur-lg border border-white/40 dark:border-white/20 shadow-xl grid place-items-center transition-transform duration-500 group-hover:rotate-90">
-                  <Plus className="size-7 text-foreground" strokeWidth={2.5} />
+                <div className="size-14 rounded-3xl bg-white/25 backdrop-blur-lg border border-white/40 shadow-xl grid place-items-center transition-transform duration-500 group-hover:rotate-90">
+                  <Plus className="size-7 text-white" strokeWidth={2.75} />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <h2 className="text-display text-4xl uppercase tracking-tight leading-[0.9] text-foreground">
+                <h2 className="text-display text-4xl uppercase tracking-tight leading-[0.9] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.15)]">
                   Novo
                   <br />
                   Orçamento
                 </h2>
-                <p className="font-medium text-sm text-foreground/75 max-w-[220px] leading-snug">
+                <p className="font-medium text-sm text-white/90 max-w-[220px] leading-snug">
                   Comece a transformar um novo ambiente hoje.
                 </p>
               </div>
