@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
   db,
@@ -934,6 +934,8 @@ function ItemEditor({
 }) {
   const [it, setIt] = useState<ItemAmbiente>(item);
   const [cameraOpen, setCameraOpen] = useState(false);
+  const [showNomeSug, setShowNomeSug] = useState(false);
+  const [showServSug, setShowServSug] = useState(false);
 
   async function addFoto(file: File) {
     const id = await salvarFoto(file);
@@ -953,26 +955,23 @@ function ItemEditor({
     <>
       <div className="flex-1 overflow-y-auto p-5 space-y-5">
         <div>
-          <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60 mb-2">
-            Nome do item
-          </div>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {NOMES_ITEM.map((n) => (
-              <button
-                key={n}
-                onClick={() => setIt({ ...it, nome: n })}
-                className={`brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase brutal-press ${
-                  it.nome === n ? "bg-brand text-ink" : "bg-surface"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60">
+              Nome do item
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowNomeSug(true)}
+              className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold text-[#7b5cff] bg-[#7b5cff]/10 border border-[#7b5cff]/30 active:scale-95 transition"
+            >
+              ≡ Sugestões
+            </button>
           </div>
           <input
             value={it.nome}
             onChange={(e) => setIt({ ...it, nome: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+            placeholder="Ex.: Janela da sala"
+            className="w-full"
           />
         </div>
 
@@ -986,7 +985,7 @@ function ItemEditor({
               onChange={(e) =>
                 setIt({ ...it, altura: e.target.value ? parseFloat(e.target.value) : undefined })
               }
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+              className="w-full"
             />
           </Field>
           <Field label="Comprimento (m)">
@@ -1001,28 +1000,9 @@ function ItemEditor({
                   comprimento: e.target.value ? parseFloat(e.target.value) : undefined,
                 })
               }
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+              className="w-full"
             />
           </Field>
-        </div>
-
-        <div>
-          <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60 mb-2">
-            Serviços
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {SERVICOS_PADRAO.map((s) => (
-              <button
-                key={s}
-                onClick={() => toggleServico(s)}
-                className={`brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase brutal-press ${
-                  it.servicos.includes(s) ? "bg-brand text-ink" : "bg-surface"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
         </div>
 
         <Field label="Preço (R$)">
@@ -1032,18 +1012,51 @@ function ItemEditor({
             inputMode="decimal"
             value={it.preco || ""}
             onChange={(e) => setIt({ ...it, preco: parseFloat(e.target.value) || 0 })}
-            className="w-full bg-midnight brutal-border-thin px-3 py-3 text-display text-2xl focus:outline-none focus:border-brand"
+            className="w-full text-display text-2xl"
           />
         </Field>
 
-        <Field label="Observação">
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60">
+              Observação
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowServSug(true)}
+              className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold text-emerald-700 bg-emerald-500/10 border border-emerald-500/30 active:scale-95 transition"
+            >
+              ≡ Serviços
+            </button>
+          </div>
           <textarea
             rows={2}
             value={it.observacao ?? ""}
             onChange={(e) => setIt({ ...it, observacao: e.target.value })}
-            className="w-full bg-midnight brutal-border-thin px-3 py-3 focus:outline-none focus:border-brand resize-none"
+            placeholder="Ex.: precisa lixar, remover ferragem, corrigir trinca..."
+            className="w-full resize-none"
           />
-        </Field>
+          {it.servicos.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {it.servicos.map((s) => (
+                <span
+                  key={s}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#7b5cff]/15 text-[#7b5cff] border border-[#7b5cff]/30"
+                >
+                  {s}
+                  <button
+                    type="button"
+                    onClick={() => toggleServico(s)}
+                    aria-label={`Remover ${s}`}
+                    className="opacity-70 hover:opacity-100"
+                  >
+                    <X className="size-3" strokeWidth={3} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div>
           <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60 mb-2">
@@ -1104,6 +1117,95 @@ function ItemEditor({
           Salvar Item
         </button>
       </div>
+
+      {showNomeSug && (
+        <SugestoesSheet
+          title="Selecione o item"
+          onClose={() => setShowNomeSug(false)}
+        >
+          <div className="grid grid-cols-3 gap-2">
+            {NOMES_ITEM.map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => {
+                  setIt({ ...it, nome: n });
+                  setShowNomeSug(false);
+                }}
+                className="px-3 py-3 rounded-xl border-2 border-slate-300 bg-white text-slate-900 font-bold text-sm active:scale-95 hover:border-[#7b5cff] hover:bg-[#7b5cff]/5 transition"
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        </SugestoesSheet>
+      )}
+
+      {showServSug && (
+        <SugestoesSheet
+          title="Serviços e Materiais"
+          onClose={() => setShowServSug(false)}
+        >
+          <div className="space-y-4">
+            <div>
+              <div className="text-[11px] font-black uppercase tracking-widest text-[#7b5cff] mb-2">
+                Serviços
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {SERVICOS_PADRAO.map((s) => {
+                  const active = it.servicos.includes(s);
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => toggleServico(s)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition active:scale-95 ${
+                        active
+                          ? "bg-[#7b5cff] text-white border-[#7b5cff]"
+                          : "bg-white text-[#7b5cff] border-[#7b5cff]/40"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div>
+              <div className="text-[11px] font-black uppercase tracking-widest text-emerald-700 mb-2">
+                Materiais
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {MATERIAIS_PADRAO.map((m) => {
+                  const active = it.servicos.includes(m);
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => toggleServico(m)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition active:scale-95 ${
+                        active
+                          ? "bg-emerald-600 text-white border-emerald-600"
+                          : "bg-white text-emerald-700 border-emerald-600/40"
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowServSug(false)}
+              className="w-full mt-2 py-3 rounded-full text-sm font-bold uppercase tracking-wider text-white"
+              style={{ background: "linear-gradient(135deg, #ff6b35, #7b5cff)" }}
+            >
+              Confirmar
+            </button>
+          </div>
+        </SugestoesSheet>
+      )}
     </>
   );
 }
@@ -1305,6 +1407,42 @@ function PassoRevisao({
             <MessageCircle className="size-4" /> Enviar WhatsApp
           </a>
         )}
+      </div>
+    </div>
+  );
+}
+
+function SugestoesSheet({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4 animate-fade-in"
+      style={{ background: "rgba(0,0,0,0.45)" }}
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md bg-white rounded-3xl shadow-2xl animate-scale-in overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+          <h3 className="text-lg font-bold text-slate-900">{title}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Fechar"
+            className="size-9 rounded-full bg-slate-100 grid place-items-center active:scale-95"
+          >
+            <X className="size-5 text-slate-700" strokeWidth={2.5} />
+          </button>
+        </div>
+        <div className="p-5 max-h-[70vh] overflow-y-auto">{children}</div>
       </div>
     </div>
   );
