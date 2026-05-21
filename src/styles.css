@@ -351,6 +351,13 @@
       0 10px 20px -8px rgba(255, 107, 53, 0.35),
       0 28px 60px -18px rgba(123, 92, 255, 0.55);
   }
+  /* Force white text on colored surfaces (override base h1-h4 color) */
+  .glass-brand h1, .glass-brand h2, .glass-brand h3, .glass-brand h4,
+  .glass-brand h5, .glass-brand h6, .glass-brand p, .glass-brand span,
+  .cta-pill, .cta-pill *,
+  .mode-avatar, .mode-avatar *,
+  .chip.active, .chip.active *,
+  .stepper-seg.active { color: #ffffff !important; }
   .glass-brand-glow {
     position: relative;
     isolation: isolate;
