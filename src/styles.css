@@ -482,6 +482,12 @@
   --border: #000000;
 }
 
+:root.dark[data-contraste="alto"] {
+  --foreground: #ffffff;
+  --muted-foreground: #e5e5e5;
+  --border: #ffffff;
+}
+
 @layer base {
   * { border-color: var(--color-border); }
 
