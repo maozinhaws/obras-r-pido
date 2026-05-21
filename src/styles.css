@@ -345,32 +345,41 @@
   background: #000000 !important;
   border: 2px solid #ffffff !important;
 }
-/* Override the "white on colored bg" forced rule for inverted brutalist */
-:root[data-tema="brutalista"].dark .glass-brand h1,
-:root[data-tema="brutalista"].dark .glass-brand h2,
-:root[data-tema="brutalista"].dark .glass-brand h3,
-:root[data-tema="brutalista"].dark .glass-brand h4,
-:root[data-tema="brutalista"].dark .glass-brand p,
-:root[data-tema="brutalista"].dark .glass-brand span,
+/* Force ALL text/icons inside colored surfaces to black in inverted brutalist.
+   Uses universal selector to override Tailwind text-white utilities. */
+:root[data-tema="brutalista"].dark .glass-brand,
+:root[data-tema="brutalista"].dark .glass-brand *,
 :root[data-tema="brutalista"].dark .cta-pill,
 :root[data-tema="brutalista"].dark .cta-pill *,
 :root[data-tema="brutalista"].dark .mode-avatar,
 :root[data-tema="brutalista"].dark .mode-avatar *,
 :root[data-tema="brutalista"].dark .chip.active,
 :root[data-tema="brutalista"].dark .chip.active *,
-:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand h1,
-:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand h2,
-:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand h3,
-:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand h4,
-:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand p,
-:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand span,
+:root[data-tema="brutalista"].dark .stepper-seg.active,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand,
+:root[data-tema="brutalista"][data-theme="escuro"] .glass-brand *,
 :root[data-tema="brutalista"][data-theme="escuro"] .cta-pill,
 :root[data-tema="brutalista"][data-theme="escuro"] .cta-pill *,
 :root[data-tema="brutalista"][data-theme="escuro"] .mode-avatar,
 :root[data-tema="brutalista"][data-theme="escuro"] .mode-avatar *,
 :root[data-tema="brutalista"][data-theme="escuro"] .chip.active,
-:root[data-tema="brutalista"][data-theme="escuro"] .chip.active * {
+:root[data-tema="brutalista"][data-theme="escuro"] .chip.active *,
+:root[data-tema="brutalista"][data-theme="escuro"] .stepper-seg.active {
   color: #000000 !important;
+  --tw-text-opacity: 1 !important;
+}
+
+/* And in light brutalist, all text inside colored surfaces stays white */
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .glass-brand,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .glass-brand *,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .cta-pill,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .cta-pill *,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .mode-avatar,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .mode-avatar *,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .chip.active,
+:root[data-tema="brutalista"]:not(.dark):not([data-theme="escuro"]) .chip.active * {
+  color: #ffffff !important;
+  --tw-text-opacity: 1 !important;
 }
 
 /* Accessibility */
