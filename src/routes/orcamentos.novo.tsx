@@ -1411,3 +1411,39 @@ function PassoRevisao({
     </div>
   );
 }
+
+function SugestoesSheet({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4 animate-fade-in"
+      style={{ background: "rgba(0,0,0,0.45)" }}
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md bg-white rounded-3xl shadow-2xl animate-scale-in overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+          <h3 className="text-lg font-bold text-slate-900">{title}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Fechar"
+            className="size-9 rounded-full bg-slate-100 grid place-items-center active:scale-95"
+          >
+            <X className="size-5 text-slate-700" strokeWidth={2.5} />
+          </button>
+        </div>
+        <div className="p-5 max-h-[70vh] overflow-y-auto">{children}</div>
+      </div>
+    </div>
+  );
+}
