@@ -84,19 +84,21 @@ function Home() {
           onClick={() => setModalOpen(true)}
           className="block w-full text-left glass-brand-glow glass-press group"
         >
-          <div className="glass-brand hero-lens-flare p-7 py-10 my-4 text-black dark:text-white">
-            <div className="flex justify-between items-start mb-12">
-              <div className="size-12 rounded-2xl bg-card/20 backdrop-blur-md grid place-items-center">
-                <Plus className="size-6" strokeWidth={2.75} />
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] bg-black/15 dark:bg-white/15 px-3 py-1.5 rounded-full">
+          <div className="glass-brand hero-lens-flare p-7 py-10 my-4 text-white">
+            <div className="flex justify-end mb-10">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] bg-black/30 px-3 py-1.5 rounded-full">
                 Toque para iniciar
               </span>
             </div>
-            <h2 className="text-display text-3xl uppercase leading-[0.95] tracking-tight text-inherit">
-              Novo
-              <br />
-              Orçamento
+            <h2 className="text-display text-3xl uppercase leading-[0.95] tracking-tight flex items-center gap-3 flex-wrap">
+              <span>
+                Novo
+                <br />
+                Orçamento
+              </span>
+              <span className="size-12 rounded-2xl bg-white/20 backdrop-blur-md grid place-items-center shrink-0">
+                <Plus className="size-6" strokeWidth={2.75} />
+              </span>
             </h2>
             <p className="font-medium text-sm mt-2 opacity-85">
               Comece a transformar um novo ambiente hoje.
