@@ -228,13 +228,13 @@ function Home() {
           to="/agenda"
           className="relative block active:scale-[0.99] transition"
           style={{
-            background: "rgba(20,23,29,0.5)",
+            background: "var(--card-solid)",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: "1px solid var(--card-border-strong)",
             borderRadius: "0 24px 24px 24px",
             padding: 20,
-            boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
           }}
         >
           <div className="flex justify-between items-center mb-3">
@@ -244,17 +244,20 @@ function Home() {
               />
               {proximoEvento ? "Próximo Evento" : "Próximos Eventos"}
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#a78bfa] inline-flex items-center gap-1">
+            <span
+              className="text-[10px] font-bold uppercase tracking-[0.14em] inline-flex items-center gap-1"
+              style={{ color: "var(--brand-2)" }}
+            >
               Ver agenda <ArrowUpRight className="size-3" strokeWidth={3} />
             </span>
           </div>
           <div className="flex justify-between items-center gap-3">
             <div className="min-w-0">
-              <h3 className="text-display text-xl text-white uppercase leading-none truncate">
+              <h3 className="text-display text-xl uppercase leading-none truncate" style={{ color: "var(--on-hero)" }}>
                 {proximoEvento ? proximoEvento.titulo : "Agenda Livre"}
               </h3>
               {proximoEvento && (
-                <p className="text-[11px] text-white/55 mt-1">
+                <p className="text-[11px] mt-1" style={{ color: "var(--on-hero-muted)" }}>
                   {format(new Date(proximoEvento.data), "dd 'de' MMM", { locale: ptBR })}
                 </p>
               )}
@@ -262,11 +265,11 @@ function Home() {
             <div
               className="size-16 rounded-2xl grid place-items-center shrink-0"
               style={{
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "var(--surface-2)",
+                border: "1px solid var(--surface-2-border)",
               }}
             >
-              <Calendar className="size-8 text-[#a78bfa]" strokeWidth={1.5} />
+              <Calendar className="size-8" style={{ color: "var(--brand-2)" }} strokeWidth={1.5} />
             </div>
           </div>
         </Link>
@@ -276,6 +279,7 @@ function Home() {
     </div>
   );
 }
+
 
 function GlassMetric({ dotColor, label }: { dotColor: string; label: string }) {
   return (
