@@ -57,24 +57,22 @@ function Home() {
       className="min-h-screen relative"
       style={{ background: "var(--bg-hero)" }}
     >
+      {/* Nome da empresa — topo centralizado entre menu e toggle */}
+      <div className="fixed top-3 left-1/2 -translate-x-1/2 z-40 h-11 flex items-center px-4 rounded-2xl bg-card border border-border shadow-[0_4px_14px_rgba(0,0,0,0.06)] max-w-[calc(100vw-7rem)]">
+        <span className="text-display text-sm font-extrabold truncate text-foreground">
+          {dashboard?.config?.nome || "Pintor Plus"}
+        </span>
+      </div>
+
       <div
         className="w-full max-w-md mx-auto px-6 pt-14 pb-10 space-y-4"
         style={{ color: "var(--on-hero)" }}
       >
-        {/* Top row */}
-        <div className="flex justify-between items-center">
-          <span
-            className="text-[11px] font-bold uppercase tracking-[0.14em]"
-            style={{ color: "var(--on-hero-muted)" }}
-          >
-            Painel · System Active
-          </span>
-        </div>
-
         {/* Title */}
         <h1 className="text-display text-[32px] font-extrabold tracking-tight leading-none">
           Performance Hub
         </h1>
+
 
         {/* Metrics pills */}
         <div className="flex gap-2 flex-wrap">
