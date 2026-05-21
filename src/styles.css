@@ -319,19 +319,27 @@
   }
   .text-mono { font-family: var(--font-mono); }
 
-  /* Card surfaces — white, soft floating, one sharp corner (top-left) */
+  /* Card surfaces — soft floating, one sharp corner (top-left).
+     Shadows are deeper in light mode for clearer depth. */
   .glass {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 0 32px 32px 32px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    box-shadow:
+      0 1px 2px rgba(15, 23, 42, 0.06),
+      0 12px 28px -8px rgba(15, 23, 42, 0.14);
   }
   .glass-strong {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 0 32px 32px 32px;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 2px 4px rgba(15, 23, 42, 0.08),
+      0 22px 50px -10px rgba(15, 23, 42, 0.20);
   }
+
+  /* Darker shadows in light mode are already the default.
+     Soften back down in dark mode (handled in the .dark block above). */
 
   /* Vibrant gradient hero card — sharp top-right corner for contrast */
   .glass-brand {
@@ -339,7 +347,9 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 36px 0 36px 36px;
     color: #ffffff;
-    box-shadow: 0 20px 50px -15px rgba(123, 92, 255, 0.35);
+    box-shadow:
+      0 10px 20px -8px rgba(255, 107, 53, 0.35),
+      0 28px 60px -18px rgba(123, 92, 255, 0.55);
   }
   .glass-brand-glow {
     position: relative;
@@ -358,9 +368,18 @@
   }
 
   .glass-press {
-    transition: transform 150ms cubic-bezier(.2,.8,.2,1), box-shadow 150ms ease;
+    transition:
+      transform 220ms cubic-bezier(.2,.8,.2,1),
+      box-shadow 220ms ease,
+      background 200ms ease;
   }
-  .glass-press:active { transform: scale(0.98); }
+  .glass-press:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 8px rgba(15, 23, 42, 0.08),
+      0 22px 40px -12px rgba(15, 23, 42, 0.22);
+  }
+  .glass-press:active { transform: scale(0.97); }
 
   /* Brand pill (dark) — primary CTA */
   .btn-dark {
@@ -370,9 +389,18 @@
     padding: 0.75rem 1.5rem;
     font-weight: 700;
     font-size: 0.8rem;
-    transition: background 150ms ease, transform 100ms ease;
+    box-shadow:
+      0 4px 10px rgba(10, 10, 10, 0.20),
+      0 14px 30px -10px rgba(10, 10, 10, 0.35);
+    transition: background 180ms ease, transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms ease;
   }
-  .btn-dark:hover { background: #1f1f1f; }
+  .btn-dark:hover {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow:
+      0 6px 14px rgba(10, 10, 10, 0.24),
+      0 22px 40px -10px rgba(10, 10, 10, 0.45);
+  }
   .btn-dark:active { transform: scale(0.97); }
 
   /* Legacy brutalist (kept for any pages still using it) */
@@ -404,9 +432,17 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 10px 30px -10px rgba(123, 92, 255, 0.5);
+    box-shadow:
+      0 6px 14px -4px rgba(255, 107, 53, 0.45),
+      0 16px 36px -10px rgba(123, 92, 255, 0.55);
     cursor: pointer;
-    transition: transform 150ms ease;
+    transition: transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease;
+  }
+  .cta-pill:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 10px 20px -6px rgba(255, 107, 53, 0.55),
+      0 24px 50px -10px rgba(123, 92, 255, 0.65);
   }
   .cta-pill:active { transform: scale(0.97); }
 
