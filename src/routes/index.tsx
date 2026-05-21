@@ -84,7 +84,7 @@ function Home() {
           onClick={() => setModalOpen(true)}
           className="block w-full text-left glass-brand-glow glass-press group"
         >
-          <div className="glass-brand hero-lens-flare p-7 text-black dark:text-white">
+          <div className="glass-brand hero-lens-flare p-7 py-10 my-4 text-black dark:text-white">
             <div className="flex justify-between items-start mb-12">
               <div className="size-12 rounded-2xl bg-card/20 backdrop-blur-md grid place-items-center">
                 <Plus className="size-6" strokeWidth={2.75} />
@@ -93,7 +93,7 @@ function Home() {
                 Toque para iniciar
               </span>
             </div>
-            <h2 className="flex justify-between items-start mb-12 text-inherit">
+            <h2 className="text-display text-3xl uppercase leading-[0.95] tracking-tight text-inherit">
               Novo
               <br />
               Orçamento
@@ -102,6 +102,7 @@ function Home() {
               Comece a transformar um novo ambiente hoje.
             </p>
           </div>
+
         </button>
 
         {/* Fluxo de Orçamentos */}
