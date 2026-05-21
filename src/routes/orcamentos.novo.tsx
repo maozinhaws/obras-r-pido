@@ -1117,6 +1117,95 @@ function ItemEditor({
           Salvar Item
         </button>
       </div>
+
+      {showNomeSug && (
+        <SugestoesSheet
+          title="Selecione o item"
+          onClose={() => setShowNomeSug(false)}
+        >
+          <div className="grid grid-cols-3 gap-2">
+            {NOMES_ITEM.map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => {
+                  setIt({ ...it, nome: n });
+                  setShowNomeSug(false);
+                }}
+                className="px-3 py-3 rounded-xl border-2 border-slate-300 bg-white text-slate-900 font-bold text-sm active:scale-95 hover:border-[#7b5cff] hover:bg-[#7b5cff]/5 transition"
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        </SugestoesSheet>
+      )}
+
+      {showServSug && (
+        <SugestoesSheet
+          title="Serviços e Materiais"
+          onClose={() => setShowServSug(false)}
+        >
+          <div className="space-y-4">
+            <div>
+              <div className="text-[11px] font-black uppercase tracking-widest text-[#7b5cff] mb-2">
+                Serviços
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {SERVICOS_PADRAO.map((s) => {
+                  const active = it.servicos.includes(s);
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => toggleServico(s)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition active:scale-95 ${
+                        active
+                          ? "bg-[#7b5cff] text-white border-[#7b5cff]"
+                          : "bg-white text-[#7b5cff] border-[#7b5cff]/40"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div>
+              <div className="text-[11px] font-black uppercase tracking-widest text-emerald-700 mb-2">
+                Materiais
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {MATERIAIS_PADRAO.map((m) => {
+                  const active = it.servicos.includes(m);
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => toggleServico(m)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition active:scale-95 ${
+                        active
+                          ? "bg-emerald-600 text-white border-emerald-600"
+                          : "bg-white text-emerald-700 border-emerald-600/40"
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowServSug(false)}
+              className="w-full mt-2 py-3 rounded-full text-sm font-bold uppercase tracking-wider text-white"
+              style={{ background: "linear-gradient(135deg, #ff6b35, #7b5cff)" }}
+            >
+              Confirmar
+            </button>
+          </div>
+        </SugestoesSheet>
+      )}
     </>
   );
 }
