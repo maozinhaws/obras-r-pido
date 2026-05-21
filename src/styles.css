@@ -532,6 +532,59 @@
   }
 }
 
+/* ===========================================================
+   SUAVE (default) — light glassmorphism + livelier motion.
+   Applied when no data-tema attribute is set on <html>.
+   =========================================================== */
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .glass,
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .glass-strong {
+  background: color-mix(in oklab, var(--card) 78%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .glass-press {
+  transition:
+    transform 260ms cubic-bezier(.2,.8,.2,1),
+    box-shadow 260ms ease,
+    background 220ms ease;
+}
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .glass-press:hover {
+  transform: translateY(-3px) scale(1.01);
+}
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .cta-pill,
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .btn-dark {
+  transition:
+    transform 260ms cubic-bezier(.2,.8,.2,1),
+    box-shadow 260ms ease,
+    background 220ms ease,
+    filter 220ms ease;
+}
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .cta-pill:hover {
+  transform: translateY(-3px) scale(1.02);
+  filter: brightness(1.08);
+}
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .chip {
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 200ms cubic-bezier(.2,.8,.2,1);
+}
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .chip:hover {
+  transform: translateY(-1px);
+}
+
+/* Slightly softer shadows in dark mode (light-mode defaults are deeper) */
+.dark .glass,
+:root[data-theme="escuro"] .glass {
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.30),
+    0 18px 40px -10px rgba(0, 0, 0, 0.45);
+}
+.dark .glass-strong,
+:root[data-theme="escuro"] .glass-strong {
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.40),
+    0 26px 56px -12px rgba(0, 0, 0, 0.55);
+}
+
+
 /* Inputs — Lovable style, themed via tokens */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea, select {
