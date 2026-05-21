@@ -55,15 +55,18 @@ function Home() {
   return (
     <div
       className="min-h-screen relative"
-      style={{
-        background:
-          "radial-gradient(80% 50% at 50% 0%, rgba(255,107,53,0.5), transparent 70%), radial-gradient(60% 50% at 100% 100%, rgba(123,92,255,0.6), transparent 70%), #0b0d12",
-      }}
+      style={{ background: "var(--bg-hero)" }}
     >
-      <div className="w-full max-w-md mx-auto px-6 pt-14 pb-10 space-y-4 text-white">
+      <div
+        className="w-full max-w-md mx-auto px-6 pt-14 pb-10 space-y-4"
+        style={{ color: "var(--on-hero)" }}
+      >
         {/* Top row */}
         <div className="flex justify-between items-center">
-          <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60">
+          <span
+            className="text-[11px] font-bold uppercase tracking-[0.14em]"
+            style={{ color: "var(--on-hero-muted)" }}
+          >
             Painel · System Active
           </span>
         </div>
