@@ -146,14 +146,14 @@ function Home() {
             </div>
           </div>
           <h2
-            className="relative z-10 text-display font-extrabold uppercase tracking-tight leading-[1] mb-2"
-            style={{ fontSize: 36, textShadow: "0 2px 4px rgba(0,0,0,0.18)" }}
+            className="relative z-10 text-display font-extrabold uppercase tracking-tight leading-[1] mb-2 text-white"
+            style={{ fontSize: 36, textShadow: "0 2px 4px rgba(0,0,0,0.35)" }}
           >
             Novo
             <br />
             Orçamento
           </h2>
-          <p className="relative z-10 text-[13px] font-medium text-white/85">
+          <p className="relative z-10 text-[13px] font-medium text-white/90">
             Comece a transformar um novo ambiente hoje.
           </p>
         </button>
