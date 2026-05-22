@@ -117,7 +117,7 @@ function Home() {
           className="relative w-full overflow-hidden text-left transition-transform active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-brand-2/30"
           style={{
             background:
-              "linear-gradient(135deg, #ff6b35 0%, #ff6b35 45%, #7b5cff 100%)",
+              "linear-gradient(120deg, #ff6b35 0%, #ff7a3d 25%, #f25a6b 50%, #b85cc4 75%, #7b5cff 100%)",
             border: "1px solid rgba(255,255,255,0.18)",
             borderRadius: "36px 0 36px 36px",
             padding: "28px 24px",
