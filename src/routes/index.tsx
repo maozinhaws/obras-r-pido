@@ -111,51 +111,85 @@ function Home() {
           </div>
         </Link>
 
-        {/* Hero CTA — Apple Glass */}
+        {/* Hero CTA — Vulcão (gradiente theme-aware) */}
         <button
           onClick={() => setModalOpen(true)}
           className="relative w-full overflow-hidden text-left transition-transform active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-brand-2/30"
           style={{
-            background:
-              "linear-gradient(120deg, #ff5722 0%, #ff7a18 22%, #e85d04 45%, #3a2a6b 75%, #0f1b3d 100%)",
-            border: "1px solid rgba(255,255,255,0.18)",
-            borderRadius: "36px 0 36px 36px",
-            padding: "28px 24px",
-            boxShadow: "0 20px 60px -15px rgba(123,92,255,0.5)",
+            background: "var(--gradient-hero)",
+            borderRadius: "20px 0 20px 20px",
+            padding: "clamp(14px,3vw,22px) clamp(16px,3.5vw,26px) clamp(18px,3.5vw,26px)",
+            color: "#fff",
+            isolation: "isolate",
+            containerType: "inline-size",
           }}
           aria-label="Novo Orçamento"
         >
           {/* Lens flare */}
           <span className="hero-flare pointer-events-none absolute inset-0" />
-          <div className="relative z-10 flex justify-between items-center mb-6">
-            <span
-              className="text-[9px] font-bold uppercase tracking-[0.14em] text-white px-3 py-[5px] rounded-full"
-              style={{ background: "rgba(0,0,0,0.32)", backdropFilter: "blur(10px)" }}
-            >
-              Toque para iniciar
-            </span>
-            <div
-              className="size-[52px] rounded-full grid place-items-center"
+
+          {/* Pill "Toque para iniciar" */}
+          <span
+            className="relative z-10 inline-flex items-center font-extrabold uppercase whitespace-nowrap"
+            style={{
+              background: "rgba(0,0,0,0.12)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.22)",
+              boxShadow: "inset 0 2px 6px rgba(0,0,0,0.22), inset 0 1px 2px rgba(0,0,0,0.15)",
+              color: "rgba(255,255,255,0.90)",
+              padding: "clamp(4px,1.2cqi,7px) clamp(9px,3cqi,15px)",
+              borderRadius: 999,
+              fontFamily: "'Sora', sans-serif",
+              fontSize: "clamp(8px,2.2cqi,12px)",
+              letterSpacing: "0.13em",
+              marginBottom: "clamp(10px,2.5cqi,20px)",
+            }}
+          >
+            Toque para iniciar
+          </span>
+
+          {/* Linha título + "+" */}
+          <div
+            className="relative z-10 flex justify-between items-end"
+            style={{ gap: "clamp(8px,2.5cqi,16px)" }}
+          >
+            <h2
+              className="text-white"
               style={{
-                background: "rgba(255,255,255,0.2)",
-                backdropFilter: "blur(12px)",
-                border: "1px solid rgba(255,255,255,0.35)",
+                fontFamily: "'Sora', sans-serif",
+                fontWeight: 800,
+                fontSize: "clamp(16px,8.5cqi,44px)",
+                lineHeight: 1,
+                letterSpacing: "-0.03em",
+                textTransform: "uppercase",
+                wordBreak: "keep-all",
+                overflowWrap: "normal",
+                flex: "1 1 0",
+                minWidth: 0,
               }}
             >
-              <Plus className="size-7 text-white" strokeWidth={2} />
+              Novo<br />Orçamento
+            </h2>
+            <div
+              className="flex items-center justify-center shrink-0"
+              style={{
+                width: "calc(clamp(16px,8.5cqi,44px) * 2)",
+                height: "calc(clamp(16px,8.5cqi,44px) * 2)",
+                borderRadius: "50%",
+                background: "rgba(0,0,0,0.12)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.22)",
+                boxShadow: "inset 0 2px 6px rgba(0,0,0,0.22), inset 0 1px 2px rgba(0,0,0,0.15)",
+              }}
+            >
+              <Plus
+                style={{ width: "62%", height: "62%", color: "rgba(255,255,255,0.85)" }}
+                strokeWidth={4}
+              />
             </div>
           </div>
-          <h2
-            className="relative z-10 text-display font-extrabold uppercase tracking-tight leading-[1] mb-2 text-white"
-            style={{ fontSize: 36, textShadow: "0 2px 4px rgba(0,0,0,0.35)" }}
-          >
-            Novo
-            <br />
-            Orçamento
-          </h2>
-          <p className="relative z-10 text-[13px] font-medium text-white/90">
-            Comece a transformar um novo ambiente hoje.
-          </p>
         </button>
 
         {/* Fluxo de Orçamentos — Glass card */}
