@@ -120,6 +120,8 @@
   --surface-2-border: #e2e8f0;
   --on-hero: #0a0a0a;
   --on-hero-muted: #475569;
+  /* Hero CTA gradient (Combinação Vulcão Vivo — claro) */
+  --gradient-hero: linear-gradient(145deg, #f08040 0%, #dc6a26 45%, #8c5ed4 98%, #6e44bc 100%);
 }
 
 /* Dark mode — toggle via .dark class on <html> (preferred).
