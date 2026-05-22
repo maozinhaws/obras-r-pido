@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, useBlocker } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { db, type ConfigEmpresa, SERVICOS_PADRAO, FORMAS_PAGAMENTO, AMBIENTES_PADRAO } from "@/lib/db";
 import { PageHeader } from "@/components/app-shell";
 import { Field } from "./clientes";
@@ -11,6 +11,7 @@ import {
   PenLine,
   Phone,
   ChevronDown,
+  X,
 } from "lucide-react";
 
 export const Route = createFileRoute("/configuracoes")({
@@ -25,35 +26,93 @@ export const Route = createFileRoute("/configuracoes")({
 
 type SectionId = "acessibilidade" | "empresa" | "contato" | "whats" | "assinatura";
 
+const DEFAULTS: ConfigEmpresa = {
+  id: 1,
+  servicosPadrao: SERVICOS_PADRAO,
+  formasPagamento: FORMAS_PAGAMENTO,
+  ambientesPadrao: AMBIENTES_PADRAO,
+  mensagemPadraoWhats:
+    "Olá! Segue o orçamento solicitado. Qualquer dúvida estou à disposição.",
+};
+
+function applyAcessibilidade(cfg: Partial<ConfigEmpresa>) {
+  const root = document.documentElement;
+  if (cfg.fonteTamanho) root.setAttribute("data-fonte", cfg.fonteTamanho);
+  else root.removeAttribute("data-fonte");
+  if (cfg.altoContraste) root.setAttribute("data-contraste", "alto");
+  else root.removeAttribute("data-contraste");
+}
+
 function ConfigPage() {
-  const [form, setForm] = useState<ConfigEmpresa>({
-    id: 1,
-    servicosPadrao: SERVICOS_PADRAO,
-    formasPagamento: FORMAS_PAGAMENTO,
-    ambientesPadrao: AMBIENTES_PADRAO,
-    mensagemPadraoWhats:
-      "Olá! Segue o orçamento solicitado. Qualquer dúvida estou à disposição.",
-  });
-  const [salvo, setSalvo] = useState(false);
+  const [saved, setSaved] = useState<ConfigEmpresa>(DEFAULTS);
+  const [form, setForm] = useState<ConfigEmpresa>(DEFAULTS);
+  const [flashSalvo, setFlashSalvo] = useState(false);
   const [open, setOpen] = useState<SectionId | null>("acessibilidade");
 
   useEffect(() => {
-    db.config.get(1).then((c) => c && setForm({ ...form, ...c }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    db.config.get(1).then((c) => {
+      const merged = { ...DEFAULTS, ...(c ?? {}) };
+      setSaved(merged);
+      setForm(merged);
+    });
   }, []);
+
+  const dirty = useMemo(() => JSON.stringify(saved) !== JSON.stringify(form), [saved, form]);
+
+  // Avisar antes de fechar/recarregar a aba
+  useEffect(() => {
+    if (!dirty) return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty]);
+
+  // Avisar antes de navegar para outra rota
+  useBlocker({
+    shouldBlockFn: () => {
+      if (!dirty) return false;
+      const ok = window.confirm(
+        "Você tem alterações não salvas. Deseja sair sem salvar?",
+      );
+      if (ok) {
+        // restaura aparência salva ao sair sem salvar
+        applyAcessibilidade(saved);
+        return false;
+      }
+      return true;
+    },
+    enableBeforeUnload: false,
+  });
+
+  function updateForm(patch: Partial<ConfigEmpresa>) {
+    const next = { ...form, ...patch };
+    setForm(next);
+    if ("fonteTamanho" in patch || "altoContraste" in patch) {
+      applyAcessibilidade(next);
+    }
+  }
 
   async function handleLogo(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => setForm({ ...form, logo: reader.result as string });
+    reader.onload = () => updateForm({ logo: reader.result as string });
     reader.readAsDataURL(file);
   }
 
   async function salvar() {
     await db.config.put(form);
-    setSalvo(true);
-    setTimeout(() => setSalvo(false), 2000);
+    setSaved(form);
+    setFlashSalvo(true);
+    setTimeout(() => setFlashSalvo(false), 1500);
+  }
+
+  function cancelar() {
+    setForm(saved);
+    applyAcessibilidade(saved);
   }
 
   function toggle(id: SectionId) {
@@ -66,14 +125,32 @@ function ConfigPage() {
         eyebrow="Sistema · Empresa"
         title="Configurações"
         actions={
-          <button
-            onClick={salvar}
-            className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
-          >
-            <Save className="size-4" strokeWidth={3} /> {salvo ? "Salvo!" : "Salvar"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={cancelar}
+              disabled={!dirty}
+              className="bg-card text-foreground border border-border glass-press px-4 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <X className="size-4" strokeWidth={3} /> Cancelar
+            </button>
+            <button
+              onClick={salvar}
+              disabled={!dirty && !flashSalvo}
+              className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2 disabled:opacity-50"
+            >
+              <Save className="size-4" strokeWidth={3} /> {flashSalvo ? "Salvo!" : "Salvar"}
+            </button>
+          </div>
         }
       />
+
+      {dirty && (
+        <div className="px-4 lg:px-10 pt-3">
+          <div className="text-xs font-bold uppercase tracking-widest text-warning bg-warning/10 border border-warning/30 rounded-xl px-3 py-2 inline-block">
+            Alterações não salvas
+          </div>
+        </div>
+      )}
 
       <div className="px-4 lg:px-10 py-5 max-w-3xl space-y-3">
         <Section
@@ -94,7 +171,7 @@ function ConfigPage() {
                 return (
                   <button
                     key={t.id}
-                    onClick={() => setForm({ ...form, fonteTamanho: t.id as any })}
+                    onClick={() => updateForm({ fonteTamanho: t.id as any })}
                     className={`p-4 rounded-xl border-2 transition-all ${
                       ativo ? "border-brand bg-brand/10" : "border-border hover:border-foreground/30"
                     }`}
@@ -107,20 +184,30 @@ function ConfigPage() {
               })}
             </div>
           </Field>
-          <label className="flex items-center justify-between cursor-pointer pt-3">
+          <button
+            type="button"
+            onClick={() => updateForm({ altoContraste: !(form.altoContraste ?? false) })}
+            className="w-full flex items-center justify-between pt-3 text-left"
+          >
             <div>
               <div className="text-sm font-bold uppercase tracking-widest">Alto contraste</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Aumenta legibilidade reduzindo opacidades
               </p>
             </div>
-            <input
-              type="checkbox"
-              checked={form.altoContraste ?? false}
-              onChange={(e) => setForm({ ...form, altoContraste: e.target.checked })}
-              className="size-5 accent-brand"
-            />
-          </label>
+            <span
+              aria-hidden
+              className={`relative inline-block h-6 w-11 rounded-full transition-colors ${
+                form.altoContraste ? "bg-brand" : "bg-muted"
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 size-5 rounded-full bg-white shadow transition-transform ${
+                  form.altoContraste ? "translate-x-5" : ""
+                }`}
+              />
+            </span>
+          </button>
         </Section>
 
         <Section
@@ -143,14 +230,14 @@ function ConfigPage() {
               <Field label="Nome da empresa">
                 <input
                   value={form.nome ?? ""}
-                  onChange={(e) => setForm({ ...form, nome: e.target.value })}
+                  onChange={(e) => updateForm({ nome: e.target.value })}
                   className="w-full"
                 />
               </Field>
               <Field label="CNPJ / CPF">
                 <input
                   value={form.documento ?? ""}
-                  onChange={(e) => setForm({ ...form, documento: e.target.value })}
+                  onChange={(e) => updateForm({ documento: e.target.value })}
                   className="w-full"
                 />
               </Field>
@@ -169,7 +256,7 @@ function ConfigPage() {
             <Field label="Telefone">
               <input
                 value={form.telefone ?? ""}
-                onChange={(e) => setForm({ ...form, telefone: e.target.value })}
+                onChange={(e) => updateForm({ telefone: e.target.value })}
                 inputMode="tel"
                 className="w-full"
               />
@@ -178,7 +265,7 @@ function ConfigPage() {
               <input
                 type="email"
                 value={form.email ?? ""}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                onChange={(e) => updateForm({ email: e.target.value })}
                 className="w-full"
               />
             </Field>
@@ -187,7 +274,7 @@ function ConfigPage() {
             <textarea
               rows={2}
               value={form.endereco ?? ""}
-              onChange={(e) => setForm({ ...form, endereco: e.target.value })}
+              onChange={(e) => updateForm({ endereco: e.target.value })}
               className="w-full resize-none"
             />
           </Field>
@@ -204,7 +291,7 @@ function ConfigPage() {
             <textarea
               rows={3}
               value={form.mensagemPadraoWhats ?? ""}
-              onChange={(e) => setForm({ ...form, mensagemPadraoWhats: e.target.value })}
+              onChange={(e) => updateForm({ mensagemPadraoWhats: e.target.value })}
               className="w-full resize-none"
             />
           </Field>
@@ -221,7 +308,7 @@ function ConfigPage() {
             <textarea
               rows={2}
               value={form.assinatura ?? ""}
-              onChange={(e) => setForm({ ...form, assinatura: e.target.value })}
+              onChange={(e) => updateForm({ assinatura: e.target.value })}
               className="w-full resize-none"
             />
           </Field>
