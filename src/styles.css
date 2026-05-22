@@ -162,6 +162,8 @@
   --surface-2-border: rgba(255,255,255,0.10);
   --on-hero: #ffffff;
   --on-hero-muted: rgba(255,255,255,0.65);
+  /* Hero CTA gradient (Combinação Vulcão Escuro) */
+  --gradient-hero: linear-gradient(145deg, #e87838 0%, #d06420 45%, #4a1070 98%, #2d0945 100%);
 }
 .dark .btn-dark,
 :root[data-theme="escuro"] .btn-dark { background: #ededf0; color: #0b0d12; }
