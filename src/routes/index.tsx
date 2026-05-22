@@ -52,37 +52,64 @@ function Home() {
 
   const proximoEvento = eventos[0];
 
+  const nomeEmpresa = dashboard?.config?.nome?.trim() || "Sua Empresa";
+
   return (
     <div
       className="min-h-screen relative"
       style={{ background: "var(--bg-hero)" }}
     >
-      {/* Nome da empresa — topo centralizado entre menu e toggle */}
-      <Link
-        to="/configuracoes"
-        className="fixed top-3 left-1/2 -translate-x-1/2 z-40 h-11 flex items-center px-4 rounded-2xl bg-card border border-border shadow-[0_4px_14px_rgba(0,0,0,0.06)] max-w-[calc(100vw-7rem)] active:scale-95 transition"
-        aria-label="Nome da empresa — toque para editar nas configurações"
-      >
-        <span className="text-display text-sm font-extrabold truncate text-foreground">
-          {dashboard?.config?.nome?.trim() || "Defina sua empresa"}
-        </span>
-      </Link>
-
       <div
-        className="w-full max-w-md mx-auto px-6 pt-14 pb-10 space-y-4"
+        className="w-full max-w-md mx-auto px-4 pt-3 pb-10 space-y-4"
         style={{ color: "var(--on-hero)" }}
       >
-        {/* Title */}
-        <h1 className="text-display text-[32px] font-extrabold tracking-tight leading-none">
-          Performance Hub
-        </h1>
-
-
-        {/* Metrics pills */}
-        <div className="flex gap-2 flex-wrap">
-          <GlassMetric dotColor="#ff6b35" label={`${formatBRL(faturamento).replace(",00", "")} Faturamento`} />
-          <GlassMetric dotColor="#7b5cff" label={`${totalClientes} Cliente${totalClientes === 1 ? "" : "s"}`} />
-        </div>
+        {/* Header card — empresa + métricas (entre menu e toggle) */}
+        <Link
+          to="/configuracoes"
+          aria-label="Editar empresa nas configurações"
+          className="block active:scale-[0.99] transition"
+          style={{
+            background: "var(--card-solid)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid var(--card-border-strong)",
+            borderRadius: "0 24px 24px 24px",
+            padding: "16px 16px 18px",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+          }}
+        >
+          <div className="flex items-center justify-center pl-12 pr-12 min-h-[44px] text-center">
+            <div className="min-w-0">
+              <h1 className="text-display text-[22px] font-extrabold leading-none truncate" style={{ color: "var(--on-hero)" }}>
+                {nomeEmpresa}
+              </h1>
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] mt-1" style={{ color: "var(--brand-2)" }}>
+                Pintor Plus
+              </p>
+            </div>
+          </div>
+          <div className="mt-3 h-px" style={{ background: "var(--card-border-strong)" }} />
+          <div className="grid grid-cols-2 mt-3 divide-x" style={{ borderColor: "var(--card-border-strong)" }}>
+            <div className="text-center px-2">
+              <p className="text-display text-xl leading-none" style={{ color: "var(--on-hero)" }}>
+                {formatBRL(faturamento).replace(",00", "")}
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] mt-1.5 inline-flex items-center gap-1.5" style={{ color: "var(--on-hero-muted)" }}>
+                <span className="size-[6px] rounded-full" style={{ background: "#ff6b35" }} />
+                Faturamento
+              </p>
+            </div>
+            <div className="text-center px-2">
+              <p className="text-display text-xl leading-none" style={{ color: "var(--on-hero)" }}>
+                {totalClientes}
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] mt-1.5 inline-flex items-center gap-1.5" style={{ color: "var(--on-hero-muted)" }}>
+                <span className="size-[6px] rounded-full" style={{ background: "#7b5cff" }} />
+                Cliente{totalClientes === 1 ? "" : "s"}
+              </p>
+            </div>
+          </div>
+        </Link>
 
         {/* Hero CTA — Apple Glass */}
         <button
