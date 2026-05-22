@@ -61,35 +61,6 @@ function ConfigPage() {
       />
 
       <div className="px-5 lg:px-10 py-6 max-w-3xl space-y-6">
-        <Card titulo="Aparência">
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { id: "suave", label: "Suave", desc: "Glass & cores · padrão" },
-              { id: "minimalista", label: "Minimalista", desc: "Sólido & direto" },
-              { id: "brutalista", label: "Brutalista", desc: "Acessível · sem degradê" },
-            ].map((t) => {
-              const ativo =
-                form.tema === t.id || (!form.tema && t.id === "suave") ||
-                (form.tema === "moderno" && t.id === "suave");
-              return (
-                <button
-                  key={t.id}
-                  onClick={async () => {
-                    const next = { ...form, tema: t.id as any };
-                    setForm(next);
-                    await db.config.put(next);
-                  }}
-                  className={`p-4 rounded-xl border-2 transition-all text-left ${
-                    ativo ? "border-brand bg-brand/10" : "border-border hover:border-brand/40"
-                  }`}
-                >
-                  <div className="font-bold text-xs uppercase tracking-widest mb-1">{t.label}</div>
-                  <div className="text-[10px] opacity-60">{t.desc}</div>
-                </button>
-              );
-            })}
-          </div>
-        </Card>
 
         <Card titulo="Empresa">
           <div className="flex items-start gap-4">
