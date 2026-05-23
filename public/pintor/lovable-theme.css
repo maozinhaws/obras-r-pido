@@ -1,0 +1,318 @@
+/* ===========================================================
+   Lovable Theme Override — aplicado por cima do app do zip.
+   Carregado DEPOIS de app-BL-*.css e photo-annotator.css.
+   Mantém a lógica/markup do zip e força o visual do Lovable:
+   - Light mode como default (claro, para uso em campo)
+   - Glassmorphism translúcido em sidebar/cards/headers
+   - Gradiente quadricolor (laranja→rosa→roxo) nos CTAs
+   - Fontes Sora (display) + Manrope (body)
+   - Inputs sempre brancos sólidos com borda slate
+   =========================================================== */
+
+/* 1) Tokens — força paleta clara do Lovable como padrão */
+:root,
+html:not(.dark) {
+  --bl: #ff6b35 !important;
+  --bld: #e85520 !important;
+  --bll: rgba(255,107,53,0.10) !important;
+  --bl2: #7b5cff !important;
+  --bl2l: rgba(123,92,255,0.10) !important;
+
+  --ink: #0a0a0a !important;
+  --ink2: #4a4a55 !important;
+  --ink3: #6b6b78 !important;
+
+  /* Fundo geral: cinza-claro suave Lovable */
+  --bg: #f4f4f6 !important;
+  --bg2: #ededef !important;
+  --bdr: rgba(15,5,40,0.10) !important;
+
+  /* Inputs: sempre brancos sólidos com borda slate (regra fixa do design) */
+  --bg-input: #ffffff !important;
+  --bdr-input: #64748b !important;
+
+  /* Cards: translúcidos brancos para o efeito glass */
+  --bg-card: rgba(255,255,255,0.72) !important;
+  --bg-card-alt: rgba(255,255,255,0.78) !important;
+  --bg-modal: rgba(255,255,255,0.92) !important;
+  --bg-yellow: #fff8f5 !important;
+
+  --sh: 0 1px 2px rgba(15,23,42,.06), 0 12px 28px -8px rgba(15,5,40,.16) !important;
+}
+
+/* Dark mode: usa tokens escuros mas com glass translúcido */
+html.dark,
+:root.dark {
+  --bl: #ff6b35 !important;
+  --bl2: #7b5cff !important;
+  --ink: #ededf0 !important;
+  --ink2: #c5c5d0 !important;
+  --ink3: #8a8a98 !important;
+
+  --bg: #0b0712 !important;
+  --bg2: #14101e !important;
+  --bdr: rgba(255,255,255,0.10) !important;
+
+  --bg-input: #ffffff !important;   /* inputs SEMPRE brancos, mesmo no dark */
+  --bdr-input: #64748b !important;
+
+  --bg-card: rgba(28,18,42,0.55) !important;
+  --bg-card-alt: rgba(28,18,42,0.62) !important;
+  --bg-modal: rgba(20,14,30,0.92) !important;
+
+  --sh: 0 2px 6px rgba(0,0,0,.35), 0 18px 40px -10px rgba(0,0,0,.55) !important;
+}
+
+/* 2) Fundo do app — gradiente sutil + textura para realçar glass */
+html, body, #app {
+  background:
+    radial-gradient(1200px 700px at 0% -10%, rgba(255,107,53,0.10), transparent 60%),
+    radial-gradient(1100px 700px at 100% 110%, rgba(123,92,255,0.12), transparent 60%),
+    #f4f4f6 !important;
+  font-family: 'Manrope', 'Sora', system-ui, sans-serif !important;
+  color: var(--ink) !important;
+}
+html.dark, html.dark body, html.dark #app {
+  background:
+    radial-gradient(1200px 700px at 0% -10%, rgba(255,107,53,0.16), transparent 60%),
+    radial-gradient(1100px 700px at 100% 110%, rgba(123,92,255,0.18), transparent 60%),
+    #0b0712 !important;
+}
+
+/* 3) Tipografia Lovable */
+.title-big, .hm-name, .sec-title, .rcard-name, .hon,
+.cfg-card-hdr, h1, h2, h3, h4 {
+  font-family: 'Sora', system-ui, sans-serif !important;
+  letter-spacing: -0.02em !important;
+}
+.flbl, .step-label, .hbadge, .hood {
+  font-family: 'Manrope', system-ui, sans-serif !important;
+}
+
+/* 4) Topnav — glassmorphism translúcido */
+.topnav,
+.hm-hdr,
+.sidebar-hdr {
+  background: rgba(255,255,255,0.65) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  border-bottom: 1px solid rgba(15,5,40,0.08) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset, 0 4px 18px -4px rgba(15,5,40,0.10) !important;
+}
+html.dark .topnav,
+html.dark .hm-hdr,
+html.dark .sidebar-hdr {
+  background: rgba(20,14,30,0.55) !important;
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+
+/* 5) Sidebar — drawer com glass */
+.sidebar {
+  background: rgba(255,255,255,0.82) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border-right: 1px solid rgba(15,5,40,0.10) !important;
+  box-shadow: 8px 0 32px -12px rgba(15,5,40,0.18) !important;
+}
+html.dark .sidebar {
+  background: rgba(20,14,30,0.78) !important;
+  border-right-color: rgba(255,255,255,0.10) !important;
+}
+.sidebar-links { background: transparent !important; }
+.sidebar-link {
+  border-radius: 14px !important;
+  margin: 2px 10px !important;
+  padding: 12px 14px !important;
+  transition: background .2s, color .2s, transform .15s !important;
+}
+.sidebar-link:hover {
+  background: rgba(255,107,53,0.10) !important;
+  color: var(--bl) !important;
+}
+.sidebar-overlay {
+  background: rgba(15,5,40,0.45) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* 6) Seções e cards — glass translúcido */
+.sec, .cfg-card, .hoc, .rcard, .item-card, .item-summary, .toggle-row {
+  background: rgba(255,255,255,0.72) !important;
+  border: 1px solid rgba(15,5,40,0.08) !important;
+  border-radius: 22px !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    0 1px 2px rgba(15,23,42,0.04),
+    0 12px 28px -10px rgba(15,5,40,0.14) !important;
+}
+html.dark .sec,
+html.dark .cfg-card,
+html.dark .hoc,
+html.dark .rcard,
+html.dark .item-card,
+html.dark .item-summary,
+html.dark .toggle-row {
+  background: rgba(28,18,42,0.55) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 14px 36px -12px rgba(0,0,0,0.50) !important;
+}
+
+/* rcard-head e rcard-body herdam o glass do .rcard */
+.rcard-head { background: transparent !important; border-bottom: 1px solid rgba(15,5,40,0.06) !important; }
+html.dark .rcard-head { border-bottom-color: rgba(255,255,255,0.08) !important; }
+
+/* 7) Modais e dropdowns */
+.card-menu-drop {
+  background: rgba(255,255,255,0.95) !important;
+  border: 1px solid rgba(15,5,40,0.10) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(20px) saturate(170%) !important;
+  box-shadow: 0 12px 36px -6px rgba(15,5,40,0.25) !important;
+}
+html.dark .card-menu-drop {
+  background: rgba(20,14,30,0.95) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+/* 8) CTA principal — gradiente quadricolor Lovable */
+.act-save,
+.cfg-card-hdr.cta,
+button[class*="primary"] {
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow:
+    0 6px 14px -4px rgba(255,107,53,0.45),
+    0 16px 36px -10px rgba(123,92,255,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.30) !important;
+  border-radius: 16px !important;
+  font-weight: 700 !important;
+}
+.act-save:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+.add-room-btn {
+  border: 2px dashed rgba(255,107,53,0.45) !important;
+  color: var(--bl) !important;
+  background: rgba(255,107,53,0.06) !important;
+  border-radius: 16px !important;
+}
+.add-room-btn:hover {
+  background: rgba(255,107,53,0.12) !important;
+  border-color: var(--bl) !important;
+}
+
+/* 9) Badges com cores Lovable */
+.hbadge { border-radius: 100px !important; font-family: 'Manrope', sans-serif !important; }
+.hbadge.hbb { background: rgba(255,107,53,0.14) !important; color: #c1410c !important; }
+.hbadge.hbg { background: rgba(34,197,94,0.16) !important; color: #15803d !important; }
+.hbadge.hby { background: rgba(245,158,11,0.18) !important; color: #b45309 !important; }
+.hbadge.hbr { background: rgba(239,68,68,0.16) !important; color: #b91c1c !important; }
+html.dark .hbadge.hbb { color: #ffb088 !important; }
+html.dark .hbadge.hbg { color: #86efac !important; }
+html.dark .hbadge.hby { color: #fcd34d !important; }
+html.dark .hbadge.hbr { color: #fca5a5 !important; }
+
+/* 10) Inputs — regra fixa: sempre brancos sólidos, borda slate 2px, text-base */
+.finput, .fta, .fsel, .item-title-inp,
+input[type="text"], input[type="number"], input[type="tel"],
+input[type="email"], input[type="date"], textarea, select {
+  background: #ffffff !important;
+  color: #0a0a0a !important;
+  border: 2px solid #64748b !important;
+  border-radius: 14px !important;
+  font-size: 16px !important;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+}
+.finput:focus, .fta:focus, .fsel:focus, .item-title-inp:focus,
+input:focus, textarea:focus, select:focus {
+  border-color: #ff6b35 !important;
+  box-shadow: 0 0 0 3px rgba(255,107,53,0.18) !important;
+  outline: none !important;
+}
+.finput::placeholder, .fta::placeholder { color: #94a3b8 !important; }
+
+/* 11) Checkbox / chk-item */
+.chk-item {
+  background: rgba(255,255,255,0.72) !important;
+  border: 1.5px solid rgba(15,5,40,0.10) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(12px) !important;
+}
+.chk-item.on {
+  background: rgba(255,107,53,0.10) !important;
+  border-color: var(--bl) !important;
+}
+html.dark .chk-item {
+  background: rgba(28,18,42,0.55) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+}
+
+/* 12) Steps pill — laranja vibrante */
+.step-pill.done, .step-pill.active { background: #ff6b35 !important; }
+
+/* 13) Botões secundários do card (menu, deletar) */
+.card-menu-btn, .item-del, .rcard-del {
+  background: rgba(255,255,255,0.85) !important;
+  border: 1px solid rgba(15,5,40,0.10) !important;
+  border-radius: 12px !important;
+}
+html.dark .card-menu-btn,
+html.dark .item-del,
+html.dark .rcard-del {
+  background: rgba(28,18,42,0.70) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+  color: #ededf0 !important;
+}
+
+/* 14) Toggle switch */
+.toggle-sw { background: rgba(15,5,40,0.18) !important; }
+.toggle-sw.on { background: linear-gradient(135deg, #ff6b35, #7b5cff) !important; }
+
+/* 15) Toast */
+#toast {
+  background: rgba(20,14,30,0.95) !important;
+  color: #fff !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 100px !important;
+  box-shadow: 0 12px 32px -8px rgba(15,5,40,0.40) !important;
+}
+
+/* 16) Format cards (formato de envio) */
+.fmt-card {
+  background: rgba(255,255,255,0.72) !important;
+  border: 1.5px solid rgba(15,5,40,0.10) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(12px) !important;
+}
+.fmt-card.on {
+  background: linear-gradient(135deg, #ff6b35, #7b5cff) !important;
+  border-color: transparent !important;
+}
+
+/* 17) Hoover/active states gerais */
+.hoc:active, .sec:active, .rcard:active { transform: scale(0.995); }
+
+/* 18) Esconde scrollbar de áreas internas mas mantém scroll */
+.scr, .sidebar-links { scrollbar-width: thin; scrollbar-color: rgba(15,5,40,0.20) transparent; }
+
+/* 19) Tema "brutalista" e "minimalista" — desliga os cantos arredondados quando ativos */
+:root[data-theme="brutalista"] .sec,
+:root[data-theme="brutalista"] .hoc,
+:root[data-theme="brutalista"] .rcard,
+:root[data-theme="brutalista"] .item-card,
+:root[data-theme="brutalista"] .cfg-card {
+  border-radius: 0 !important;
+  border-width: 2px !important;
+  border-color: var(--ink) !important;
+  backdrop-filter: none !important;
+}
+:root[data-theme="minimalista"] .sec,
+:root[data-theme="minimalista"] .hoc,
+:root[data-theme="minimalista"] .rcard,
+:root[data-theme="minimalista"] .item-card {
+  border-radius: 8px !important;
+}
