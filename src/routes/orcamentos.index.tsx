@@ -11,7 +11,7 @@ import {
   type Orcamento,
 } from "@/lib/db";
 import { PageHeader } from "@/components/app-shell";
-import { Plus, Search, Trash2, FileText, Share2, Edit3, Eye, Receipt, Tag, Filter, Check } from "lucide-react";
+import { Plus, Search, Trash2, FileText, Share2, Edit3, Eye, Receipt, Tag, Filter, Check, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -143,6 +143,18 @@ const OrcamentoCard = memo(({ o }: { o: Orcamento }) => {
 function OrcamentosPage() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<StatusOrcamento | "todos">("todos");
+  const [ocultarCancelados, setOcultarCancelados] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return window.localStorage.getItem("pp.ocultarCancelados") !== "0";
+  });
+  function toggleOcultarCancelados() {
+    setOcultarCancelados((v) => {
+      const next = !v;
+      if (typeof window !== "undefined")
+        window.localStorage.setItem("pp.ocultarCancelados", next ? "1" : "0");
+      return next;
+    });
+  }
   const orcamentos = useLiveQuery(
     () => {
       const query = filtro === "todos"
@@ -157,11 +169,12 @@ function OrcamentosPage() {
   const lista = useMemo(() => {
     return (orcamentos ?? []).filter((o) => {
       if (filtro !== "todos" && o.status !== filtro) return false;
+      if (ocultarCancelados && filtro !== "cancelado" && o.status === "cancelado") return false;
       if (busca && !(o.clienteSnapshot?.nome ?? "").toLowerCase().includes(busca.toLowerCase()))
         return false;
       return true;
     });
-  }, [orcamentos, filtro, busca]);
+  }, [orcamentos, filtro, busca, ocultarCancelados]);
 
   return (
     <div>
@@ -191,39 +204,51 @@ function OrcamentosPage() {
           />
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className="glass glass-press inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest"
-            >
-              <Filter className="size-4" strokeWidth={2.5} />
-              <span>{filtro === "todos" ? "Todos" : STATUS_LABELS[filtro]}</span>
-              {filtro !== "todos" && (
-                <span className="ml-1 size-1.5 rounded-full bg-brand" />
-              )}
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56 rounded-2xl">
-            <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Filtrar por status
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {(["todos", ...STATUSES] as const).map((s) => {
-              const active = filtro === s;
-              return (
-                <DropdownMenuItem
-                  key={s}
-                  onSelect={() => setFiltro(s)}
-                  className="flex items-center justify-between gap-2 rounded-xl text-sm font-semibold"
-                >
-                  <span>{s === "todos" ? "Todos" : STATUS_LABELS[s]}</span>
-                  {active && <Check className="size-4 text-brand" strokeWidth={3} />}
-                </DropdownMenuItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex flex-wrap items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="glass glass-press inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest"
+              >
+                <Filter className="size-4" strokeWidth={2.5} />
+                <span>{filtro === "todos" ? "Todos" : STATUS_LABELS[filtro]}</span>
+                {filtro !== "todos" && (
+                  <span className="ml-1 size-1.5 rounded-full bg-brand" />
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56 rounded-2xl">
+              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Filtrar por status
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {(["todos", ...STATUSES] as const).map((s) => {
+                const active = filtro === s;
+                return (
+                  <DropdownMenuItem
+                    key={s}
+                    onSelect={() => setFiltro(s)}
+                    className="flex items-center justify-between gap-2 rounded-xl text-sm font-semibold"
+                  >
+                    <span>{s === "todos" ? "Todos" : STATUS_LABELS[s]}</span>
+                    {active && <Check className="size-4 text-brand" strokeWidth={3} />}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <button
+            type="button"
+            onClick={toggleOcultarCancelados}
+            title={ocultarCancelados ? "Mostrar cancelados" : "Ocultar cancelados"}
+            className={`glass glass-press inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest ${ocultarCancelados ? "" : "opacity-60"}`}
+          >
+            {ocultarCancelados ? <Check className="size-4 text-brand" strokeWidth={3} /> : <X className="size-4" strokeWidth={2.5} />}
+            <span>Ocultar cancelados</span>
+          </button>
+        </div>
 
         {lista.length === 0 ? (
           <div className="brutal-border-thin border-dashed border-foreground/20 p-12 text-center">

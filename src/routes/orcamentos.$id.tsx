@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   db,
@@ -12,7 +12,7 @@ import { PageHeader } from "@/components/app-shell";
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
 import { urlFoto } from "@/lib/fotos";
-import { FileText, MessageCircle, Receipt, Edit3, ArrowLeft, ScrollText, X } from "lucide-react";
+import { FileText, MessageCircle, Receipt, Edit3, ArrowLeft, ScrollText, X, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/orcamentos/$id")({
   head: ({ params }) => ({
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/orcamentos/$id")({
 
 function OrcamentoDetalhe() {
   const { id } = useParams({ from: "/orcamentos/$id" });
+  const nav = useNavigate();
   const [o, setO] = useState<Orcamento | undefined>();
   const [showHist, setShowHist] = useState(false);
 
@@ -37,6 +38,13 @@ function OrcamentoDetalhe() {
 
   const total = calcularTotal(o);
 
+  async function excluir() {
+    if (!o?.id) return;
+    if (!confirm(`Excluir o orçamento #${o.id}? Esta ação não pode ser desfeita.`)) return;
+    await db.orcamentos.delete(o.id);
+    nav({ to: "/orcamentos" });
+  }
+
   return (
     <div>
       <PageHeader
@@ -50,6 +58,13 @@ function OrcamentoDetalhe() {
               className="glass glass-press px-3 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
             >
               <ScrollText className="size-3" /> Histórico
+            </button>
+            <button
+              onClick={excluir}
+              title="Excluir orçamento"
+              className="glass glass-press px-3 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 text-destructive"
+            >
+              <Trash2 className="size-3" /> Excluir
             </button>
             <Link
               to="/orcamentos"
