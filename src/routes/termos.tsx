@@ -13,9 +13,9 @@ export const Route = createFileRoute("/termos")({
 
 function TermosPage() {
   return (
-    <div>
+    <div className="min-h-screen" style={{ background: "var(--bg-hero)" }}>
       <PageHeader eyebrow="Legal · Privacidade" title="Termos de Uso" />
-      <div className="px-5 lg:px-10 py-6 max-w-3xl space-y-6 text-sm leading-relaxed text-foreground/80">
+      <div className="px-5 lg:px-10 pb-10 max-w-3xl mx-auto space-y-4">
         <Block titulo="1. Sobre o app">
           Pintor Plus é um aplicativo offline para organização do trabalho do pintor:
           orçamentos, clientes, fornecedores, agenda e recibos. Os dados ficam
@@ -46,9 +46,30 @@ function TermosPage() {
 
 function Block({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
-    <div className="bg-surface brutal-border p-5">
-      <h2 className="text-display text-lg italic mb-2">{titulo}</h2>
-      <div>{children}</div>
+    <div
+      style={{
+        background: "var(--card-solid)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        border: "1px solid var(--card-border-strong)",
+        borderRadius: 24,
+        padding: 20,
+        boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+        color: "var(--on-hero)",
+      }}
+    >
+      <h2
+        className="text-display text-lg mb-2"
+        style={{ color: "var(--on-hero)" }}
+      >
+        {titulo}
+      </h2>
+      <div
+        className="text-sm leading-relaxed"
+        style={{ color: "var(--on-hero-muted)" }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
