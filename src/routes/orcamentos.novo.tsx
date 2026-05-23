@@ -1403,6 +1403,16 @@ function PassoRevisao({
         <pre className="whitespace-pre-wrap text-xs text-foreground/80 font-sans">{msg}</pre>
       </div>
 
+      <label className="glass p-4 flex items-center gap-3 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={orc.incluirFotosPdf ?? true}
+          onChange={(e) => setOrc({ ...orc, incluirFotosPdf: e.target.checked })}
+          className="size-5 accent-brand"
+        />
+        <span className="text-xs font-bold uppercase tracking-widest">Incluir fotos no PDF</span>
+      </label>
+
       <div className="flex flex-wrap gap-2">
         <button
           onClick={async () => {
@@ -1425,6 +1435,7 @@ function PassoRevisao({
           </a>
         )}
       </div>
+
     </div>
   );
 }
