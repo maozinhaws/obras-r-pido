@@ -25,11 +25,11 @@ export function ShareMenu({ onClose, titulo, texto, telefone, arquivo, onSalvarP
   }
 
   return (
-    <div className="fixed inset-0 z-[70] bg-black/55 flex items-end sm:items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-card w-full max-w-md rounded-3xl overflow-hidden border border-border" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+    <div className="modal-backdrop" style={{ zIndex: 70 }} onClick={onClose}>
+      <div className="modal-glass w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[color-mix(in_oklab,var(--brand-2)_20%,transparent)]">
           <h3 className="text-display text-lg text-foreground">Compartilhar</h3>
-          <button onClick={onClose} aria-label="Fechar" className="size-9 rounded-full bg-muted grid place-items-center">
+          <button onClick={onClose} aria-label="Fechar" className="size-9 rounded-full bg-[color-mix(in_oklab,var(--card)_70%,transparent)] backdrop-blur grid place-items-center border border-border/60">
             <X className="size-5" />
           </button>
         </div>
