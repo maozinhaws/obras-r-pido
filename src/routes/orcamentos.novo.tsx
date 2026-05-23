@@ -34,6 +34,7 @@ import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
 import { PhotoEditor } from "@/components/photo-editor";
 import { persistOrcamento } from "@/lib/orcamentos";
+import { handleEnterNav } from "@/lib/forms";
 
 type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number; draftKey?: string };
 
