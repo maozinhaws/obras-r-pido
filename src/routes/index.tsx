@@ -402,23 +402,29 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
           </button>
         </div>
         <div className="p-5 space-y-3">
-          {modos.map(({ modo, icon: Icon, title, desc }) => (
-            <Link
-              key={modo}
-              to="/orcamentos/novo"
-              search={{ modo, draftKey: uid() }}
-              onClick={onClose}
-              className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
-            >
-              <div className="mode-avatar">
-                <Icon className="size-6 text-white" strokeWidth={2.25} />
-              </div>
-              <div className="min-w-0">
-                <h4 className="font-bold text-foreground">{title}</h4>
-                <p className="text-xs text-muted-foreground font-medium">{desc}</p>
-              </div>
-            </Link>
-          ))}
+          {modos.map(({ modo, icon: Icon, title, desc }) => {
+            const isFlash = modo === "flash";
+            const props = isFlash
+              ? { to: "/flash" as const }
+              : { to: "/orcamentos/novo" as const, search: { modo, draftKey: uid() } };
+            return (
+              <Link
+                key={modo}
+                {...(props as any)}
+                onClick={onClose}
+                className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
+              >
+                <div className="mode-avatar">
+                  <Icon className="size-6 text-white" strokeWidth={2.25} />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="font-bold text-foreground">{title}</h4>
+                  <p className="text-xs text-muted-foreground font-medium">{desc}</p>
+                </div>
+              </Link>
+            );
+          })}
+
         </div>
       </div>
     </div>

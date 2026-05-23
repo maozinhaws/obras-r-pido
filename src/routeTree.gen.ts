@@ -13,6 +13,7 @@ import { Route as TermosRouteImport } from './routes/termos'
 import { Route as OrcamentosRouteImport } from './routes/orcamentos'
 import { Route as MaisRouteImport } from './routes/mais'
 import { Route as FornecedoresRouteImport } from './routes/fornecedores'
+import { Route as FlashRouteImport } from './routes/flash'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as BackupRouteImport } from './routes/backup'
@@ -41,6 +42,11 @@ const MaisRoute = MaisRouteImport.update({
 const FornecedoresRoute = FornecedoresRouteImport.update({
   id: '/fornecedores',
   path: '/fornecedores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlashRoute = FlashRouteImport.update({
+  id: '/flash',
+  path: '/flash',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/backup': typeof BackupRoute
   '/clientes': typeof ClientesRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/flash': typeof FlashRoute
   '/fornecedores': typeof FornecedoresRoute
   '/mais': typeof MaisRoute
   '/orcamentos': typeof OrcamentosRouteWithChildren
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/backup': typeof BackupRoute
   '/clientes': typeof ClientesRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/flash': typeof FlashRoute
   '/fornecedores': typeof FornecedoresRoute
   '/mais': typeof MaisRoute
   '/termos': typeof TermosRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/backup': typeof BackupRoute
   '/clientes': typeof ClientesRoute
   '/configuracoes': typeof ConfiguracoesRoute
+  '/flash': typeof FlashRoute
   '/fornecedores': typeof FornecedoresRoute
   '/mais': typeof MaisRoute
   '/orcamentos': typeof OrcamentosRouteWithChildren
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/backup'
     | '/clientes'
     | '/configuracoes'
+    | '/flash'
     | '/fornecedores'
     | '/mais'
     | '/orcamentos'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/backup'
     | '/clientes'
     | '/configuracoes'
+    | '/flash'
     | '/fornecedores'
     | '/mais'
     | '/termos'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/backup'
     | '/clientes'
     | '/configuracoes'
+    | '/flash'
     | '/fornecedores'
     | '/mais'
     | '/orcamentos'
@@ -187,6 +199,7 @@ export interface RootRouteChildren {
   BackupRoute: typeof BackupRoute
   ClientesRoute: typeof ClientesRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
+  FlashRoute: typeof FlashRoute
   FornecedoresRoute: typeof FornecedoresRoute
   MaisRoute: typeof MaisRoute
   OrcamentosRoute: typeof OrcamentosRouteWithChildren
@@ -221,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/fornecedores'
       fullPath: '/fornecedores'
       preLoaderRoute: typeof FornecedoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flash': {
+      id: '/flash'
+      path: '/flash'
+      fullPath: '/flash'
+      preLoaderRoute: typeof FlashRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/configuracoes': {
@@ -323,6 +343,7 @@ const rootRouteChildren: RootRouteChildren = {
   BackupRoute: BackupRoute,
   ClientesRoute: ClientesRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
+  FlashRoute: FlashRoute,
   FornecedoresRoute: FornecedoresRoute,
   MaisRoute: MaisRoute,
   OrcamentosRoute: OrcamentosRouteWithChildren,
