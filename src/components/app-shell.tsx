@@ -145,13 +145,14 @@ export const Sidebar = memo(() => {
         <button
           aria-label="Fechar menu"
           onClick={close}
-          className="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm animate-fade-in"
+          className="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-[420ms] ease-out animate-fade-in"
         />
       )}
       <aside
         className={cn(
-          "fixed md:sticky top-0 left-0 z-40 h-dvh shrink-0 flex flex-col border-r border-border/60 transition-[width,transform] duration-300 ease-out overflow-hidden",
-          "bg-[color-mix(in_oklab,var(--card)_70%,transparent)] backdrop-blur-2xl backdrop-saturate-150",
+          "fixed md:sticky top-0 left-0 z-40 h-dvh shrink-0 flex flex-col border-r border-border/60 overflow-hidden",
+          "transition-[width,transform] duration-[460ms] [transition-timing-function:cubic-bezier(.32,.72,0,1)] will-change-transform",
+          "bg-[color-mix(in_oklab,var(--card)_45%,transparent)] backdrop-blur-2xl backdrop-saturate-[1.8]",
           collapsed ? "md:w-20" : "md:w-64",
           "w-64",
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
@@ -219,7 +220,7 @@ export const PageHeader = memo(({
   actions?: React.ReactNode;
 }) => {
   return (
-    <header className="sticky top-0 z-30 px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-border/50 bg-[color-mix(in_oklab,var(--background)_65%,transparent)] backdrop-blur-2xl backdrop-saturate-150">
+    <header className="sticky top-0 z-30 px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-border/50 bg-[color-mix(in_oklab,var(--background)_42%,transparent)] backdrop-blur-2xl backdrop-saturate-[1.8]">
       <div>
         {eyebrow && (
           <p className="text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.2em] mb-2">
