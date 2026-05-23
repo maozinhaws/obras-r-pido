@@ -75,13 +75,16 @@ function Home() {
     >
       <div
         className="w-full max-w-md mx-auto px-4 pt-3 pb-10 space-y-4"
-        style={{ color: "var(--on-hero)" }}
+        style={{ color: "var(--on-hero)", paddingTop: headerH + 18 }}
       >
+        {/* Spacer reservando o espaço do header fixo */}
+        <div aria-hidden style={{ height: 0 }} />
         {/* Header card — empresa + métricas (FIXO no topo) */}
         <Link
+          ref={headerRef}
           to="/configuracoes"
           aria-label="Editar empresa nas configurações"
-          className="block active:scale-[0.99] transition sticky top-3 z-20"
+          className="block active:scale-[0.99] transition fixed top-3 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-2rem)] max-w-md"
           style={{
             background: "var(--card-solid)",
             backdropFilter: "blur(28px) saturate(170%)",
@@ -102,6 +105,7 @@ function Home() {
               </p>
             </div>
           </div>
+
           <div className="mt-3 h-px" style={{ background: "var(--card-border-strong)" }} />
           <div className="grid grid-cols-2 mt-3 divide-x" style={{ borderColor: "var(--card-border-strong)" }}>
             <div className="text-center px-2">
