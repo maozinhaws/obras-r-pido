@@ -175,19 +175,31 @@ function ClienteForm({
       criadoEm: Date.now(),
     },
   );
+  const [errors, setErrors] = useState<ZodIssueMap>({});
+  const [cep, setCep] = useState("");
+  const [buscandoCep, setBuscandoCep] = useState(false);
+
+  async function autoCEP() {
+    if (!cep) return;
+    setBuscandoCep(true);
+    const r = await buscarCEP(cep);
+    setBuscandoCep(false);
+    if (!r) { alert("CEP não encontrado"); return; }
+    const novoEnd = `${r.logradouro}, ${r.bairro} - ${r.localidade}/${r.uf} - CEP ${r.cep}`;
+    setForm((f) => ({ ...f, endereco: novoEnd }));
+  }
 
   async function salvar() {
-    if (!form.nome.trim()) return;
-    if (form.id) {
-      await db.clientes.update(form.id, form);
-    } else {
-      await db.clientes.add({ ...form, criadoEm: Date.now() });
-    }
+    const result = clienteSchema.safeParse(form);
+    if (!result.success) { setErrors(issuesToMap(result.error)); return; }
+    setErrors({});
+    if (form.id) await db.clientes.update(form.id, form);
+    else await db.clientes.add({ ...form, criadoEm: Date.now() });
     onClose();
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60  flex items-end md:items-center justify-center p-0 md:p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center p-0 md:p-4 animate-fade-in">
       <div className="glass-strong w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale-in">
         <div className="bg-ink p-4 flex items-center justify-between sticky top-0 z-10">
           <h3 className="text-display text-lg">
@@ -197,7 +209,12 @@ function ClienteForm({
             <X className="size-6" strokeWidth={3} />
           </button>
         </div>
-        <div className="p-5 space-y-3">
+        <form
+          data-enter-nav
+          onKeyDown={handleEnterNav}
+          onSubmit={(e) => { e.preventDefault(); salvar(); }}
+          className="p-5 space-y-3"
+        >
           <Field label="Nome *">
             <input
               autoFocus
@@ -205,6 +222,7 @@ function ClienteForm({
               onChange={(e) => setForm({ ...form, nome: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
+            {errors.nome && <p className="text-[11px] text-destructive mt-1">{errors.nome}</p>}
           </Field>
           <Field label="Apelido">
             <input
@@ -221,6 +239,7 @@ function ClienteForm({
                 inputMode="tel"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
               />
+              {errors.telefone && <p className="text-[11px] text-destructive mt-1">{errors.telefone}</p>}
             </Field>
             <Field label="CPF/CNPJ">
               <input
@@ -237,6 +256,27 @@ function ClienteForm({
               type="email"
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
+            {errors.email && <p className="text-[11px] text-destructive mt-1">{errors.email}</p>}
+          </Field>
+          <Field label="CEP (preenche endereço)">
+            <div className="flex gap-2">
+              <input
+                value={cep}
+                onChange={(e) => setCep(e.target.value)}
+                inputMode="numeric"
+                maxLength={9}
+                placeholder="00000-000"
+                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+              />
+              <button
+                type="button"
+                onClick={autoCEP}
+                disabled={buscandoCep}
+                className="px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest brutal-border-thin disabled:opacity-50"
+              >
+                {buscandoCep ? "..." : "Buscar"}
+              </button>
+            </div>
           </Field>
           <Field label="Endereço">
             <textarea
@@ -246,7 +286,8 @@ function ClienteForm({
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
             />
           </Field>
-        </div>
+          <button type="submit" className="hidden" />
+        </form>
         <div className="p-6 flex gap-3 border-t border-white/10 sticky bottom-0 glass-strong">
           <button
             onClick={onClose}
@@ -256,8 +297,7 @@ function ClienteForm({
           </button>
           <button
             onClick={salvar}
-            disabled={!form.nome.trim()}
-            className="flex-[2] bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest disabled:opacity-40"
+            className="flex-[2] bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest"
           >
             Salvar
           </button>
