@@ -536,11 +536,15 @@
    SUAVE (default) — light glassmorphism + livelier motion.
    Applied when no data-tema attribute is set on <html>.
    =========================================================== */
-:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .glass,
+:root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .glass {
+  background: color-mix(in oklab, var(--card) 48%, transparent);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
 :root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .glass-strong {
-  background: color-mix(in oklab, var(--card) 78%, transparent);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: color-mix(in oklab, var(--card) 55%, transparent);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
 }
 :root:not([data-tema="minimalista"]):not([data-tema="brutalista"]) .glass-press {
   transition:
