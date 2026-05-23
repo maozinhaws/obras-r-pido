@@ -172,6 +172,7 @@ function RootComponent() {
             <Outlet />
           </main>
         </div>
+        <TermsGate />
       </SidebarProvider>
     </QueryClientProvider>
   );
