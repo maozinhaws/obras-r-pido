@@ -124,7 +124,15 @@ export const MenuButton = memo(() => {
         else toggleOpen();
       }}
       aria-label="Menu"
-      className="fixed top-3 left-3 z-50 size-11 bg-card rounded-2xl grid place-items-center shadow-[0_4px_14px_rgba(0,0,0,0.06)] border border-border glass-press md:hidden"
+      className="fixed top-5 left-5 z-50 size-11 rounded-[18px] grid place-items-center glass-press md:hidden"
+      style={{
+        background: "var(--card-solid)",
+        backdropFilter: "blur(28px) saturate(170%)",
+        WebkitBackdropFilter: "blur(28px) saturate(170%)",
+        border: "1px solid var(--card-border-strong)",
+        boxShadow: "0 6px 18px -6px rgba(15,5,40,0.18)",
+        color: "var(--on-hero)",
+      }}
     >
       {open ? (
         <X className="size-5 text-foreground" strokeWidth={2.5} />
