@@ -13,6 +13,7 @@ import {
   Calendar,
   FileText,
 } from "lucide-react";
+import { InstallPromptCard } from "@/components/install-prompt-card";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { uid } from "@/lib/utils";
