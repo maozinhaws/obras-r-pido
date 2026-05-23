@@ -388,14 +388,14 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
     { modo: "detalhado", icon: ClipboardList, title: "Detalhado", desc: "Relatório completo" },
   ];
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center p-4 animate-fade-in">
-      <div className="bg-card rounded-[32px] w-full max-w-md overflow-hidden animate-scale-in shadow-2xl">
-        <div className="p-5 flex justify-between items-center border-b border-border">
+    <div className="modal-backdrop animate-fade-in" onClick={onClose}>
+      <div className="modal-glass w-full max-w-md animate-scale-in" onClick={(e) => e.stopPropagation()}>
+        <div className="p-5 flex justify-between items-center border-b border-[color-mix(in_oklab,var(--brand-2)_20%,transparent)]">
           <h3 className="text-display text-xl text-foreground">Tipo de Orçamento</h3>
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="size-9 rounded-full bg-muted grid place-items-center hover:bg-muted transition-colors"
+            className="size-9 rounded-full bg-[color-mix(in_oklab,var(--card)_70%,transparent)] backdrop-blur grid place-items-center border border-border/60"
           >
             <X className="size-5 text-foreground" strokeWidth={2.5} />
           </button>
