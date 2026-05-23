@@ -11,7 +11,7 @@ import {
   type Orcamento,
 } from "@/lib/db";
 import { PageHeader } from "@/components/app-shell";
-import { Plus, Search, Trash2, FileText, Share2, Edit3, Eye, Receipt, Tag, Filter, Check } from "lucide-react";
+import { Plus, Search, Trash2, FileText, Share2, Edit3, Eye, Receipt, Tag, Filter, Check, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
