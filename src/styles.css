@@ -110,10 +110,7 @@
   --sidebar-ring: #7b5cff;
 
   /* Home hero background + glass surfaces (theme-aware) */
-  --bg-hero:
-    radial-gradient(80% 50% at 50% 0%, rgba(255,107,53,0.10), transparent 70%),
-    radial-gradient(60% 50% at 100% 100%, rgba(123,92,255,0.10), transparent 70%),
-    #faf8f5;
+  --bg-hero: #faf8f5;
   --card-solid: #ffffff;
   --card-border-strong: #cbd5e1;
   --surface-2: #f1f5f9;
