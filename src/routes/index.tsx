@@ -63,19 +63,19 @@ function Home() {
         className="w-full max-w-md mx-auto px-4 pt-3 pb-10 space-y-4"
         style={{ color: "var(--on-hero)" }}
       >
-        {/* Header card — empresa + métricas (entre menu e toggle) */}
+        {/* Header card — empresa + métricas (FIXO no topo) */}
         <Link
           to="/configuracoes"
           aria-label="Editar empresa nas configurações"
-          className="block active:scale-[0.99] transition"
+          className="block active:scale-[0.99] transition sticky top-3 z-20"
           style={{
             background: "var(--card-solid)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
+            backdropFilter: "blur(28px) saturate(170%)",
+            WebkitBackdropFilter: "blur(28px) saturate(170%)",
             border: "1px solid var(--card-border-strong)",
-            borderRadius: "0 24px 24px 24px",
+            borderRadius: "24px",
             padding: "16px 16px 18px",
-            boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+            boxShadow: "0 10px 32px -8px rgba(15,5,40,0.18)",
           }}
         >
           <div className="flex items-center justify-center pl-12 pr-12 min-h-[44px] text-center">
