@@ -307,7 +307,7 @@ function FlashPage() {
 
       {pickerOpen && (
         <div className="fixed inset-0 z-[70] bg-[color-mix(in_oklab,#0a0420_55%,transparent)] backdrop-blur-md flex items-end sm:items-center justify-center p-4" onClick={() => setPickerOpen(false)}>
-          <div className="bg-card w-full max-w-md rounded-3xl overflow-hidden border border-border" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-glass w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <h3 className="text-display text-lg">Clientes salvos</h3>
               <button onClick={() => setPickerOpen(false)} aria-label="Fechar" className="size-9 rounded-full bg-muted grid place-items-center">
