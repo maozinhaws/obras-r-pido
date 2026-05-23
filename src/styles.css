@@ -465,7 +465,7 @@
     background-image:
       radial-gradient(ellipse 80% 60% at 80% 20%, rgba(255,107,53,0.18), transparent 60%),
       radial-gradient(ellipse 70% 60% at 20% 80%, rgba(139,63,214,0.22), transparent 60%),
-      url('/logo-bg.png');
+      url('/logo-bg.webp');
     background-repeat: no-repeat, no-repeat, no-repeat;
     background-position: center, center, center;
     background-size: auto, auto, min(70vmin, 560px) auto;
@@ -476,7 +476,7 @@
     background-image:
       radial-gradient(ellipse 80% 60% at 80% 20%, rgba(255,107,53,0.20), transparent 60%),
       radial-gradient(ellipse 70% 60% at 20% 80%, rgba(139,63,214,0.30), transparent 60%),
-      url('/logo-bg.png');
+      url('/logo-bg.webp');
     opacity: 0.35;
   }
 
@@ -514,7 +514,9 @@
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     display: flex; align-items: flex-end; justify-content: center; padding: 1rem;
   }
-  @media (min-width: 640px) { .modal-backdrop { align-items: center; } }
+  @media (min-width: 640px) {
+    .modal-backdrop { align-items: center; }
+  }
   .modal-glass {
     background: color-mix(in oklab, var(--card) 60%, transparent);
     backdrop-filter: blur(28px) saturate(180%);
