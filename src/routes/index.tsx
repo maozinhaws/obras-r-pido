@@ -6,7 +6,7 @@ import {
   Plus,
   Zap,
   X,
-  Image as ImageIcon,
+  Camera,
   ClipboardList,
   ArrowUpRight,
   Calendar,
@@ -385,7 +385,7 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
     desc: string;
   }> = [
     { modo: "flash", icon: Zap, title: "Modo Flash", desc: "Rápido e prático" },
-    { modo: "foto", icon: ImageIcon, title: "Modo Foto", desc: "Análise por imagem" },
+    { modo: "foto", icon: Camera, title: "Modo Foto", desc: "Análise por imagem" },
     { modo: "detalhado", icon: ClipboardList, title: "Detalhado", desc: "Relatório completo" },
   ];
   return (
@@ -414,7 +414,7 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
                 onClick={onClose}
                 className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
               >
-                <div className="mode-avatar">
+                <div className={`mode-avatar ${modo === "flash" ? "is-flash" : modo === "foto" ? "is-foto" : ""}`}>
                   <Icon className="size-6 text-white" strokeWidth={2.25} />
                 </div>
                 <div className="min-w-0">

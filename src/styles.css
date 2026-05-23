@@ -416,6 +416,16 @@
     color: #ffffff;
     flex-shrink: 0;
   }
+  .mode-avatar.is-flash {
+    background: linear-gradient(135deg, #ff8a3d, #ff5a1f);
+    box-shadow: 0 10px 24px -8px rgba(255,107,53,0.65), inset 0 1px 0 rgba(255,255,255,0.25);
+    color: #ffffff;
+  }
+  .mode-avatar.is-foto {
+    background: linear-gradient(135deg, #5b3bd4, #3b1e9e);
+    box-shadow: 0 10px 24px -8px rgba(91,59,212,0.65), inset 0 1px 0 rgba(255,255,255,0.25);
+    color: #ffffff;
+  }
 
   /* Hero lens-flare animation — diagonal white gleam every 5s */
   .hero-lens-flare { position: relative; overflow: hidden; isolation: isolate; }
