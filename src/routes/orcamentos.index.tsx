@@ -11,7 +11,7 @@ import {
   type Orcamento,
 } from "@/lib/db";
 import { PageHeader } from "@/components/app-shell";
-import { Plus, Search, Trash2, FileText, Share2, Edit3, Eye, Receipt, Tag, Filter, Check, X } from "lucide-react";
+import { Plus, Search, Trash2, Share2, Edit3, Eye, Receipt, Tag, Filter, Check, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -22,11 +22,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { updateStatusWithLog } from "@/lib/orcamentos";
 import { CardMenu } from "@/components/card-menu";
 import { StatusPicker } from "@/components/status-picker";
-import { ShareMenu } from "@/components/share-menu";
+import { ShareOrcamentoModal } from "@/components/share-orcamento-modal";
+
 
 export const Route = createFileRoute("/orcamentos/")({
   head: () => ({
