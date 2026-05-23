@@ -286,7 +286,7 @@ function Home() {
         </div>
 
 
-        {/* Agenda — Glass card */}
+        {/* Agenda — Glass card (mini-lista até 3 eventos) */}
         <Link
           to="/agenda"
           className="relative block active:scale-[0.99] transition"
@@ -302,10 +302,8 @@ function Home() {
         >
           <div className="flex justify-between items-center mb-3">
             <span className="text-[14px] font-extrabold uppercase tracking-[0.04em] inline-flex items-center gap-2">
-              <span
-                className={`size-2 rounded-full ${proximoEvento ? "bg-[#ff6b35] animate-pulse" : "bg-[#4ade80]"}`}
-              />
-              {proximoEvento ? "Próximo Evento" : "Próximos Eventos"}
+              <span className={`size-2 rounded-full ${proximoEvento ? "bg-[#ff6b35] animate-pulse" : "bg-[#4ade80]"}`} />
+              {proximoEvento ? "Próximos Eventos" : "Agenda Livre"}
             </span>
             <span
               className="text-[10px] font-bold uppercase tracking-[0.14em] inline-flex items-center gap-1"
@@ -314,28 +312,44 @@ function Home() {
               Ver agenda <ArrowUpRight className="size-3" strokeWidth={3} />
             </span>
           </div>
-          <div className="flex justify-between items-center gap-3">
-            <div className="min-w-0">
+          {!proximoEvento ? (
+            <div className="flex justify-between items-center gap-3">
               <h3 className="text-display text-xl uppercase leading-none truncate" style={{ color: "var(--on-hero)" }}>
-                {proximoEvento ? proximoEvento.titulo : "Agenda Livre"}
+                Agenda Livre
               </h3>
-              {proximoEvento && (
-                <p className="text-[11px] mt-1" style={{ color: "var(--on-hero-muted)" }}>
-                  {format(new Date(proximoEvento.data), "dd 'de' MMM", { locale: ptBR })}
-                </p>
-              )}
+              <div className="size-16 rounded-2xl grid place-items-center shrink-0" style={{ background: "var(--surface-2)", border: "1px solid var(--surface-2-border)" }}>
+                <Calendar className="size-8" style={{ color: "var(--brand-2)" }} strokeWidth={1.5} />
+              </div>
             </div>
-            <div
-              className="size-16 rounded-2xl grid place-items-center shrink-0"
-              style={{
-                background: "var(--surface-2)",
-                border: "1px solid var(--surface-2-border)",
-              }}
-            >
-              <Calendar className="size-8" style={{ color: "var(--brand-2)" }} strokeWidth={1.5} />
+          ) : (
+            <div className="space-y-2">
+              {eventos.slice(0, 3).map((e) => (
+                <div
+                  key={e.id}
+                  className="flex items-center gap-3 p-3 rounded-2xl"
+                  style={{ background: "var(--surface-2)", border: "1px solid var(--surface-2-border)" }}
+                >
+                  <div
+                    className="size-12 rounded-xl grid place-items-center shrink-0 text-white"
+                    style={{ background: e.orcamentoId ? "linear-gradient(135deg,#4ade80,#16a34a)" : "linear-gradient(135deg,#60a5fa,#7b5cff)" }}
+                  >
+                    <Calendar className="size-5" strokeWidth={2.25} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-bold text-[13px] truncate" style={{ color: "var(--on-hero)" }}>
+                      {e.titulo}
+                    </p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: "var(--on-hero-muted)" }}>
+                      {format(new Date(e.data), "dd 'de' MMM", { locale: ptBR })}
+                      {e.hora ? ` · ${e.hora}` : ""}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
         </Link>
+
       </div>
 
       {modalOpen && <NovoOrcamentoModal onClose={() => setModalOpen(false)} />}
