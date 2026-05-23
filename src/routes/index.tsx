@@ -385,7 +385,7 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
     desc: string;
   }> = [
     { modo: "flash", icon: Zap, title: "Modo Flash", desc: "Rápido e prático" },
-    { modo: "foto", icon: ImageIcon, title: "Modo Foto", desc: "Análise por imagem" },
+    { modo: "foto", icon: Camera, title: "Modo Foto", desc: "Análise por imagem" },
     { modo: "detalhado", icon: ClipboardList, title: "Detalhado", desc: "Relatório completo" },
   ];
   return (
