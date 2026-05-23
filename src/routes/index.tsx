@@ -6,7 +6,7 @@ import {
   Plus,
   Zap,
   X,
-  Image as ImageIcon,
+  Camera,
   ClipboardList,
   ArrowUpRight,
   Calendar,
