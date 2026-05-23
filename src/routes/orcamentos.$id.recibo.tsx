@@ -131,6 +131,11 @@ function ReciboPage() {
               onChange={(e) => setForm({ ...form, valor: parseFloat(e.target.value) || 0 })}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-display text-2xl focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
+            {form.valor > 0 && (
+              <p className="text-[11px] italic text-foreground/70 mt-1.5">
+                ({valorPorExtenso(form.valor)})
+              </p>
+            )}
           </Field>
           <Field label="Data">
             <input
@@ -163,6 +168,11 @@ function ReciboPage() {
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
             />
           </Field>
+          <SignaturePad
+            label="Assinatura do pagador"
+            value={form.assinaturaPagador}
+            onChange={(v) => setForm({ ...form, assinaturaPagador: v })}
+          />
           <button
             onClick={salvar}
             disabled={!form.valor || form.valor <= 0}
