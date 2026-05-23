@@ -219,7 +219,7 @@ export const PageHeader = memo(({
   actions?: React.ReactNode;
 }) => {
   return (
-    <header className="px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-border bg-card/60">
+    <header className="sticky top-0 z-30 px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-border/50 bg-[color-mix(in_oklab,var(--background)_65%,transparent)] backdrop-blur-2xl backdrop-saturate-150">
       <div>
         {eyebrow && (
           <p className="text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.2em] mb-2">
