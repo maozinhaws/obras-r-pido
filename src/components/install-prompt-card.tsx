@@ -103,7 +103,7 @@ export function InstallPromptCard() {
         }}
       >
         <Zap className="size-3" strokeWidth={3} fill="currentColor" />
-        Experiência Premium
+        Atalho rápido
       </span>
 
       <h3
