@@ -145,12 +145,13 @@ export const Sidebar = memo(() => {
         <button
           aria-label="Fechar menu"
           onClick={close}
-          className="md:hidden fixed inset-0 z-40 bg-black/40 animate-fade-in"
+          className="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm animate-fade-in"
         />
       )}
       <aside
         className={cn(
-          "fixed md:sticky top-0 left-0 z-40 h-dvh shrink-0 flex flex-col bg-card border-r border-border transition-[width,transform] duration-300 ease-out overflow-hidden",
+          "fixed md:sticky top-0 left-0 z-40 h-dvh shrink-0 flex flex-col border-r border-border/60 transition-[width,transform] duration-300 ease-out overflow-hidden",
+          "bg-[color-mix(in_oklab,var(--card)_70%,transparent)] backdrop-blur-2xl backdrop-saturate-150",
           collapsed ? "md:w-20" : "md:w-64",
           "w-64",
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
