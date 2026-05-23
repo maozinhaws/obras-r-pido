@@ -110,10 +110,7 @@
   --sidebar-ring: #7b5cff;
 
   /* Home hero background + glass surfaces (theme-aware) */
-  --bg-hero:
-    radial-gradient(80% 50% at 50% 0%, rgba(255,107,53,0.10), transparent 70%),
-    radial-gradient(60% 50% at 100% 100%, rgba(123,92,255,0.10), transparent 70%),
-    #faf8f5;
+  --bg-hero: #faf8f5;
   --card-solid: #ffffff;
   --card-border-strong: #cbd5e1;
   --surface-2: #f1f5f9;
@@ -152,10 +149,7 @@
   --sidebar-border: #262932;
 
   /* Home hero background + glass surfaces (dark) */
-  --bg-hero:
-    radial-gradient(80% 50% at 50% 0%, rgba(255,107,53,0.5), transparent 70%),
-    radial-gradient(60% 50% at 100% 100%, rgba(123,92,255,0.6), transparent 70%),
-    #0b0d12;
+  --bg-hero: #0b0d12;
   --card-solid: rgba(20,23,29,0.55);
   --card-border-strong: rgba(255,255,255,0.10);
   --surface-2: rgba(255,255,255,0.06);
