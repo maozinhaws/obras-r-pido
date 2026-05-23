@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   db,
@@ -12,7 +12,7 @@ import { PageHeader } from "@/components/app-shell";
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
 import { urlFoto } from "@/lib/fotos";
-import { FileText, MessageCircle, Receipt, Edit3, ArrowLeft, ScrollText, X } from "lucide-react";
+import { FileText, MessageCircle, Receipt, Edit3, ArrowLeft, ScrollText, X, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/orcamentos/$id")({
   head: ({ params }) => ({
