@@ -146,7 +146,7 @@ function FornecedorForm({
     onClose();
   }
   return (
-    <div className="fixed inset-0 z-50 bg-black/60  flex items-end md:items-center justify-center p-0 md:p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 bg-[color-mix(in_oklab,#0a0420_55%,transparent)] backdrop-blur-md flex items-end md:items-center justify-center p-0 md:p-4 animate-fade-in">
       <div className="glass-strong w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale-in">
         <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between sticky top-0 z-10">
           <h3 className="text-display text-lg">

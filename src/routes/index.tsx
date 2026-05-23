@@ -63,19 +63,19 @@ function Home() {
         className="w-full max-w-md mx-auto px-4 pt-3 pb-10 space-y-4"
         style={{ color: "var(--on-hero)" }}
       >
-        {/* Header card — empresa + métricas (entre menu e toggle) */}
+        {/* Header card — empresa + métricas (FIXO no topo) */}
         <Link
           to="/configuracoes"
           aria-label="Editar empresa nas configurações"
-          className="block active:scale-[0.99] transition"
+          className="block active:scale-[0.99] transition sticky top-3 z-20"
           style={{
             background: "var(--card-solid)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
+            backdropFilter: "blur(28px) saturate(170%)",
+            WebkitBackdropFilter: "blur(28px) saturate(170%)",
             border: "1px solid var(--card-border-strong)",
-            borderRadius: "0 24px 24px 24px",
+            borderRadius: "24px",
             padding: "16px 16px 18px",
-            boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+            boxShadow: "0 10px 32px -8px rgba(15,5,40,0.18)",
           }}
         >
           <div className="flex items-center justify-center pl-12 pr-12 min-h-[44px] text-center">
@@ -234,8 +234,7 @@ function Home() {
               </p>
               <button
                 onClick={() => setModalOpen(true)}
-                className="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] active:scale-95 transition"
-                style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
+                className="btn-gradient"
               >
                 Criar Primeiro
               </button>
@@ -389,14 +388,14 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
     { modo: "detalhado", icon: ClipboardList, title: "Detalhado", desc: "Relatório completo" },
   ];
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center p-4 animate-fade-in">
-      <div className="bg-card rounded-[32px] w-full max-w-md overflow-hidden animate-scale-in shadow-2xl">
-        <div className="p-5 flex justify-between items-center border-b border-border">
+    <div className="modal-backdrop animate-fade-in" onClick={onClose}>
+      <div className="modal-glass w-full max-w-md animate-scale-in" onClick={(e) => e.stopPropagation()}>
+        <div className="p-5 flex justify-between items-center border-b border-[color-mix(in_oklab,var(--brand-2)_20%,transparent)]">
           <h3 className="text-display text-xl text-foreground">Tipo de Orçamento</h3>
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="size-9 rounded-full bg-muted grid place-items-center hover:bg-muted transition-colors"
+            className="size-9 rounded-full bg-[color-mix(in_oklab,var(--card)_70%,transparent)] backdrop-blur grid place-items-center border border-border/60"
           >
             <X className="size-5 text-foreground" strokeWidth={2.5} />
           </button>

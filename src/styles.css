@@ -78,47 +78,49 @@
   --popover: #ffffff;
   --popover-foreground: #111111;
 
-  /* Brand */
+  /* Brand — paleta inspirada no logotipo (roxo Pintor Plus) */
   --brand: #ff6b35;
-  --brand-2: #7b5cff;
+  --brand-2: #8b3fd6;     /* roxo do logo */
+  --brand-2-deep: #5b1e96; /* sombra roxa do logo */
   --ink: #0a0a0a;
   --success: #16a34a;
   --warning: #f59e0b;
   --info: #2563eb;
 
-  --primary: #0a0a0a;
+  --primary: #8b3fd6;
   --primary-foreground: #ffffff;
-  --secondary: #f4f4f6;
-  --secondary-foreground: #111111;
-  --muted: #f4f4f6;
-  --muted-foreground: #6b7280;
-  --accent: #f4f4f6;
-  --accent-foreground: #111111;
+  --secondary: #f1eaf9;
+  --secondary-foreground: #2a0a4a;
+  --muted: #f4eef9;
+  --muted-foreground: #5b4a72;
+  --accent: #f1eaf9;
+  --accent-foreground: #2a0a4a;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #ececef;
+  --border: #e5dcf0;
   --input: #ffffff;
-  --ring: #7b5cff;
+  --ring: #8b3fd6;
 
   --sidebar: #ffffff;
   --sidebar-foreground: #111111;
-  --sidebar-primary: #0a0a0a;
+  --sidebar-primary: #8b3fd6;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4f4f6;
-  --sidebar-accent-foreground: #111111;
-  --sidebar-border: #ececef;
-  --sidebar-ring: #7b5cff;
+  --sidebar-accent: #f4eef9;
+  --sidebar-accent-foreground: #2a0a4a;
+  --sidebar-border: #e5dcf0;
+  --sidebar-ring: #8b3fd6;
 
   /* Home hero background + glass surfaces (theme-aware) */
-  --bg-hero: #faf8f5;
-  --card-solid: #ffffff;
-  --card-border-strong: #cbd5e1;
-  --surface-2: #f1f5f9;
-  --surface-2-border: #e2e8f0;
-  --on-hero: #0a0a0a;
-  --on-hero-muted: #475569;
-  /* Hero CTA gradient (Combinação Vulcão Vivo — claro) */
-  --gradient-hero: linear-gradient(145deg, #f08040 0%, #dc6a26 45%, #8c5ed4 98%, #6e44bc 100%);
+  --bg-hero: transparent;
+  --card-solid: rgba(255,255,255,0.72);
+  --card-border-strong: rgba(139,63,214,0.18);
+  --surface-2: rgba(255,255,255,0.55);
+  --surface-2-border: rgba(139,63,214,0.14);
+  --on-hero: #1a0a2e;
+  --on-hero-muted: #5b4a72;
+  /* Hero CTA gradient (laranja → roxo do logo) */
+  --gradient-hero: linear-gradient(145deg, #ff8a3d 0%, #ff6b35 35%, #8b3fd6 85%, #5b1e96 100%);
+  --gradient-brand: linear-gradient(135deg, #ff6b35 0%, #ec4899 50%, #8b3fd6 100%);
 }
 
 /* Dark mode — toggle via .dark class on <html> (preferred).
@@ -149,15 +151,16 @@
   --sidebar-border: #262932;
 
   /* Home hero background + glass surfaces (dark) */
-  --bg-hero: #0b0d12;
-  --card-solid: rgba(20,23,29,0.55);
-  --card-border-strong: rgba(255,255,255,0.10);
+  --bg-hero: transparent;
+  --card-solid: rgba(28,18,42,0.55);
+  --card-border-strong: rgba(180,140,230,0.18);
   --surface-2: rgba(255,255,255,0.06);
-  --surface-2-border: rgba(255,255,255,0.10);
+  --surface-2-border: rgba(180,140,230,0.14);
   --on-hero: #ffffff;
   --on-hero-muted: rgba(255,255,255,0.65);
-  /* Hero CTA gradient (Combinação Vulcão Escuro) */
-  --gradient-hero: linear-gradient(145deg, #e87838 0%, #d06420 45%, #4a1070 98%, #2d0945 100%);
+  /* Hero CTA gradient (laranja → roxo do logo, escuro) */
+  --gradient-hero: linear-gradient(145deg, #ff7a30 0%, #e85a1c 35%, #6b22b0 85%, #3a0a6e 100%);
+  --gradient-brand: linear-gradient(135deg, #ff6b35 0%, #d63384 50%, #6b22b0 100%);
 }
 .dark .btn-dark,
 :root[data-theme="escuro"] .btn-dark { background: #ededf0; color: #0b0d12; }
@@ -452,7 +455,80 @@
     60%  { transform: translateX(350%) rotate(8deg); }
     100% { transform: translateX(350%) rotate(8deg); }
   }
+
+  /* ===== Background com logo borrado (claro/escuro) ===== */
+  .app-bg-logo {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 80% 20%, rgba(255,107,53,0.18), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 20% 80%, rgba(139,63,214,0.22), transparent 60%),
+      url('/logo-bg.png');
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-position: center, center, center;
+    background-size: auto, auto, min(70vmin, 560px) auto;
+    filter: blur(60px) saturate(140%);
+    opacity: 0.55;
+  }
+  .dark .app-bg-logo {
+    background-image:
+      radial-gradient(ellipse 80% 60% at 80% 20%, rgba(255,107,53,0.20), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 20% 80%, rgba(139,63,214,0.30), transparent 60%),
+      url('/logo-bg.png');
+    opacity: 0.35;
+  }
+
+  /* ===== Botão gradiente destacado (laranja → rosa → roxo) ===== */
+  .btn-gradient {
+    background: var(--gradient-brand);
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 9999px;
+    padding: 0.625rem 1.25rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.28),
+      0 8px 18px -6px rgba(255,107,53,0.45),
+      0 18px 40px -12px rgba(139,63,214,0.55);
+    cursor: pointer;
+    transition: transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, filter 200ms ease;
+  }
+  .btn-gradient:hover { transform: translateY(-2px); filter: brightness(1.07); }
+  .btn-gradient:active { transform: scale(0.97); }
+
+  /* ===== Modal glassmorphism (backdrop + sheet) ===== */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 50;
+    background: color-mix(in oklab, #0a0420 55%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    display: flex; align-items: flex-end; justify-content: center; padding: 1rem;
+  }
+  @media (min-width: 640px) { .modal-backdrop { align-items: center; } }
+  .modal-glass {
+    background: color-mix(in oklab, var(--card) 60%, transparent);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid color-mix(in oklab, var(--brand-2) 30%, transparent);
+    border-radius: 28px;
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, #ffffff 24%, transparent),
+      0 30px 80px -20px rgba(15,5,40,0.45);
+    overflow: hidden;
+  }
 }
+
+
 
 /* ===========================================================
    SUAVE (default) — light glassmorphism + livelier motion.
