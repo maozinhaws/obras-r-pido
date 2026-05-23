@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, memo } from "react";
+import { useState, memo, useRef, useEffect, useLayoutEffect } from "react";
+
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, calcularTotal, formatBRL, STATUS_LABELS } from "@/lib/db";
 import {
