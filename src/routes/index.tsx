@@ -414,7 +414,7 @@ export const NovoOrcamentoModal = memo(({ onClose }: { onClose: () => void }) =>
                 onClick={onClose}
                 className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 hover:bg-muted glass-press"
               >
-                <div className="mode-avatar">
+                <div className={`mode-avatar ${modo === "flash" ? "is-flash" : modo === "foto" ? "is-foto" : ""}`}>
                   <Icon className="size-6 text-white" strokeWidth={2.25} />
                 </div>
                 <div className="min-w-0">
