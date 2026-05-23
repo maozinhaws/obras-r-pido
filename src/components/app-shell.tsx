@@ -103,13 +103,13 @@ function NavRow({
       to={to}
       title={!showLabel ? label : undefined}
       className={cn(
-        "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors border",
+        "flex items-center gap-3 px-3 py-2 rounded-lg text-[15px] transition-colors border",
         active
-          ? "bg-secondary text-foreground border-border"
-          : "text-muted-foreground hover:text-foreground hover:bg-secondary/60 border-transparent",
+          ? "bg-secondary border-border font-extrabold text-foreground dark:text-white"
+          : "border-transparent font-semibold hover:bg-secondary/60 text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white",
       )}
     >
-      <Icon className="size-4 shrink-0" strokeWidth={2} />
+      <Icon className="size-4 shrink-0" strokeWidth={active ? 2.75 : 2.25} />
       {showLabel && <span className="truncate">{label}</span>}
     </Link>
   );
