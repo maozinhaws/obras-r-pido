@@ -51,34 +51,48 @@ const OrcamentoCard = memo(({ o }: { o: Orcamento }) => {
   const nav = useNavigate();
   const [statusOpen, setStatusOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
-  const [shareTexto, setShareTexto] = useState("");
 
-  async function abrirCompartilhar() {
-    const texto = await gerarMensagemWhatsapp(o);
-    setShareTexto(texto);
-    setShareOpen(true);
+  function abrirDetalhes() {
+    nav({ to: "/orcamentos/$id", params: { id: String(o.id) } });
   }
 
   return (
-    <div className="glass p-5 space-y-4 group">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={abrirDetalhes}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          abrirDetalhes();
+        }
+      }}
+      className="glass p-5 space-y-4 group cursor-pointer hover:bg-[color-mix(in_oklab,var(--card)_85%,transparent)] transition-colors"
+    >
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="font-black uppercase truncate">
-            {o.clienteSnapshot?.nome ?? "Sem cliente"}
-          </p>
-          <p className="text-mono text-[10px] text-foreground/40 uppercase">
-            #{o.id} · {format(o.atualizadoEm, "dd MMM yy, HH:mm", { locale: ptBR })}
-          </p>
+        <div className="min-w-0 flex items-start gap-2">
+          <Eye className="size-4 text-foreground/40 mt-1 shrink-0" aria-label="Ver resumo" />
+          <div className="min-w-0">
+            <p className="font-black uppercase truncate">
+              {o.clienteSnapshot?.nome ?? "Sem cliente"}
+            </p>
+            <p className="text-mono text-[10px] text-foreground/40 uppercase">
+              #{o.id} · {format(o.atualizadoEm, "dd MMM yy, HH:mm", { locale: ptBR })}
+            </p>
+          </div>
         </div>
-        <div className="flex items-start gap-2 shrink-0">
+        <div
+          className="flex items-start gap-2 shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="text-display text-2xl italic text-brand">
             {formatBRL(calcularTotal(o)).replace(",00", "")}
           </div>
           <CardMenu
             items={[
-              { label: "Ver detalhes", icon: <Eye className="size-4" />, onClick: () => nav({ to: "/orcamentos/$id", params: { id: String(o.id) } }) },
+              { label: "Ver detalhes", icon: <Eye className="size-4" />, onClick: abrirDetalhes },
               { label: "Editar", icon: <Edit3 className="size-4" />, onClick: () => nav({ to: "/orcamentos/novo", search: { editId: o.id!, draftKey: String(o.id) } as any }) },
-              { label: "Compartilhar", icon: <Share2 className="size-4" />, onClick: abrirCompartilhar },
+              { label: "Compartilhar", icon: <Share2 className="size-4" />, onClick: () => setShareOpen(true) },
               { label: "Mudar status", icon: <Tag className="size-4" />, onClick: () => setStatusOpen(true) },
               { label: "Recibo", icon: <Receipt className="size-4" />, onClick: () => nav({ to: "/orcamentos/$id/recibo", params: { id: String(o.id) } }) },
               { label: "Excluir", icon: <Trash2 className="size-4" />, danger: true, onClick: () => { if (confirm("Excluir orçamento?")) db.orcamentos.delete(o.id!); } },
@@ -88,57 +102,38 @@ const OrcamentoCard = memo(({ o }: { o: Orcamento }) => {
       </div>
       <button
         type="button"
-        onClick={() => setStatusOpen(true)}
+        onClick={(e) => { e.stopPropagation(); setStatusOpen(true); }}
         className={`inline-flex items-center gap-2 glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status]}`}
       >
         <Tag className="size-3" /> {STATUS_LABELS[o.status]}
       </button>
-      <div className="flex flex-wrap gap-2">
-        <Link
-          to="/orcamentos/$id"
-          params={{ id: String(o.id) }}
-          className="flex-1 glass glass-press px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-center"
-        >
-          Ver
-        </Link>
+      <div className="flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
         <button
-          onClick={async () => {
-            const blob = await gerarPdfOrcamento(o);
-            baixarBlob(blob, `orcamento-${o.id}.pdf`);
-          }}
-          className="glass glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
-        >
-          <FileText className="size-3" /> PDF
-        </button>
-        <button
-          onClick={abrirCompartilhar}
-          className="glass-brand glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 text-white"
+          type="button"
+          onClick={() => setShareOpen(true)}
+          className="flex-1 glass-brand glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 text-white"
         >
           <Share2 className="size-3" /> Compartilhar
         </button>
       </div>
       {statusOpen && (
-        <StatusPicker
-          value={o.status}
-          onPick={(s) => updateStatusWithLog(o.id!, s)}
-          onClose={() => setStatusOpen(false)}
-        />
+        <div onClick={(e) => e.stopPropagation()}>
+          <StatusPicker
+            value={o.status}
+            onPick={(s) => updateStatusWithLog(o.id!, s)}
+            onClose={() => setStatusOpen(false)}
+          />
+        </div>
       )}
       {shareOpen && (
-        <ShareMenu
-          onClose={() => setShareOpen(false)}
-          titulo={`Orçamento — ${o.clienteSnapshot?.nome ?? ""}`}
-          texto={shareTexto}
-          telefone={o.clienteSnapshot?.telefone}
-          onSalvarPDF={async () => {
-            const blob = await gerarPdfOrcamento(o);
-            baixarBlob(blob, `orcamento-${o.id}.pdf`);
-          }}
-        />
+        <div onClick={(e) => e.stopPropagation()}>
+          <ShareOrcamentoModal orcamento={o} onClose={() => setShareOpen(false)} />
+        </div>
       )}
     </div>
   );
 });
+
 
 function OrcamentosPage() {
   const [busca, setBusca] = useState("");
