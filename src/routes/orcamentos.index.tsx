@@ -143,6 +143,18 @@ const OrcamentoCard = memo(({ o }: { o: Orcamento }) => {
 function OrcamentosPage() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<StatusOrcamento | "todos">("todos");
+  const [ocultarCancelados, setOcultarCancelados] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return window.localStorage.getItem("pp.ocultarCancelados") !== "0";
+  });
+  function toggleOcultarCancelados() {
+    setOcultarCancelados((v) => {
+      const next = !v;
+      if (typeof window !== "undefined")
+        window.localStorage.setItem("pp.ocultarCancelados", next ? "1" : "0");
+      return next;
+    });
+  }
   const orcamentos = useLiveQuery(
     () => {
       const query = filtro === "todos"
@@ -157,11 +169,12 @@ function OrcamentosPage() {
   const lista = useMemo(() => {
     return (orcamentos ?? []).filter((o) => {
       if (filtro !== "todos" && o.status !== filtro) return false;
+      if (ocultarCancelados && filtro !== "cancelado" && o.status === "cancelado") return false;
       if (busca && !(o.clienteSnapshot?.nome ?? "").toLowerCase().includes(busca.toLowerCase()))
         return false;
       return true;
     });
-  }, [orcamentos, filtro, busca]);
+  }, [orcamentos, filtro, busca, ocultarCancelados]);
 
   return (
     <div>
