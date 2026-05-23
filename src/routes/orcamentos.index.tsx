@@ -204,39 +204,51 @@ function OrcamentosPage() {
           />
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className="glass glass-press inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest"
-            >
-              <Filter className="size-4" strokeWidth={2.5} />
-              <span>{filtro === "todos" ? "Todos" : STATUS_LABELS[filtro]}</span>
-              {filtro !== "todos" && (
-                <span className="ml-1 size-1.5 rounded-full bg-brand" />
-              )}
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56 rounded-2xl">
-            <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Filtrar por status
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {(["todos", ...STATUSES] as const).map((s) => {
-              const active = filtro === s;
-              return (
-                <DropdownMenuItem
-                  key={s}
-                  onSelect={() => setFiltro(s)}
-                  className="flex items-center justify-between gap-2 rounded-xl text-sm font-semibold"
-                >
-                  <span>{s === "todos" ? "Todos" : STATUS_LABELS[s]}</span>
-                  {active && <Check className="size-4 text-brand" strokeWidth={3} />}
-                </DropdownMenuItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex flex-wrap items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="glass glass-press inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest"
+              >
+                <Filter className="size-4" strokeWidth={2.5} />
+                <span>{filtro === "todos" ? "Todos" : STATUS_LABELS[filtro]}</span>
+                {filtro !== "todos" && (
+                  <span className="ml-1 size-1.5 rounded-full bg-brand" />
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56 rounded-2xl">
+              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Filtrar por status
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {(["todos", ...STATUSES] as const).map((s) => {
+                const active = filtro === s;
+                return (
+                  <DropdownMenuItem
+                    key={s}
+                    onSelect={() => setFiltro(s)}
+                    className="flex items-center justify-between gap-2 rounded-xl text-sm font-semibold"
+                  >
+                    <span>{s === "todos" ? "Todos" : STATUS_LABELS[s]}</span>
+                    {active && <Check className="size-4 text-brand" strokeWidth={3} />}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <button
+            type="button"
+            onClick={toggleOcultarCancelados}
+            title={ocultarCancelados ? "Mostrar cancelados" : "Ocultar cancelados"}
+            className={`glass glass-press inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest ${ocultarCancelados ? "" : "opacity-60"}`}
+          >
+            {ocultarCancelados ? <Check className="size-4 text-brand" strokeWidth={3} /> : <X className="size-4" strokeWidth={2.5} />}
+            <span>Ocultar cancelados</span>
+          </button>
+        </div>
 
         {lista.length === 0 ? (
           <div className="brutal-border-thin border-dashed border-foreground/20 p-12 text-center">
