@@ -31,7 +31,15 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={mode === "claro" ? "Ativar modo escuro" : "Ativar modo claro"}
-      className="fixed top-3 right-3 z-50 size-11 bg-card text-foreground rounded-2xl grid place-items-center shadow-[0_4px_14px_rgba(0,0,0,0.08)] border border-border glass-press"
+      className="fixed top-5 right-5 z-50 size-11 rounded-[18px] grid place-items-center glass-press"
+      style={{
+        background: "var(--card-solid)",
+        backdropFilter: "blur(28px) saturate(170%)",
+        WebkitBackdropFilter: "blur(28px) saturate(170%)",
+        border: "1px solid var(--card-border-strong)",
+        boxShadow: "0 6px 18px -6px rgba(15,5,40,0.18)",
+        color: "var(--on-hero)",
+      }}
     >
       {mode === "claro" ? (
         <Moon className="size-5" strokeWidth={2.25} />
