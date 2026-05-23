@@ -227,19 +227,56 @@ export const PageHeader = memo(({
   title: string;
   actions?: React.ReactNode;
 }) => {
+  const ref = useRef<HTMLElement>(null);
+  const [h, setH] = useState(120);
+  const useIso = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+  useIso(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setH(el.getBoundingClientRect().height);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   return (
-    <header className="sticky top-0 z-30 px-5 lg:px-10 pt-6 lg:pt-8 pb-6 pl-20 md:pl-10 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-end border-b border-border/50 bg-[color-mix(in_oklab,var(--background)_42%,transparent)] backdrop-blur-2xl backdrop-saturate-[1.8]">
-      <div>
-        {eyebrow && (
-          <p className="text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.2em] mb-2">
-            {eyebrow}
-          </p>
+    <>
+      {/* Spacer reservando o espaço do header fixo */}
+      <div aria-hidden style={{ height: h + 30 }} />
+      <header
+        ref={ref}
+        className="fixed top-3 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-2rem)] max-w-md"
+        style={{
+          background: "var(--card-solid)",
+          backdropFilter: "blur(28px) saturate(170%)",
+          WebkitBackdropFilter: "blur(28px) saturate(170%)",
+          border: "1px solid var(--card-border-strong)",
+          borderRadius: 24,
+          padding: "16px 16px 18px",
+          boxShadow: "0 10px 32px -8px rgba(15,5,40,0.18)",
+          color: "var(--on-hero)",
+        }}
+      >
+        <div className="text-center pl-12 pr-12 min-h-[44px] flex flex-col justify-center">
+          {eyebrow && (
+            <p
+              className="text-[10px] font-bold uppercase tracking-[0.18em]"
+              style={{ color: "var(--brand-2)" }}
+            >
+              {eyebrow}
+            </p>
+          )}
+          <h1
+            className="text-display text-[22px] font-extrabold leading-none mt-1 truncate"
+            style={{ color: "var(--on-hero)" }}
+          >
+            {title}
+          </h1>
+        </div>
+        {actions && (
+          <div className="mt-3 flex justify-center gap-2 flex-wrap">{actions}</div>
         )}
-        <h1 className="text-display text-2xl lg:text-4xl leading-none text-foreground">
-          {title}
-        </h1>
-      </div>
-      {actions && <div className="flex items-center gap-2 flex-wrap">{actions}</div>}
-    </header>
+      </header>
+    </>
   );
 });
