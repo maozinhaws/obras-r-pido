@@ -234,8 +234,7 @@ function Home() {
               </p>
               <button
                 onClick={() => setModalOpen(true)}
-                className="px-5 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] active:scale-95 transition"
-                style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
+                className="btn-gradient"
               >
                 Criar Primeiro
               </button>
