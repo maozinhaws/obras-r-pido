@@ -244,8 +244,9 @@ export async function gerarPdfRecibo(params: {
   formaPagamento: string;
   observacao?: string;
   numero: number;
+  assinaturaPagador?: string;
 }): Promise<Blob> {
-  const { orcamento: o, valor, data, formaPagamento, observacao, numero } = params;
+  const { orcamento: o, valor, data, formaPagamento, observacao, numero, assinaturaPagador } = params;
   const config = (await db.config.get(1)) ?? { id: 1 as const };
   const doc = await makeDoc();
   const pageW = doc.internal.pageSize.getWidth();
@@ -283,10 +284,14 @@ export async function gerarPdfRecibo(params: {
   y += 7;
   doc.setFontSize(18);
   doc.text(formatBRL(valor), 15, y);
-  y += 8;
-
+  y += 6;
   doc.setFontSize(10);
+  doc.setFont("helvetica", "italic");
+  const extLines = doc.splitTextToSize(`(${valorPorExtenso(valor)})`, pageW - 30);
+  doc.text(extLines, 15, y);
+  y += extLines.length * 5 + 4;
   doc.setFont("helvetica", "normal");
+
   doc.text(`Forma de pagamento: ${formaPagamento}`, 15, y);
   y += 6;
   doc.text(`Referente ao orçamento #${o.id} — ${o.tipoServico ?? "Serviços de pintura"}`, 15, y);
@@ -302,14 +307,26 @@ export async function gerarPdfRecibo(params: {
     y += lines.length * 5;
   }
 
-  y += 20;
-  doc.line(60, y, pageW - 60, y);
-  y += 5;
-  doc.setFontSize(9);
-  doc.text(config.nome ?? "—", pageW / 2, y, { align: "center" });
-  if (config.documento) {
-    y += 4;
-    doc.text(config.documento, pageW / 2, y, { align: "center" });
+  // Assinatura do pagador
+  if (assinaturaPagador) {
+    y += 14;
+    if (y > 245) { doc.addPage(); y = 30; }
+    try { doc.addImage(assinaturaPagador, "PNG", pageW / 2 - 30, y - 14, 60, 18); } catch { /* */ }
+    doc.line(60, y, pageW - 60, y);
+    y += 5;
+    doc.setFontSize(9);
+    const nomePag = o.pagadorDiferente ? o.pagadorNome : o.clienteSnapshot?.nome;
+    doc.text(`Assinatura do pagador: ${nomePag ?? ""}`, pageW / 2, y, { align: "center" });
+  } else {
+    y += 20;
+    doc.line(60, y, pageW - 60, y);
+    y += 5;
+    doc.setFontSize(9);
+    doc.text(config.nome ?? "—", pageW / 2, y, { align: "center" });
+    if (config.documento) {
+      y += 4;
+      doc.text(config.documento, pageW / 2, y, { align: "center" });
+    }
   }
 
   // Aviso
