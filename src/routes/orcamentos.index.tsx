@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, memo, useMemo } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
   db,
@@ -8,14 +8,17 @@ import {
   STATUS_COLORS,
   STATUS_LABELS,
   type StatusOrcamento,
+  type Orcamento,
 } from "@/lib/db";
 import { PageHeader } from "@/components/app-shell";
-import { Plus, Search, Trash2, FileText, MessageCircle } from "lucide-react";
+import { Plus, Search, Trash2, FileText, Share2, Edit3, Eye, Receipt, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
-import { whatsappLink } from "@/lib/utils";
 import { updateStatusWithLog } from "@/lib/orcamentos";
+import { CardMenu } from "@/components/card-menu";
+import { StatusPicker } from "@/components/status-picker";
+import { ShareMenu } from "@/components/share-menu";
 
 export const Route = createFileRoute("/orcamentos/")({
   head: () => ({
@@ -36,84 +39,107 @@ const STATUSES: StatusOrcamento[] = [
   "cancelado",
 ];
 
-import { memo, useMemo } from "react";
+const OrcamentoCard = memo(({ o }: { o: Orcamento }) => {
+  const nav = useNavigate();
+  const [statusOpen, setStatusOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareTexto, setShareTexto] = useState("");
 
-const OrcamentoCard = memo(({ o, STATUSES }: { o: any, STATUSES: StatusOrcamento[] }) => (
-  <div key={o.id} className="glass p-5 space-y-4 group">
-    <div className="flex items-start justify-between gap-3">
-      <div className="min-w-0">
-        <p className="font-black uppercase truncate">
-          {o.clienteSnapshot?.nome ?? "Sem cliente"}
-        </p>
-        <p className="text-mono text-[10px] text-foreground/40 uppercase">
-          #{o.id} · {format(o.atualizadoEm, "dd MMM yy, HH:mm", { locale: ptBR })}
-        </p>
+  async function abrirCompartilhar() {
+    const texto = await gerarMensagemWhatsapp(o);
+    setShareTexto(texto);
+    setShareOpen(true);
+  }
+
+  return (
+    <div className="glass p-5 space-y-4 group">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-black uppercase truncate">
+            {o.clienteSnapshot?.nome ?? "Sem cliente"}
+          </p>
+          <p className="text-mono text-[10px] text-foreground/40 uppercase">
+            #{o.id} · {format(o.atualizadoEm, "dd MMM yy, HH:mm", { locale: ptBR })}
+          </p>
+        </div>
+        <div className="flex items-start gap-2 shrink-0">
+          <div className="text-display text-2xl italic text-brand">
+            {formatBRL(calcularTotal(o)).replace(",00", "")}
+          </div>
+          <CardMenu
+            items={[
+              { label: "Ver detalhes", icon: <Eye className="size-4" />, onClick: () => nav({ to: "/orcamentos/$id", params: { id: String(o.id) } }) },
+              { label: "Editar", icon: <Edit3 className="size-4" />, onClick: () => nav({ to: "/orcamentos/novo", search: { editId: o.id!, draftKey: String(o.id) } as any }) },
+              { label: "Compartilhar", icon: <Share2 className="size-4" />, onClick: abrirCompartilhar },
+              { label: "Mudar status", icon: <Tag className="size-4" />, onClick: () => setStatusOpen(true) },
+              { label: "Recibo", icon: <Receipt className="size-4" />, onClick: () => nav({ to: "/orcamentos/$id/recibo", params: { id: String(o.id) } }) },
+              { label: "Excluir", icon: <Trash2 className="size-4" />, danger: true, onClick: () => { if (confirm("Excluir orçamento?")) db.orcamentos.delete(o.id!); } },
+            ]}
+          />
+        </div>
       </div>
-      <div className="text-display text-2xl italic text-brand shrink-0">
-        {formatBRL(calcularTotal(o)).replace(",00", "")}
-      </div>
-    </div>
-    <select
-      value={o.status}
-      onChange={(e) =>
-        updateStatusWithLog(o.id!, e.target.value as StatusOrcamento)
-      }
-      className={`glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status as StatusOrcamento]}`}
-    >
-      {STATUSES.map((s) => (
-        <option key={s} value={s} className="bg-surface text-foreground">
-          {STATUS_LABELS[s]}
-        </option>
-      ))}
-    </select>
-    <div className="flex flex-wrap gap-2">
-      <Link
-        to="/orcamentos/$id"
-        params={{ id: String(o.id) }}
-        className="flex-1 glass glass-press px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-center"
-      >
-        Ver
-      </Link>
       <button
-        onClick={async () => {
-          const blob = await gerarPdfOrcamento(o);
-          baixarBlob(blob, `orcamento-${o.id}.pdf`);
-        }}
-        className="glass glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
+        type="button"
+        onClick={() => setStatusOpen(true)}
+        className={`inline-flex items-center gap-2 glass px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest ${STATUS_COLORS[o.status]}`}
       >
-        <FileText className="size-3" /> PDF
+        <Tag className="size-3" /> {STATUS_LABELS[o.status]}
       </button>
-      {o.clienteSnapshot?.telefone && (
+      <div className="flex flex-wrap gap-2">
+        <Link
+          to="/orcamentos/$id"
+          params={{ id: String(o.id) }}
+          className="flex-1 glass glass-press px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-center"
+        >
+          Ver
+        </Link>
         <button
           onClick={async () => {
-            const msg = await gerarMensagemWhatsapp(o);
-            window.open(whatsappLink(o.clienteSnapshot!.telefone!, msg), "_blank");
+            const blob = await gerarPdfOrcamento(o);
+            baixarBlob(blob, `orcamento-${o.id}.pdf`);
           }}
+          className="glass glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
+        >
+          <FileText className="size-3" /> PDF
+        </button>
+        <button
+          onClick={abrirCompartilhar}
           className="glass-brand glass-press px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 text-white"
         >
-          <MessageCircle className="size-3" /> Wpp
+          <Share2 className="size-3" /> Compartilhar
         </button>
+      </div>
+      {statusOpen && (
+        <StatusPicker
+          value={o.status}
+          onPick={(s) => updateStatusWithLog(o.id!, s)}
+          onClose={() => setStatusOpen(false)}
+        />
       )}
-      <button
-        onClick={() => confirm("Excluir orçamento?") && db.orcamentos.delete(o.id!)}
-        className="glass glass-press border-destructive/20 px-3 py-2.5 text-destructive"
-        aria-label="Excluir"
-      >
-        <Trash2 className="size-3" />
-      </button>
+      {shareOpen && (
+        <ShareMenu
+          onClose={() => setShareOpen(false)}
+          titulo={`Orçamento — ${o.clienteSnapshot?.nome ?? ""}`}
+          texto={shareTexto}
+          telefone={o.clienteSnapshot?.telefone}
+          onSalvarPDF={async () => {
+            const blob = await gerarPdfOrcamento(o);
+            baixarBlob(blob, `orcamento-${o.id}.pdf`);
+          }}
+        />
+      )}
     </div>
-  </div>
-));
+  );
+});
 
 function OrcamentosPage() {
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState<StatusOrcamento | "todos">("todos");
   const orcamentos = useLiveQuery(
     () => {
-      const query = filtro === "todos" 
+      const query = filtro === "todos"
         ? db.orcamentos.orderBy("atualizadoEm")
         : db.orcamentos.where("status").equals(filtro).reverse();
-      
       return query.reverse().toArray();
     },
     [filtro],
@@ -137,7 +163,7 @@ function OrcamentosPage() {
         actions={
           <Link
             to="/orcamentos/novo"
-              search={{ modo: "flash", draftKey: String(Date.now()) }}
+            search={{ modo: "flash", draftKey: String(Date.now()) }}
             className="glass-brand text-white glass-press px-5 py-2.5 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
           >
             <Plus className="size-4" strokeWidth={3} /> Novo
@@ -185,7 +211,7 @@ function OrcamentosPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {lista.map((o) => (
-              <OrcamentoCard key={o.id} o={o} STATUSES={STATUSES} />
+              <OrcamentoCard key={o.id} o={o} />
             ))}
           </div>
         )}
