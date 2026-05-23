@@ -3,7 +3,11 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Cliente } from "@/lib/db";
 import { PageHeader } from "@/components/app-shell";
-import { Plus, Search, Edit3, Trash2, Phone, MapPin, X } from "lucide-react";
+import { exportarVCF } from "@/lib/exports";
+import { buscarCEP } from "@/lib/cep";
+import { clienteSchema, issuesToMap, handleEnterNav, type ZodIssueMap } from "@/lib/forms";
+import { Plus, Search, Edit3, Trash2, Phone, MapPin, X, Download, MessageCircle } from "lucide-react";
+import { whatsappLink } from "@/lib/utils";
 
 export const Route = createFileRoute("/clientes")({
   head: () => ({
@@ -105,9 +109,30 @@ function ClientesPage() {
                   <button
                     onClick={() => setEditando(c)}
                     className="flex-1 brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center justify-center gap-1"
+                    aria-label="Editar"
                   >
                     <Edit3 className="size-3" /> Editar
                   </button>
+                  <button
+                    onClick={() => exportarVCF(c)}
+                    className="brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center gap-1"
+                    aria-label="Exportar vCard"
+                    title="Salvar contato (.vcf)"
+                  >
+                    <Download className="size-3" />
+                  </button>
+                  {c.telefone && (
+                    <a
+                      href={whatsappLink(c.telefone, `Olá ${c.nome}!`)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="brutal-border-thin px-3 py-1.5 text-[10px] font-black uppercase tracking-widest brutal-press flex items-center gap-1 text-success"
+                      aria-label="WhatsApp"
+                      title="Abrir WhatsApp"
+                    >
+                      <MessageCircle className="size-3" />
+                    </a>
+                  )}
                   <button
                     onClick={() => {
                       if (confirm(`Excluir ${c.nome}?`)) db.clientes.delete(c.id!);
