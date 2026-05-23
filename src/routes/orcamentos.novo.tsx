@@ -34,6 +34,7 @@ import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
 import { PhotoEditor } from "@/components/photo-editor";
 import { persistOrcamento } from "@/lib/orcamentos";
+import { handleEnterNav } from "@/lib/forms";
 
 type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number; draftKey?: string };
 
@@ -234,7 +235,12 @@ function PassoCliente({
 
       {!orc.clienteSnapshot && (
         <>
-          <div className="glass p-6 space-y-4">
+          <form
+            data-enter-nav
+            onKeyDown={handleEnterNav}
+            onSubmit={(e) => { e.preventDefault(); salvarENovo(); }}
+            className="glass p-6 space-y-4"
+          >
             <div className="text-mono text-[10px] uppercase tracking-widest text-brand">
               {"> Cadastrar novo"}
             </div>
@@ -263,13 +269,14 @@ function PassoCliente({
               />
             </Field>
             <button
-              onClick={salvarENovo}
+              type="submit"
               disabled={!novo.nome.trim()}
               className="bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest disabled:opacity-40"
             >
               Salvar e usar
             </button>
-          </div>
+          </form>
+
 
           {(clientes ?? []).length > 0 && (
             <div>
