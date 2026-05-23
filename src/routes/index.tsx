@@ -13,6 +13,7 @@ import {
   Calendar,
   FileText,
 } from "lucide-react";
+import { InstallPromptCard } from "@/components/install-prompt-card";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { uid } from "@/lib/utils";
@@ -128,6 +129,9 @@ function Home() {
             </div>
           </div>
         </Link>
+
+        {/* Card de instalação do PWA — some quando instalado ou dispensado */}
+        <InstallPromptCard />
 
         {/* Hero CTA — Vulcão (gradiente theme-aware) */}
         <button
