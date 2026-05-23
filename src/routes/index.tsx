@@ -33,7 +33,20 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const [modalOpen, setModalOpen] = useState(false);
+  const headerRef = useRef<HTMLAnchorElement>(null);
+  const [headerH, setHeaderH] = useState(160);
+  const useIso = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+  useIso(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const update = () => setHeaderH(el.getBoundingClientRect().height);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const dashboard = useLiveQuery(async () => {
+
     const today = new Date().toISOString().slice(0, 10);
     const [config, orcamentos, eventos, totalClientes] = await Promise.all([
       db.config.get(1),
