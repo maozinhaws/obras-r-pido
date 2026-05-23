@@ -11,7 +11,15 @@ import {
   type Orcamento,
 } from "@/lib/db";
 import { PageHeader } from "@/components/app-shell";
-import { Plus, Search, Trash2, FileText, Share2, Edit3, Eye, Receipt, Tag } from "lucide-react";
+import { Plus, Search, Trash2, FileText, Share2, Edit3, Eye, Receipt, Tag, Filter, Check } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
