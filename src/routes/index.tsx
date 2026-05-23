@@ -130,6 +130,9 @@ function Home() {
           </div>
         </Link>
 
+        {/* Card de instalação do PWA — some quando instalado ou dispensado */}
+        <InstallPromptCard />
+
         {/* Hero CTA — Vulcão (gradiente theme-aware) */}
         <button
           onClick={() => setModalOpen(true)}
