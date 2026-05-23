@@ -63,6 +63,8 @@ export interface Orcamento {
   tipoServico?: string;
   observacoes?: string;
   formatoMensagem?: "completo" | "area" | "simples";
+  incluirFotosPdf?: boolean;
+  assinaturaCliente?: string;
   totalManual?: number;
   precoAdicionalM2?: number;
   pagadorDiferente?: boolean;
@@ -98,6 +100,7 @@ export interface Recibo {
   data: string;
   formaPagamento: string;
   observacao?: string;
+  assinaturaPagador?: string;
   criadoEm: number;
 }
 

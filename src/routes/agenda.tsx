@@ -4,7 +4,8 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db, type EventoAgenda } from "@/lib/db";
 import { PageHeader } from "@/components/app-shell";
 import { Field } from "./clientes";
-import { Plus, X, Trash2, Calendar as CalIcon, Download } from "lucide-react";
+import { Plus, X, Trash2, Calendar as CalIcon, Download, ExternalLink } from "lucide-react";
+import { googleCalendarLink } from "@/lib/exports";
 import { format, isToday, isFuture, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -118,6 +119,14 @@ function EventoCard({
           >
             <Download className="size-3" /> .ics
           </button>
+          <a
+            href={googleCalendarLink(evento)}
+            target="_blank"
+            rel="noreferrer"
+            className="glass glass-press px-3 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
+          >
+            <ExternalLink className="size-3" /> Google
+          </a>
           <button
             onClick={() => confirm("Excluir evento?") && db.eventos.delete(evento.id!)}
             className="glass glass-press border-destructive/20 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-destructive"

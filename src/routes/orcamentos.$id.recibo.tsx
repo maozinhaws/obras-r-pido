@@ -5,6 +5,8 @@ import { db, type Orcamento, type Recibo, formatBRL, FORMAS_PAGAMENTO, calcularT
 import { PageHeader } from "@/components/app-shell";
 import { Field } from "./clientes";
 import { gerarPdfRecibo, baixarBlob } from "@/lib/pdf";
+import { valorPorExtenso } from "@/lib/extenso";
+import { SignaturePad } from "@/components/signature-pad";
 import { ArrowLeft, FileText, Plus, Trash2, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -35,6 +37,7 @@ function ReciboPage() {
     data: new Date().toISOString().slice(0, 10),
     formaPagamento: "PIX",
     observacao: "",
+    assinaturaPagador: undefined,
   });
 
   if (!o)
@@ -56,6 +59,7 @@ function ReciboPage() {
       data: new Date().toISOString().slice(0, 10),
       formaPagamento: "PIX",
       observacao: "",
+      assinaturaPagador: undefined,
     });
   }
 
@@ -66,6 +70,7 @@ function ReciboPage() {
       data: r.data,
       formaPagamento: r.formaPagamento,
       observacao: r.observacao,
+      assinaturaPagador: r.assinaturaPagador,
       numero,
     });
     baixarBlob(blob, `recibo-${o!.id}-${numero}.pdf`);
@@ -126,6 +131,11 @@ function ReciboPage() {
               onChange={(e) => setForm({ ...form, valor: parseFloat(e.target.value) || 0 })}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-display text-2xl focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
             />
+            {form.valor > 0 && (
+              <p className="text-[11px] italic text-foreground/70 mt-1.5">
+                ({valorPorExtenso(form.valor)})
+              </p>
+            )}
           </Field>
           <Field label="Data">
             <input
@@ -158,6 +168,11 @@ function ReciboPage() {
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
             />
           </Field>
+          <SignaturePad
+            label="Assinatura do pagador"
+            value={form.assinaturaPagador}
+            onChange={(v) => setForm({ ...form, assinaturaPagador: v })}
+          />
           <button
             onClick={salvar}
             disabled={!form.valor || form.valor <= 0}
