@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, memo } from "react";
+import { useState, memo, useRef, useEffect, useLayoutEffect } from "react";
+
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, calcularTotal, formatBRL, STATUS_LABELS } from "@/lib/db";
 import {
@@ -32,7 +33,20 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const [modalOpen, setModalOpen] = useState(false);
+  const headerRef = useRef<HTMLAnchorElement>(null);
+  const [headerH, setHeaderH] = useState(160);
+  const useIso = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+  useIso(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const update = () => setHeaderH(el.getBoundingClientRect().height);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const dashboard = useLiveQuery(async () => {
+
     const today = new Date().toISOString().slice(0, 10);
     const [config, orcamentos, eventos, totalClientes] = await Promise.all([
       db.config.get(1),
@@ -61,13 +75,16 @@ function Home() {
     >
       <div
         className="w-full max-w-md mx-auto px-4 pt-3 pb-10 space-y-4"
-        style={{ color: "var(--on-hero)" }}
+        style={{ color: "var(--on-hero)", paddingTop: headerH + 18 }}
       >
+        {/* Spacer reservando o espaço do header fixo */}
+        <div aria-hidden style={{ height: 0 }} />
         {/* Header card — empresa + métricas (FIXO no topo) */}
         <Link
+          ref={headerRef}
           to="/configuracoes"
           aria-label="Editar empresa nas configurações"
-          className="block active:scale-[0.99] transition sticky top-3 z-20"
+          className="block active:scale-[0.99] transition fixed top-3 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-2rem)] max-w-md"
           style={{
             background: "var(--card-solid)",
             backdropFilter: "blur(28px) saturate(170%)",
@@ -88,6 +105,7 @@ function Home() {
               </p>
             </div>
           </div>
+
           <div className="mt-3 h-px" style={{ background: "var(--card-border-strong)" }} />
           <div className="grid grid-cols-2 mt-3 divide-x" style={{ borderColor: "var(--card-border-strong)" }}>
             <div className="text-center px-2">
