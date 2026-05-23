@@ -1,0 +1,246 @@
+/* =====================================================================
+   PhotoAnnotator — sidebar direita, painéis expansíveis
+   ===================================================================== */
+
+#pa-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: none;
+  flex-direction: column;
+  background: #0a0a0a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ── Topbar ─────────────────────────────────────────────────────────── */
+#pa-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  background: rgba(15, 15, 15, 0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+#pa-title {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+
+.pa-topbtn {
+  border: none;
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .15s;
+  white-space: nowrap;
+}
+.pa-topbtn:active { opacity: .65; }
+.pa-cancel-btn { background: rgba(255,255,255,.1); color: #fff; }
+.pa-save-btn   { background: #EF4444; color: #fff; }
+
+/* ── Main: canvas + sidebar ─────────────────────────────────────────── */
+#pa-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+/* ── Canvas area ────────────────────────────────────────────────────── */
+#pa-canvas-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #111;
+  overflow: hidden;
+}
+
+#pa-photo-c,
+#pa-strokes-c,
+#pa-obj-c {
+  position: absolute;
+  display: block;
+  touch-action: none;
+}
+
+#pa-obj-c { cursor: crosshair; }
+
+/* ── Sidebar ────────────────────────────────────────────────────────── */
+#pa-sidebar {
+  width: 64px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+  background: rgba(10, 10, 10, 0.94);
+  backdrop-filter: blur(14px);
+  border-left: 1px solid rgba(255,255,255,.07);
+  overflow-y: auto;
+  overflow-x: visible;
+  position: relative;
+  z-index: 10;
+}
+
+/* ── Tool group (wraps button + opts panel) ──────────────────────────── */
+.pa-tool-group {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Tool button ─────────────────────────────────────────────────────── */
+.pa-tool-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.55);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0;
+  transition: background .15s, border-color .15s, color .15s;
+  flex-shrink: 0;
+}
+.pa-tool-btn:active { opacity: .65; }
+.pa-tool-btn.pa-active {
+  background: rgba(239,68,68,.18);
+  border-color: #EF4444;
+  color: #EF4444;
+}
+
+.pa-icon-btn { width: 44px; height: 44px; border-radius: 10px; }
+.pa-danger.pa-icon-btn { color: #F87171; }
+.pa-danger.pa-icon-btn:hover { background: rgba(239,68,68,.2); }
+
+.pa-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pa-icon svg { width: 100%; height: 100%; }
+
+.pa-label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: inherit;
+  line-height: 1;
+}
+
+/* ── Separator ───────────────────────────────────────────────────────── */
+.pa-sep {
+  width: 32px;
+  height: 1px;
+  background: rgba(255,255,255,.1);
+  margin: 4px 0;
+  flex-shrink: 0;
+}
+
+/* ── Options panel (expands to the LEFT of sidebar) ─────────────────── */
+.pa-opts-panel {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(18, 18, 18, 0.97);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 12px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 160px;
+  max-width: 220px;
+  box-shadow: -4px 4px 24px rgba(0,0,0,.6);
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.pa-opts-panel.pa-open { display: flex; }
+
+.pa-opts-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+}
+
+/* Color swatches */
+.pa-opts-colors { gap: 8px; }
+
+.pa-opt-color {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.2);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform .12s, border-color .12s;
+}
+.pa-opt-color:active { transform: scale(.82); }
+.pa-opt-color.pa-sel {
+  border-color: #fff;
+  transform: scale(1.2);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.25);
+}
+
+/* Width buttons */
+.pa-opt-width {
+  background: rgba(255,255,255,.08);
+  border: 1.5px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  padding: 7px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .12s, border-color .12s;
+  flex: 1;
+}
+.pa-opt-width:active { opacity: .65; }
+.pa-opt-width.pa-sel {
+  background: rgba(239,68,68,.18);
+  border-color: #EF4444;
+}
+
+.pa-dot {
+  border-radius: 50%;
+  background: #fff;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Hint text */
+.pa-opts-hint {
+  font-size: 11px;
+  color: rgba(255,255,255,.45);
+  line-height: 1.5;
+  padding: 2px 0;
+}

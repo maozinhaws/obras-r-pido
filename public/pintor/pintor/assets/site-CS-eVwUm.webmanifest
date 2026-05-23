@@ -1,0 +1,134 @@
+{
+  "name": "Pintor Plus MVP",
+  "short_name": "Pintor+",
+  "description": "Gerencie orçamentos e clientes. O app profissional para pintores — funciona offline.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "/app.html?source=pwa",
+  "scope": "/",
+  "id": "/app.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#7C3AED",
+  "background_color": "#F8FAFC",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/public/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/public/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/public/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/public/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/public/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/public/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/public/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/public/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Novo Orçamento",
+      "short_name": "Orçamento",
+      "description": "Criar um novo orçamento detalhado",
+      "url": "/app.html?action=new-orc&source=shortcut",
+      "icons": [{ "src": "/public/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Orçamento Flash",
+      "short_name": "Flash",
+      "description": "Orçamento rápido para visitas técnicas",
+      "url": "/app.html?action=flash&source=shortcut",
+      "icons": [{ "src": "/public/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Agenda",
+      "short_name": "Agenda",
+      "description": "Ver e gerenciar compromissos",
+      "url": "/app.html?action=agenda&source=shortcut",
+      "icons": [{ "src": "/public/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/public/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tela inicial — resumo de orçamentos"
+    },
+    {
+      "src": "/public/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Lista de orçamentos com busca"
+    },
+    {
+      "src": "/public/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Editor de orçamento com itens e medidas"
+    },
+    {
+      "src": "/public/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Flash — orçamento rápido na visita técnica"
+    }
+  ],
+  "share_target": {
+    "action": "/app.html",
+    "method": "GET",
+    "params": {
+      "title": "share_title",
+      "text": "share_text",
+      "url": "share_url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+pintorplus",
+      "url": "/app.html?proto=%s"
+    }
+  ],
+  "prefer_related_applications": false
+}
