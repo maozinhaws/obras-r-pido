@@ -123,30 +123,47 @@ html.dark .sidebar {
   background: rgba(20,14,30,0.45) !important;
   border-right-color: rgba(255,255,255,0.10) !important;
 }
-.sidebar-links { background: transparent !important; }
+.sidebar-links,
+.sidebar .sidebar-links { background: transparent !important; }
+/* Força reset do glass do bundle nos links da sidebar */
+.sidebar .sidebar-link,
+.sidebar-links .sidebar-link,
 .sidebar-link {
   border-radius: 14px !important;
   margin: 2px 10px !important;
   padding: 12px 14px !important;
   background: transparent !important;
+  background-image: none !important;
   border: 1px solid transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
   transition: background .2s, color .2s, border-color .2s, transform .15s !important;
 }
+.sidebar .sidebar-link:hover,
+.sidebar-links .sidebar-link:hover,
 .sidebar-link:hover {
-  background: rgba(255,107,53,0.12) !important;
-  border-color: rgba(255,107,53,0.30) !important;
+  background: rgba(255,107,53,0.14) !important;
+  background-image: none !important;
+  border-color: rgba(255,107,53,0.35) !important;
   color: var(--bl) !important;
 }
+.sidebar .sidebar-link.active,
+.sidebar .sidebar-link[aria-current="page"],
+.sidebar .sidebar-link.on,
 .sidebar-link.active,
 .sidebar-link[aria-current="page"],
 .sidebar-link.on {
   background: transparent !important;
+  background-image: none !important;
   border-color: transparent !important;
   color: var(--bl) !important;
+  font-weight: 800 !important;
 }
+html.dark .sidebar .sidebar-link:hover,
 html.dark .sidebar-link:hover {
-  background: rgba(255,107,53,0.14) !important;
-  border-color: rgba(255,107,53,0.32) !important;
+  background: rgba(255,107,53,0.16) !important;
+  border-color: rgba(255,107,53,0.38) !important;
 }
 .sidebar-overlay {
   background: rgba(15,5,40,0.35) !important;
