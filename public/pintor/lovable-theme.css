@@ -63,20 +63,25 @@ html.dark,
   --sh: 0 2px 6px rgba(0,0,0,.35), 0 18px 40px -10px rgba(0,0,0,.55) !important;
 }
 
-/* 2) Fundo do app — gradiente sutil + textura para realçar glass */
+/* 2) Fundo do app — gradiente vibrante para o glass ter o que filtrar */
 html, body, #app {
   background:
-    radial-gradient(1200px 700px at 0% -10%, rgba(255,107,53,0.10), transparent 60%),
-    radial-gradient(1100px 700px at 100% 110%, rgba(123,92,255,0.12), transparent 60%),
-    #f4f4f6 !important;
+    radial-gradient(700px 500px at 8% 0%, rgba(255,107,53,0.38), transparent 60%),
+    radial-gradient(800px 600px at 100% 20%, rgba(236,72,153,0.30), transparent 60%),
+    radial-gradient(900px 700px at 50% 110%, rgba(123,92,255,0.40), transparent 60%),
+    radial-gradient(600px 500px at 0% 100%, rgba(56,189,248,0.22), transparent 60%),
+    #eef0f5 !important;
+  background-attachment: fixed !important;
   font-family: 'Manrope', 'Sora', system-ui, sans-serif !important;
   color: var(--ink) !important;
 }
 html.dark, html.dark body, html.dark #app {
   background:
-    radial-gradient(1200px 700px at 0% -10%, rgba(255,107,53,0.16), transparent 60%),
-    radial-gradient(1100px 700px at 100% 110%, rgba(123,92,255,0.18), transparent 60%),
+    radial-gradient(700px 500px at 8% 0%, rgba(255,107,53,0.32), transparent 60%),
+    radial-gradient(800px 600px at 100% 20%, rgba(236,72,153,0.26), transparent 60%),
+    radial-gradient(900px 700px at 50% 110%, rgba(123,92,255,0.36), transparent 60%),
     #0b0712 !important;
+  background-attachment: fixed !important;
 }
 
 /* 3) Tipografia Lovable */
@@ -93,29 +98,29 @@ html.dark, html.dark body, html.dark #app {
 .topnav,
 .hm-hdr,
 .sidebar-hdr {
-  background: rgba(255,255,255,0.65) !important;
-  backdrop-filter: blur(24px) saturate(170%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
-  border-bottom: 1px solid rgba(15,5,40,0.08) !important;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset, 0 4px 18px -4px rgba(15,5,40,0.10) !important;
+  background: rgba(255,255,255,0.38) !important;
+  backdrop-filter: blur(32px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.45) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.55) inset, 0 6px 22px -6px rgba(15,5,40,0.14) !important;
 }
 html.dark .topnav,
 html.dark .hm-hdr,
 html.dark .sidebar-hdr {
-  background: rgba(20,14,30,0.55) !important;
-  border-bottom-color: rgba(255,255,255,0.08) !important;
+  background: rgba(20,14,30,0.40) !important;
+  border-bottom-color: rgba(255,255,255,0.10) !important;
 }
 
-/* 5) Sidebar — drawer com glass */
+/* 5) Sidebar — drawer com glass mais translúcido */
 .sidebar {
-  background: rgba(255,255,255,0.82) !important;
-  backdrop-filter: blur(28px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
-  border-right: 1px solid rgba(15,5,40,0.10) !important;
-  box-shadow: 8px 0 32px -12px rgba(15,5,40,0.18) !important;
+  background: rgba(255,255,255,0.42) !important;
+  backdrop-filter: blur(36px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
+  border-right: 1px solid rgba(255,255,255,0.45) !important;
+  box-shadow: 8px 0 32px -12px rgba(15,5,40,0.22) !important;
 }
 html.dark .sidebar {
-  background: rgba(20,14,30,0.78) !important;
+  background: rgba(20,14,30,0.45) !important;
   border-right-color: rgba(255,255,255,0.10) !important;
 }
 .sidebar-links { background: transparent !important; }
@@ -123,28 +128,36 @@ html.dark .sidebar {
   border-radius: 14px !important;
   margin: 2px 10px !important;
   padding: 12px 14px !important;
+  background: rgba(255,255,255,0.40) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255,255,255,0.45) !important;
   transition: background .2s, color .2s, transform .15s !important;
 }
 .sidebar-link:hover {
-  background: rgba(255,107,53,0.10) !important;
+  background: rgba(255,107,53,0.18) !important;
   color: var(--bl) !important;
 }
+html.dark .sidebar-link {
+  background: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
 .sidebar-overlay {
-  background: rgba(15,5,40,0.45) !important;
-  backdrop-filter: blur(4px) !important;
+  background: rgba(15,5,40,0.35) !important;
+  backdrop-filter: blur(6px) !important;
 }
 
-/* 6) Seções e cards — glass translúcido */
+/* 6) Seções e cards — glass translúcido (menos opaco para realçar o efeito) */
 .sec, .cfg-card, .hoc, .rcard, .item-card, .item-summary, .toggle-row {
-  background: rgba(255,255,255,0.72) !important;
-  border: 1px solid rgba(15,5,40,0.08) !important;
+  background: rgba(255,255,255,0.35) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
   border-radius: 22px !important;
-  backdrop-filter: blur(20px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    inset 0 -1px 0 rgba(255,255,255,0.15),
     0 1px 2px rgba(15,23,42,0.04),
-    0 12px 28px -10px rgba(15,5,40,0.14) !important;
+    0 14px 32px -10px rgba(15,5,40,0.20) !important;
 }
 html.dark .sec,
 html.dark .cfg-card,
@@ -153,10 +166,10 @@ html.dark .rcard,
 html.dark .item-card,
 html.dark .item-summary,
 html.dark .toggle-row {
-  background: rgba(28,18,42,0.55) !important;
-  border-color: rgba(255,255,255,0.10) !important;
+  background: rgba(28,18,42,0.38) !important;
+  border-color: rgba(255,255,255,0.12) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.08),
     0 14px 36px -12px rgba(0,0,0,0.50) !important;
 }
 
