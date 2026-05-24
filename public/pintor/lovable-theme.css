@@ -379,3 +379,96 @@ html.dark #pg-login button[onclick="ppLoginOffline()"] {
   background: rgba(255,255,255,0.08) !important;
   color: #ededf0 !important;
 }
+
+/* 21) Botões globais fixos: menu (esq), home (esq+offset), tema (dir) */
+/* Reposiciona o botão de menu de cada page como botão fixo global */
+.page > .topnav button[onclick="toggleSidebar()"] {
+  position: fixed !important;
+  top: 14px !important;
+  left: 14px !important;
+  z-index: 60 !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.65) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  border: 1px solid rgba(15,5,40,0.10) !important;
+  box-shadow: 0 6px 18px -6px rgba(15,5,40,0.18) !important;
+  display: grid !important;
+  place-items: center !important;
+  color: var(--ink) !important;
+  padding: 0 !important;
+  font-size: 0 !important;
+}
+html.dark .page > .topnav button[onclick="toggleSidebar()"] {
+  background: rgba(28,18,42,0.70) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #ededf0 !important;
+}
+.page > .topnav button[onclick="toggleSidebar()"] .ico {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Botão home global — fixo ao lado do menu */
+.btn-home-global {
+  position: fixed !important;
+  top: 14px !important;
+  left: 66px !important;
+  z-index: 60 !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.65) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  border: 1px solid rgba(15,5,40,0.10) !important;
+  box-shadow: 0 6px 18px -6px rgba(15,5,40,0.18) !important;
+  display: grid !important;
+  place-items: center !important;
+  color: var(--ink) !important;
+  padding: 0 !important;
+}
+html.dark .btn-home-global {
+  background: rgba(28,18,42,0.70) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #ededf0 !important;
+}
+/* Esconde o botão home na própria home */
+#pg-home .btn-home-global { display: none !important; }
+
+/* Botão de tema global (injetado via script) */
+#pp-theme-global {
+  position: fixed !important;
+  top: 14px !important;
+  right: 14px !important;
+  z-index: 60 !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.65) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  border: 1px solid rgba(15,5,40,0.10) !important;
+  box-shadow: 0 6px 18px -6px rgba(15,5,40,0.18) !important;
+  display: grid !important;
+  place-items: center !important;
+  color: var(--ink) !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+}
+html.dark #pp-theme-global {
+  background: rgba(28,18,42,0.70) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #ededf0 !important;
+}
+/* Esconde o toggle de tema antigo (orbital) na home, pois há o global */
+.orbital-btn[onclick="toggleThemeAnim()"],
+.theme-toggle {
+  display: none !important;
+}
+
+/* Dá respiro no topo do topnav para não colidir com os botões fixos */
+.page > .topnav { padding-top: 70px !important; }
+.topnav-row { min-height: 0 !important; }
