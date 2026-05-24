@@ -133,22 +133,20 @@ html.dark .sidebar {
   transition: background .2s, color .2s, border-color .2s, transform .15s !important;
 }
 .sidebar-link:hover {
-  background: rgba(255,107,53,0.10) !important;
+  background: rgba(255,107,53,0.12) !important;
+  border-color: rgba(255,107,53,0.30) !important;
   color: var(--bl) !important;
 }
 .sidebar-link.active,
 .sidebar-link[aria-current="page"],
 .sidebar-link.on {
-  background: rgba(255,255,255,0.45) !important;
-  backdrop-filter: blur(10px) !important;
-  border-color: rgba(255,255,255,0.50) !important;
+  background: transparent !important;
+  border-color: transparent !important;
   color: var(--bl) !important;
 }
-html.dark .sidebar-link.active,
-html.dark .sidebar-link[aria-current="page"],
-html.dark .sidebar-link.on {
-  background: rgba(255,255,255,0.06) !important;
-  border-color: rgba(255,255,255,0.10) !important;
+html.dark .sidebar-link:hover {
+  background: rgba(255,107,53,0.14) !important;
+  border-color: rgba(255,107,53,0.32) !important;
 }
 .sidebar-overlay {
   background: rgba(15,5,40,0.35) !important;
