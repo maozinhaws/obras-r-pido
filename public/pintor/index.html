@@ -7001,5 +7001,29 @@ async function gDriveSyncClientes() {
 })();
 </script>
 
+<script>
+(function(){
+  function ensureThemeBtn(){
+    if (document.getElementById('pp-theme-global')) return;
+    var b = document.createElement('button');
+    b.id = 'pp-theme-global';
+    b.setAttribute('aria-label','Alternar tema');
+    b.setAttribute('title','Alternar tema');
+    b.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    b.onclick = function(){
+      try {
+        if (typeof toggleThemeAnim === 'function') return toggleThemeAnim();
+        var isDark = document.documentElement.classList.toggle('dark');
+        try { sessionStorage.setItem('pp-theme', isDark ? 'dark' : 'light'); } catch(e){}
+      } catch(e){}
+    };
+    document.body.appendChild(b);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ensureThemeBtn);
+  } else { ensureThemeBtn(); }
+})();
+</script>
+
 </body>
 </html>
