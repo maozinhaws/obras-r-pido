@@ -496,3 +496,192 @@ html.dark #pp-theme-global {
 /* Dá respiro no topo do topnav para não colidir com os botões fixos */
 .page > .topnav { padding-top: 70px !important; }
 .topnav-row { min-height: 0 !important; }
+
+/* ==========================================================
+   22) DASHBOARD — botões iguais aos das demais páginas
+   O menu hambúrguer da home (.orbital-btn) precisa ter o mesmo
+   visual dos botões flutuantes globais (44x44, radius 14, glass).
+   ========================================================== */
+#pg-home .header-top .orbital-btn[onclick="toggleSidebar()"] {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.65) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  border: 1px solid rgba(15,5,40,0.10) !important;
+  box-shadow: 0 6px 18px -6px rgba(15,5,40,0.18) !important;
+  color: var(--ink) !important;
+}
+html.dark #pg-home .header-top .orbital-btn[onclick="toggleSidebar()"] {
+  background: rgba(28,18,42,0.70) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #ededf0 !important;
+}
+#pg-home .header-top .orbital-btn .ico {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* ==========================================================
+   23) WIZARD — header estilo WhatsApp/Telegram
+   Cancelar/Voltar no topo-esquerda, Avançar no topo-direita,
+   título centralizado. Elimina a fileira extra de wizard-nav
+   e o respiro vertical desperdiçado.
+   ========================================================== */
+/* Esconde os botões flutuantes globais (menu/home/tema) nas páginas wizard
+   — eles seriam redundantes com o Cancelar/Voltar e Avançar do wizard. */
+body:has(#pg-s1.active) #pp-theme-global,
+body:has(#pg-s2.active) #pp-theme-global,
+body:has(#pg-s3.active) #pp-theme-global,
+body:has(#pg-s4.active) #pp-theme-global,
+body:has(#pg-s1.active) .btn-home-global,
+body:has(#pg-s2.active) .btn-home-global,
+body:has(#pg-s3.active) .btn-home-global,
+body:has(#pg-s4.active) .btn-home-global,
+body:has(#pg-s1.active) .page > .topnav button[onclick="toggleSidebar()"],
+body:has(#pg-s2.active) .page > .topnav button[onclick="toggleSidebar()"],
+body:has(#pg-s3.active) .page > .topnav button[onclick="toggleSidebar()"],
+body:has(#pg-s4.active) .page > .topnav button[onclick="toggleSidebar()"] {
+  display: none !important;
+}
+
+/* Compactar topnav do wizard — sem respiro extra de 70px no topo */
+#pg-s1 > .topnav, #pg-s2 > .topnav,
+#pg-s3 > .topnav, #pg-s4 > .topnav {
+  padding-top: max(14px, env(safe-area-inset-top, 14px)) !important;
+  padding-bottom: 12px !important;
+  position: relative !important;
+}
+
+/* Esconde botão home embutido (será substituído pelo Cancelar/Voltar) */
+#pg-s1 .topnav-row .btn-home-global,
+#pg-s2 .topnav-row .btn-home-global,
+#pg-s3 .topnav-row .btn-home-global,
+#pg-s4 .topnav-row .btn-home-global {
+  display: none !important;
+}
+
+/* Posiciona a wizard-nav DENTRO da topnav-row, ocupando toda a linha do título */
+#pg-s1 .topnav .wizard-nav,
+#pg-s2 .topnav .wizard-nav,
+#pg-s3 .topnav .wizard-nav,
+#pg-s4 .topnav .wizard-nav {
+  position: absolute !important;
+  top: max(14px, env(safe-area-inset-top, 14px)) !important;
+  left: 14px !important;
+  right: 14px !important;
+  margin: 0 !important;
+  height: 38px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  pointer-events: none;
+}
+#pg-s1 .topnav .wizard-nav > *,
+#pg-s2 .topnav .wizard-nav > *,
+#pg-s3 .topnav .wizard-nav > *,
+#pg-s4 .topnav .wizard-nav > * {
+  pointer-events: auto;
+}
+
+/* Botão Cancelar/Voltar — estilo glass igual aos botões globais */
+#pg-s1 .wbtn-back, #pg-s2 .wbtn-back,
+#pg-s3 .wbtn-back, #pg-s4 .wbtn-back {
+  height: 38px !important;
+  min-width: 0 !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.65) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  border: 1px solid rgba(15,5,40,0.10) !important;
+  box-shadow: 0 6px 18px -6px rgba(15,5,40,0.18) !important;
+  color: var(--ink) !important;
+  margin-right: auto;
+}
+html.dark #pg-s1 .wbtn-back, html.dark #pg-s2 .wbtn-back,
+html.dark #pg-s3 .wbtn-back, html.dark #pg-s4 .wbtn-back {
+  background: rgba(28,18,42,0.70) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #ededf0 !important;
+}
+
+/* Botão Avançar — pill gradiente compacto à direita */
+#pg-s1 .wbtn-next, #pg-s2 .wbtn-next,
+#pg-s3 .wbtn-next, #pg-s4 .wbtn-next {
+  height: 38px !important;
+  min-width: 0 !important;
+  padding: 0 16px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff6b35 45%, #7b5cff 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 6px 16px -4px rgba(255,107,53,0.50) !important;
+  margin-left: auto;
+}
+
+/* Quando só houver Voltar (sem Avançar) — caso da etapa 4 */
+#pg-s4 .topnav .wizard-nav { justify-content: flex-start !important; }
+
+/* Título do wizard com folga lateral para os botões */
+#pg-s1 .topnav-row .title-big,
+#pg-s2 .topnav-row .title-big,
+#pg-s3 .topnav-row .title-big,
+#pg-s4 .topnav-row .title-big {
+  padding: 0 110px !important;
+  font-size: 14px !important;
+}
+
+/* ==========================================================
+   24) STEPS — pílulas numeradas, visivelmente acompanhando
+   o progresso da criação do orçamento.
+   ========================================================== */
+#pg-s1 .steps, #pg-s2 .steps,
+#pg-s3 .steps, #pg-s4 .steps {
+  gap: 6px !important;
+  margin-top: 6px !important;
+  padding: 0 4px;
+}
+#pg-s1 .step-pill, #pg-s2 .step-pill,
+#pg-s3 .step-pill, #pg-s4 .step-pill {
+  height: 6px !important;
+  border-radius: 999px !important;
+  background: var(--bdr) !important;
+  opacity: 1 !important;
+  transition: background .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+#pg-s1 .step-pill.done, #pg-s2 .step-pill.done,
+#pg-s3 .step-pill.done, #pg-s4 .step-pill.done {
+  background: var(--bl) !important;
+}
+#pg-s1 .step-pill.active, #pg-s2 .step-pill.active,
+#pg-s3 .step-pill.active, #pg-s4 .step-pill.active {
+  background: linear-gradient(90deg, var(--bl), var(--bl2)) !important;
+  box-shadow: 0 2px 10px rgba(255,107,53,0.45) !important;
+  transform: scaleY(1.4);
+}
+html.dark #pg-s1 .step-pill, html.dark #pg-s2 .step-pill,
+html.dark #pg-s3 .step-pill, html.dark #pg-s4 .step-pill {
+  background: rgba(255,255,255,0.10) !important;
+}
+html.dark #pg-s1 .step-pill.done, html.dark #pg-s2 .step-pill.done,
+html.dark #pg-s3 .step-pill.done, html.dark #pg-s4 .step-pill.done {
+  background: #ff6b35 !important;
+}
+
+/* Label do passo com numeração visível (1/4 · Dados do Cliente) */
+#pg-s1 .step-label::before { content: "1/4 · "; color: var(--bl); font-weight: 800; }
+#pg-s2 .step-label::before { content: "2/4 · "; color: var(--bl); font-weight: 800; }
+#pg-s3 .step-label::before { content: "3/4 · "; color: var(--bl); font-weight: 800; }
+#pg-s4 .step-label::before { content: "4/4 · "; color: var(--bl); font-weight: 800; }
+#pg-s1 .step-label, #pg-s2 .step-label,
+#pg-s3 .step-label, #pg-s4 .step-label {
+  margin-top: 10px !important;
+  font-size: 12px !important;
+  color: var(--ink) !important;
+}
