@@ -298,8 +298,8 @@ input[type="email"], input[type="date"], textarea, select {
 }
 .finput:focus, .fta:focus, .fsel:focus, .item-title-inp:focus,
 input:focus, textarea:focus, select:focus {
-  border-color: #ff6b35 !important;
-  box-shadow: 0 0 0 3px rgba(255,107,53,0.18) !important;
+  border-color: var(--bl) !important;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--bl) 28%, transparent) !important;
   outline: none !important;
 }
 .finput::placeholder, .fta::placeholder { color: #94a3b8 !important; }
