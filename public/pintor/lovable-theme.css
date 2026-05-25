@@ -181,10 +181,10 @@ html.dark .sidebar {
 .sidebar .sidebar-link:hover,
 .sidebar-links .sidebar-link:hover,
 .sidebar-link:hover {
-  background: color-mix(in oklab, var(--bl) 10%, transparent) !important;
+  background: rgba(232,120,56,0.06) !important;
   background-image: none !important;
   border-color: color-mix(in oklab, var(--bl) 35%, transparent) !important;
-  color: var(--bl) !important;
+  color: var(--ink) !important;
 }
 
 .sidebar .sidebar-link.active,
@@ -193,21 +193,37 @@ html.dark .sidebar {
 .sidebar-link.active,
 .sidebar-link[aria-current="page"],
 .sidebar-link.on {
-  background: color-mix(in oklab, var(--bl) 10%, transparent) !important;
+  /* Idêntico ao card "Flash" selecionado do modal Novo Orçamento:
+     tinta laranja quente + borda lilás 2px + texto ink (contrastante). */
+  background: rgba(232,120,56,0.08) !important;
   background-image: none !important;
-  border: 1.5px solid var(--bl) !important;
-  color: var(--bl) !important;
+  border: 2px solid var(--bl) !important;
+  color: var(--ink) !important;
   font-weight: 800 !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.25),
-    0 0 0 3px color-mix(in oklab, var(--bl) 18%, transparent),
-    0 8px 22px -10px color-mix(in oklab, var(--bl) 55%, transparent) !important;
+    0 6px 18px -8px color-mix(in oklab, var(--bl) 50%, transparent) !important;
+}
+.sidebar .sidebar-link.active .ico,
+.sidebar-link.active .ico,
+.sidebar-link[aria-current="page"] .ico,
+.sidebar-link.on .ico {
+  color: var(--bl) !important;
+}
+html.dark .sidebar .sidebar-link.active,
+html.dark .sidebar-link.active,
+html.dark .sidebar-link[aria-current="page"],
+html.dark .sidebar-link.on {
+  background: rgba(232,120,56,0.12) !important;
+  color: #ffffff !important;
 }
 html.dark .sidebar .sidebar-link:hover,
 html.dark .sidebar-link:hover {
-  background: color-mix(in oklab, var(--bl) 16%, transparent) !important;
-  border-color: color-mix(in oklab, var(--bl) 45%, transparent) !important;
+  background: rgba(232,120,56,0.08) !important;
+  border-color: color-mix(in oklab, var(--bl) 50%, transparent) !important;
+  color: #ffffff !important;
 }
+
 
 .sidebar-overlay {
   background: rgba(15,5,40,0.35) !important;
@@ -784,4 +800,43 @@ html.dark #pg-s3 .step-pill.done, html.dark #pg-s4 .step-pill.done {
   --bl: #ff6b35 !important;
   --bld: #e85520 !important;
   --bll: rgba(255,107,53,0.14) !important;
+}
+
+/* ===========================================================
+   25) PADRÃO DE BOTÕES — unificado em todo o app
+   ---------------------------------------------------------
+   PRIMARY (ação): pílula com gradiente lilás (var(--bl) → var(--bl2)),
+                   texto branco. Ex.: "Avançar", "Novo Orçamento",
+                   "Salvar", "Confirmar".
+   SECONDARY/CANCEL: glass translúcido + texto ink (preto no claro,
+                   branco no escuro). NUNCA usar texto laranja em
+                   botão neutro de cancelar.
+   =========================================================== */
+
+/* Força texto ink em qualquer botão "Cancelar" / "Fechar" / "Voltar"
+   independente de estilos inline herdados do bundle. */
+button[onclick*="display='none'"],
+button[onclick*="closeDelConfirm"],
+button[onclick*="cancelItemModal"],
+button[onclick*="fecharModalRecibo"],
+button[onclick*="closeBackupModal"],
+button#btnCancelarItem,
+.wbtn-back {
+  color: var(--ink) !important;
+  background: rgba(255,255,255,0.55) !important;
+  border: 1.5px solid rgba(15,5,40,0.10) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  font-weight: 800 !important;
+}
+html.dark button[onclick*="display='none'"],
+html.dark button[onclick*="closeDelConfirm"],
+html.dark button[onclick*="cancelItemModal"],
+html.dark button[onclick*="fecharModalRecibo"],
+html.dark button[onclick*="closeBackupModal"],
+html.dark button#btnCancelarItem,
+html.dark .wbtn-back {
+  color: #ededf0 !important;
+  background: rgba(28,18,42,0.55) !important;
+  border-color: rgba(255,255,255,0.12) !important;
 }
