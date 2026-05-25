@@ -498,25 +498,37 @@ html.dark .flbl, html.dark label, html.dark .step-label {
   color: #cbd5e1 !important;
 }
 
-/* Placeholders — cinza claro em qualquer formulário */
-.finput::placeholder, .fta::placeholder,
-#app input::placeholder,
-#app textarea::placeholder,
-.item-title-inp::placeholder,
-.item-obs-inp::placeholder,
-.minp::placeholder,
-input::placeholder, textarea::placeholder {
+/* Placeholders — cinza claro e finos em QUALQUER formulário.
+   Alta especificidade (html body) para vencer regras !important do bundle. */
+html body .finput::placeholder,
+html body .fta::placeholder,
+html body .fsel::placeholder,
+html body #app input::placeholder,
+html body #app textarea::placeholder,
+html body .item-title-inp::placeholder,
+html body .item-obs-inp::placeholder,
+html body .minp::placeholder,
+html body input::placeholder,
+html body textarea::placeholder {
   color: #cbd5e1 !important;
   opacity: 1 !important;
-  font-weight: 400 !important;
+  font-weight: 300 !important;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  -webkit-text-fill-color: #cbd5e1 !important;
 }
-html.dark input::placeholder, html.dark textarea::placeholder,
-html.dark .finput::placeholder, html.dark .fta::placeholder,
-html.dark #app input::placeholder, html.dark #app textarea::placeholder,
-html.dark .item-title-inp::placeholder, html.dark .item-obs-inp::placeholder,
-html.dark .minp::placeholder {
+html.dark body .finput::placeholder,
+html.dark body .fta::placeholder,
+html.dark body #app input::placeholder,
+html.dark body #app textarea::placeholder,
+html.dark body .item-title-inp::placeholder,
+html.dark body .item-obs-inp::placeholder,
+html.dark body .minp::placeholder,
+html.dark body input::placeholder,
+html.dark body textarea::placeholder {
   color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
 }
+
 
 /* Alto contraste / brutalista — borda sólida slate-500 2px */
 :root[data-theme="brutalista"] .finput,
