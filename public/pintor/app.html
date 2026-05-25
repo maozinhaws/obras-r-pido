@@ -6449,10 +6449,10 @@ window.addEventListener('load', () => {
       if (!CLIENT_ID) return;
       window.google.accounts.id.initialize({
         client_id: CLIENT_ID,
-        callback: (response) => {
+         callback: (response) => {
           // Decodifica o credential JWT e armazena a sessão diretamente
           const user = window.ppHandleCredential?.(response.credential);
-          if (user) _ppShowApp(user);
+          if (user) { _ppShowApp(user); _ppSyncAfterLogin(user); }
         },
         auto_select: false,
         cancel_on_tap_outside: false,
