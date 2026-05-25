@@ -1003,27 +1003,27 @@ html.kbd-open .nav-row {
   }
 }
 
-/* Sidebar links — texto mais leve e legível sobre o gradiente translúcido.
-   Slate-700 quente + text-shadow branco sutil para contraste em qualquer área. */
+/* Sidebar links — padrão iOS: texto preto/cinza-escuro sobre painel translúcido branco. */
 #sidebar .sidebar-link {
-  color: #334155 !important;
+  color: #1c1c1e !important;
   font-weight: 600 !important;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.55);
+  text-shadow: none !important;
+  letter-spacing: -0.01em;
 }
 #sidebar .sidebar-link svg.ico {
-  color: #475569 !important;
-  opacity: .85;
+  color: #3a3a3c !important;
+  opacity: 1;
 }
 #sidebar .sidebar-link:active {
   color: #ff6b35 !important;
   background: rgba(255,107,53,0.08) !important;
 }
 html.dark #sidebar .sidebar-link {
-  color: #e2e8f0 !important;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.45);
+  color: #f2f2f7 !important;
+  text-shadow: none !important;
 }
 html.dark #sidebar .sidebar-link svg.ico {
-  color: #cbd5e1 !important;
+  color: #d1d1d6 !important;
 }
 /* Não afetar o CTA "Instalar App" nem o "Sair da conta" */
 #sidebar .sidebar-install-cta,
