@@ -7083,6 +7083,39 @@ async function gDriveSyncClientes() {
   }, {passive:true});
   document.addEventListener('touchend', function(){ tracking=false; }, {passive:true});
   document.addEventListener('touchcancel', function(){ tracking=false; }, {passive:true});
+
+<script>
+/* Wizard layout fix: move .wizard-nav out of .topnav (backdrop-filter on topnav
+   traps position:fixed inside it), and inject a small X cancel button at the
+   top-left of each wizard's topnav-row. Matches the flash-mode pattern. */
+(function(){
+  function fixWizard(id){
+    var pg = document.getElementById(id);
+    if(!pg || pg._wizFixed) return;
+    var tn = pg.querySelector(':scope > .topnav');
+    if(!tn) return;
+    var wn = tn.querySelector(':scope > .wizard-nav');
+    if(wn){ pg.appendChild(wn); }
+    var row = tn.querySelector(':scope > .topnav-row');
+    if(row && !row.querySelector('.wiz-x-btn')){
+      var x = document.createElement('button');
+      x.type = 'button';
+      x.className = 'wiz-x-btn';
+      x.setAttribute('aria-label','Cancelar');
+      x.title = 'Cancelar';
+      x.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      x.onclick = function(){
+        try { if(typeof goHome==='function') return goHome(); } catch(e){}
+        try { if(typeof homeTab==='function') return homeTab('home'); } catch(e){}
+      };
+      row.insertBefore(x, row.firstChild);
+    }
+    pg._wizFixed = true;
+  }
+  function run(){ ['pg-s1','pg-s2','pg-s3','pg-s4'].forEach(fixWizard); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else { run(); }
 })();
 </script>
 
