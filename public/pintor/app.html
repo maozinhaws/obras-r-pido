@@ -3315,9 +3315,12 @@ html.dark .dash-bar-row .barwrap{background:rgba(183,133,240,0.10);}
     <div class="sidebar-links">
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('home')"><svg class="ico" aria-hidden="true"><use href="#ico-home"/></svg> Início</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('orcamentos')"><svg class="ico" aria-hidden="true"><use href="#ico-file"/></svg> Meus Orçamentos</div>
-      <div class="sidebar-link" onclick="toggleSidebar(); homeTab('clientes')"><svg class="ico" aria-hidden="true"><use href="#ico-users"/></svg> Contatos</div>
-      <div class="sidebar-link" onclick="toggleSidebar(); homeTab('fornecedores')"><svg class="ico" aria-hidden="true"><use href="#ico-truck"/></svg> Fornecedores</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('agenda')"><svg class="ico" aria-hidden="true"><use href="#ico-calendar"/></svg> Agenda e Lembretes</div>
+      <div class="sidebar-link sidebar-contatos-toggle" onclick="ppContatosMenu(event)"><svg class="ico" aria-hidden="true"><use href="#ico-users"/></svg> Contatos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;opacity:.6;transition:transform .2s;" class="contatos-chev"><polyline points="9 18 15 12 9 6"/></svg></div>
+      <div class="sidebar-submenu" id="sidebar-contatos-sub" style="display:none;flex-direction:column;padding-left:16px;">
+        <div class="sidebar-link" onclick="toggleSidebar(); homeTab('clientes')" style="font-size:13px;"><svg class="ico" aria-hidden="true"><use href="#ico-users"/></svg> Clientes</div>
+        <div class="sidebar-link" onclick="toggleSidebar(); homeTab('fornecedores')" style="font-size:13px;"><svg class="ico" aria-hidden="true"><use href="#ico-truck"/></svg> Fornecedores</div>
+      </div>
       <a href="/privacy-policy.html" class="sidebar-link" style="font-weight:400; font-size:13px; color:var(--ink3); text-decoration:none;"><svg class="ico" aria-hidden="true"><use href="#ico-file"/></svg> Política de Privacidade</a>
       <div class="sidebar-link" onclick="toggleSidebar(); showTutorial()" style="font-weight:400; font-size:13px; color:var(--ink3);"><svg class="ico" aria-hidden="true"><use href="#ico-book"/></svg> Tutorial</div>
       <div class="sidebar-link" onclick="toggleSidebar(); showFaq()" style="font-weight:400; font-size:13px; color:var(--ink3);"><svg class="ico" aria-hidden="true"><use href="#ico-help"/></svg> FAQ</div>
