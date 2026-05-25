@@ -2737,7 +2737,6 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
                 </div>
               </div>
               <div class=&quot;step1-actions&quot;>
-                <button class=&quot;act-btn act-danger&quot; id=&quot;btnLimparCliente&quot; aria-label=&quot;Limpar dados&quot;>↻</button>
                 <button class=&quot;act-btn act-save&quot; id=&quot;btnIrItens&quot;>Avançar →</button>
               </div>
             </div>
@@ -2974,7 +2973,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
       try{ window.parent.postMessage({type:'flash-exit'}, '*'); }catch(e){}
     }
     els.btnIrItens.addEventListener('click', () => { if (!validateStep1(true)) { if (!validateFullName(els.cliente.value)) els.cliente.focus(); else els.telefone.focus(); return; } goStep(2); });
-    els.btnLimparCliente.addEventListener('click', clearClient);
+    if(els.btnLimparCliente) els.btnLimparCliente.addEventListener('click', clearClient);
     els.btnVoltarCliente.addEventListener('click', () => goStep(1));
     els.btnVoltarItens.addEventListener('click', () => goStep(2));
     els.btnAddItem.addEventListener('click', openItemModal);
