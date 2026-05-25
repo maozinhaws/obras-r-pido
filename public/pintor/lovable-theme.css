@@ -181,10 +181,10 @@ html.dark .sidebar {
 .sidebar .sidebar-link:hover,
 .sidebar-links .sidebar-link:hover,
 .sidebar-link:hover {
-  background: color-mix(in oklab, var(--bl) 10%, transparent) !important;
+  background: rgba(232,120,56,0.06) !important;
   background-image: none !important;
   border-color: color-mix(in oklab, var(--bl) 35%, transparent) !important;
-  color: var(--bl) !important;
+  color: var(--ink) !important;
 }
 
 .sidebar .sidebar-link.active,
@@ -193,21 +193,37 @@ html.dark .sidebar {
 .sidebar-link.active,
 .sidebar-link[aria-current="page"],
 .sidebar-link.on {
-  background: color-mix(in oklab, var(--bl) 10%, transparent) !important;
+  /* Idêntico ao card "Flash" selecionado do modal Novo Orçamento:
+     tinta laranja quente + borda lilás 2px + texto ink (contrastante). */
+  background: rgba(232,120,56,0.08) !important;
   background-image: none !important;
-  border: 1.5px solid var(--bl) !important;
-  color: var(--bl) !important;
+  border: 2px solid var(--bl) !important;
+  color: var(--ink) !important;
   font-weight: 800 !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.25),
-    0 0 0 3px color-mix(in oklab, var(--bl) 18%, transparent),
-    0 8px 22px -10px color-mix(in oklab, var(--bl) 55%, transparent) !important;
+    0 6px 18px -8px color-mix(in oklab, var(--bl) 50%, transparent) !important;
+}
+.sidebar .sidebar-link.active .ico,
+.sidebar-link.active .ico,
+.sidebar-link[aria-current="page"] .ico,
+.sidebar-link.on .ico {
+  color: var(--bl) !important;
+}
+html.dark .sidebar .sidebar-link.active,
+html.dark .sidebar-link.active,
+html.dark .sidebar-link[aria-current="page"],
+html.dark .sidebar-link.on {
+  background: rgba(232,120,56,0.12) !important;
+  color: #ffffff !important;
 }
 html.dark .sidebar .sidebar-link:hover,
 html.dark .sidebar-link:hover {
-  background: color-mix(in oklab, var(--bl) 16%, transparent) !important;
-  border-color: color-mix(in oklab, var(--bl) 45%, transparent) !important;
+  background: rgba(232,120,56,0.08) !important;
+  border-color: color-mix(in oklab, var(--bl) 50%, transparent) !important;
+  color: #ffffff !important;
 }
+
 
 .sidebar-overlay {
   background: rgba(15,5,40,0.35) !important;
