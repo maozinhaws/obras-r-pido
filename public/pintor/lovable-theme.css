@@ -667,10 +667,10 @@ html.dark #pg-s3 > .wizard-nav .wbtn-back, html.dark #pg-s4 > .wizard-nav .wbtn-
   font-size: 15px !important;
   font-weight: 800 !important;
   border-radius: 16px !important;
-  background: linear-gradient(135deg, #ff6b35 0%, #ff6b35 45%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, var(--bl) 0%, var(--bl) 45%, var(--bl2) 100%) !important;
   color: #fff !important;
   border: none !important;
-  box-shadow: 0 10px 24px -6px rgba(255,107,53,0.55) !important;
+  box-shadow: 0 10px 24px -6px color-mix(in oklab, var(--bl) 55%, transparent) !important;
 }
 
 /* Reserva espaço de scroll para o conteúdo não ficar atrás do footer fixo.
