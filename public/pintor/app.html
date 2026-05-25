@@ -6096,6 +6096,12 @@ async function ppLoginOffline() {
 }
 
 function ppLogoutConfirm() {
+  if (typeof window.ppConfirm === 'function') {
+    return window.ppConfirm('Seus dados locais serão mantidos no dispositivo.', { title: 'Sair da conta?', okLabel: 'Sair', cancelLabel: 'Cancelar' }).then((ok) => {
+      if (!ok) return;
+      window.ppSignOut?.().then(() => { _ppShowLogin(); }).catch(() => { _ppShowLogin(); });
+    });
+  }
   const ok = confirm('Sair da conta? Seus dados locais serão mantidos no dispositivo.');
   if (!ok) return;
   window.ppSignOut?.().then(() => { _ppShowLogin(); }).catch(() => { _ppShowLogin(); });
