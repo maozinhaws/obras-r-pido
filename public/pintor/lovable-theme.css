@@ -741,7 +741,7 @@ html.dark .wiz-x-btn {
 #pg-s1 .step-pill.active, #pg-s2 .step-pill.active,
 #pg-s3 .step-pill.active, #pg-s4 .step-pill.active {
   background: linear-gradient(90deg, var(--bl), var(--bl2)) !important;
-  box-shadow: 0 2px 10px rgba(255,107,53,0.45) !important;
+  box-shadow: 0 2px 10px color-mix(in oklab, var(--bl) 45%, transparent) !important;
   transform: scaleY(1.4);
 }
 html.dark #pg-s1 .step-pill, html.dark #pg-s2 .step-pill,
@@ -750,7 +750,7 @@ html.dark #pg-s3 .step-pill, html.dark #pg-s4 .step-pill {
 }
 html.dark #pg-s1 .step-pill.done, html.dark #pg-s2 .step-pill.done,
 html.dark #pg-s3 .step-pill.done, html.dark #pg-s4 .step-pill.done {
-  background: #ff6b35 !important;
+  background: var(--bl) !important;
 }
 
 /* Label do passo com numeração visível (1/4 · Dados do Cliente) */
