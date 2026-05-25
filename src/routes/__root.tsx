@@ -160,7 +160,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  useVisualViewportInset();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <SidebarProvider>
