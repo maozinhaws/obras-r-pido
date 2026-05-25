@@ -104,7 +104,12 @@ html.dark, html.dark body, html.dark #app {
   z-index: 20 !important;
 }
 .page > .scr {
-  padding-top: calc(var(--tn-h, 132px) + 12px) !important;
+  padding-top: 16px !important;
+}
+.page > .scr::before {
+  content: '';
+  display: block;
+  height: calc(var(--tn-h, 132px) + 12px);
 }
 .topnav,
 .hm-hdr {
