@@ -1,65 +1,71 @@
-## Contexto
+# Plano de correções
 
-As 5 tarefas têm impacto e complexidade muito diferentes. O app vive em dois arquivos gigantes (`public/pintor/index.html` e `app.html`, ~7.400 linhas cada), com boa parte do Flash dentro de um `iframe[data-srcdoc]`. Vou organizar em **4 ondas** por prioridade (impacto × risco), confirmar uma dúvida sobre a tarefa 4 e executar.
+## 1) Modal de item unificado entre Flash e Detalhado
 
-## Prioridades
+Hoje cada modo tem uma UI própria para o item:
 
-| # | Tarefa | Prioridade | Por quê |
-|---|--------|------------|---------|
-| 2 | Dashboard com gráficos | **P0** | Promete entregue mas só tem markup, sem JS de render |
-| 1 | Câmera personalizada | **P0** | Funcionalidade quebrada, bloqueia uso real em campo |
-| 3 | Modais centralizados + glass | **P1** | Inconsistência visual, mas app funciona |
-| 5 | Botões fora do padrão | **P1** | Polimento visual |
-| 4 | Prefixo `MT_`/`SV_` no DB | **P2** | Mudança estrutural com risco de quebrar dados existentes |
+- Detalhado: `ItemEditor` embutido em `src/routes/orcamentos.novo.tsx` (modal "Detalhes do Item" com sheets de Sugestões e Serviços).
+- Flash: linhas inline com inputs `nome + preço` direto em `src/routes/flash.tsx`.
 
-## Onda 1 — Dashboard funcional (P0)
+**Ação:**
 
-A página `#pg-dashboard` já existe (index.html L2567+) com KPIs, filtros de período e 3 contêineres de gráfico vazios. Falta a lógica.
+- Extrair `ItemEditor` para um componente compartilhado `src/components/item-editor-modal.tsx` (mesma estrutura: Nome com sugestões, Largura/Altura, Fotos, Observação/Serviços, Preço).
+- Aceitar prop `mode: "flash" | "detalhado"` apenas para:
+  - Flash: ocultar `Largura/Altura`, `Serviços` e `Observação` (mantém Nome, Preço, Fotos — "mesmas ferramentas" mas formulário menor).
+  - Detalhado: tudo visível.
+- `flash.tsx` passa a abrir o mesmo modal ao tocar em "Adicionar item" / linhas; remove inputs inline.
+- `orcamentos.novo.tsx` passa a importar o componente extraído (sem mudança visível).
 
-- Adicionar `renderDashboard()` que:
-  - Lê `orcamentos` do IndexedDB/localStorage
-  - Filtra pelo range ativo (7/30/90/365/tudo + custom DE/ATÉ)
-  - Calcula KPIs: total emitidos, receita total, ticket médio, taxa de conversão
-  - Renderiza 3 gráficos SVG inline (sem dependência externa):
-    - Emissões por dia (linha)
-    - Receita por mês (barras)
-    - Distribuição por status (donut)
-- Wire-up `dashSetRange()`, `dashCustomRange()`, e auto-render ao abrir a tab
-- Replicar nos dois arquivos
+## 2) Bug do teclado mobile (botões só aparecem ao clicar fora)
 
-## Onda 2 — Câmera (P0)
+O footer fixo (`position: fixed bottom-0`) fica sob o teclado virtual no Android. Quando o teclado fecha por gesto (não por blur), o `resize` do layout viewport não dispara, então o footer só "reaparece" no blur.
 
-Sintoma: abre o seletor de arquivos em vez da câmera. O código tem `getUserMedia` mas o iframe pode não estar recebendo permissão. Investigar:
+**Ação em `src/styles.css`:**
 
-- Confirmar `allow="camera; microphone"` no iframe (já tem L2609)
-- Verificar se `sandbox` está bloqueando (allow-same-origin já está)
-- O `input[type=file] accept="image/*"` está sendo acionado como fallback automático — descobrir se a Promise de `getUserMedia` está rejeitando silenciosamente
-- Garantir HTTPS no preview (sandbox usa HTTPS, ok)
-- Testar no preview com browser tool e ler console do iframe
+- Adicionar listener leve via `VisualViewport`: ouvir `resize` do `window.visualViewport` e setar `--kb-inset` no `<html>` com o offset do teclado.
+- Footer fixo usa `bottom: var(--kb-inset, 0px)` para subir/descer junto.
+- Pequeno hook `useVisualViewportInset()` em `src/hooks/use-vv-inset.ts` registrado no `__root.tsx` (uma vez).
 
-## Onda 3 — Modais centralizados + glassmorphism (P1)
+## 3) Tema roxo nos campos de item
 
-- Atualizar `.modal-overlay` para `align-items:center` (hoje é `flex-end`)
-- Aplicar `.glass` / `.glass-strong` (já existe no design system) em todos os `.modal-sheet`, `.modal-glass`, sheets do PWA, picker, etc.
-- Garantir cantos arredondados 28-32px conforme memória do projeto
-- Sweep nos dois arquivos
+No `ItemEditor` os "botões-campo" (Nome do item / Observação) e inputs hoje têm borda `slate-300` e foco laranja. Trocar para roxo (`brand-2`) conforme logotipo:
 
-## Onda 4 — Botões fora do padrão (P1)
+- Borda dos campos do item: `border-brand-2/40`.
+- Texto de label/valor selecionado: tom `brand-2` quando ativo, preto/cinza quando inativo (mantém legibilidade ao sol).
+- Glow do input em foco:
+  - Modo claro → glow roxo (`brand-2`).
+  - Modo escuro → glow laranja (`brand`).
+- Implementação centralizada em `src/styles.css` (`input:focus`, `.field-card`).
 
-Auditar e padronizar:
-- CTAs principais → `.cta-pill` (gradiente quadricolor)
-- Secundários → `.glass` com borda
-- Destrutivos → vermelho semantizado
-- Remover `style=` inline duplicado por classes
+## 4) Footer dos botões cancelar/avançar igual ao Flash
 
-## Onda 5 — Prefixo MT_/SV_ (P2) — **precisa de confirmação**
+Hoje no Detalhado o `ItemEditor` usa `brutal-border-thin` + cor `bg-brand` (amarelo/laranja). Padronizar pelo mesmo padrão do Flash:
 
-Esta mexe no schema de dados. Antes de executar, preciso confirmar:
+- Mesma ordem: `[ Excluir ] [ Cancelar ] [ Salvar/Avançar ]`.
+- Mesmas classes (`glass`, `glass-brand`, `glass-press`, pílulas arredondadas) — só muda a cor do CTA principal por modo (roxo no claro / laranja no escuro, via token).
+- Aplicar também no stepper do `orcamentos.novo.tsx` (etapa 1) já que o usuário citou avançar/voltar.
 
-**Pergunta:** os orçamentos já salvos em IndexedDB de usuários reais devem ser migrados automaticamente (script que renomeia chaves existentes na primeira abertura), ou só novos cadastros recebem o prefixo? E o prefixo deve aparecer só internamente (chave/ID) ou também no texto exibido?
+## 5) Proteção contra fechamento acidental
 
-Vou executar 1→4 e só depois fazer a 5 com a confirmação.
+Sintomas no print: existe um `X` flutuante no topo-esquerdo (fora do card) que fecha a página enquanto o modal "Novo item" está aberto, perdendo dados.
 
-## Verificação
+**Ação:**
 
-Ao final de cada onda: abrir o preview, conferir visualmente, ler console por erros. Reportar progresso entre ondas.
+- Quando qualquer modal de item/sugestões estiver aberto, renderizar overlay `fixed inset-0 z-[60]` que captura cliques e bloqueia o conteúdo de fundo (`pointer-events-none` no main).
+- Esconder o `X` global da página enquanto o modal está aberto (ou desabilitá-lo).
+- Mover todos os botões `X` de fechar para a **direita** do header do card (já é o padrão da maioria; revisar o stepper da página de orçamento que tem o `X` à esquerda).
+- O único `X` que aparece com modal aberto é o do próprio modal (canto superior direito).
+
+## Arquivos afetados
+
+- `src/components/item-editor-modal.tsx` (novo, extraído de `orcamentos.novo.tsx`)
+- `src/routes/orcamentos.novo.tsx` (usar componente extraído, mover X do header, footer padronizado, bloquear fundo)
+- `src/routes/flash.tsx` (abrir o mesmo modal ao adicionar item)
+- `src/hooks/use-vv-inset.ts` (novo)
+- `src/routes/__root.tsx` (registrar hook)
+- `src/styles.css` (variável `--kb-inset`, focos roxo/laranja, classe `.field-card` roxa)
+
+## Observações
+
+- Mantenho a lógica de persistência intacta (forms, validação, fotos via Dexie). Só refatoro UI/UX.
+- Não toco em `public/pintor/*` (app HTML legado) — as correções são na app React (rotas `/flash` e `/orcamentos/novo`).
