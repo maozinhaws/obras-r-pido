@@ -94,21 +94,28 @@ html.dark, html.dark body, html.dark #app {
   font-family: 'Manrope', system-ui, sans-serif !important;
 }
 
-/* 4) Topnav — glassmorphism translúcido */
+/* 4) Topnav / hm-hdr — glassmorphism estilo Telegram (alta translucidez + blur forte) */
 .topnav,
-.hm-hdr,
-.sidebar-hdr {
-  background: rgba(255,255,255,0.38) !important;
-  backdrop-filter: blur(32px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.45) !important;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.55) inset, 0 6px 22px -6px rgba(15,5,40,0.14) !important;
+.hm-hdr {
+  background: rgba(255,255,255,0.55) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.55) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 8px 24px -10px rgba(15,5,40,0.16) !important;
 }
 html.dark .topnav,
-html.dark .hm-hdr,
-html.dark .sidebar-hdr {
-  background: rgba(20,14,30,0.40) !important;
-  border-bottom-color: rgba(255,255,255,0.10) !important;
+html.dark .hm-hdr {
+  background: rgba(20,14,30,0.55) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 8px 24px -10px rgba(0,0,0,0.5) !important;
+}
+/* Sidebar-hdr — sem divisor visual, herda blur do .sidebar */
+.sidebar-hdr {
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 /* 5) Sidebar — drawer com glass mais translúcido */
