@@ -8,8 +8,6 @@ import {
   type ItemAmbiente,
   type Cliente,
   AMBIENTES_PADRAO,
-  MATERIAIS_PADRAO,
-  SERVICOS_PADRAO,
   FORMAS_PAGAMENTO,
   formatBRL,
   calcularTotal,
@@ -17,7 +15,7 @@ import {
 // PageHeader removido: uso header compacto inline para uso em campo
 import { Field } from "./clientes";
 import { uid } from "@/lib/utils";
-import { salvarFoto, urlFoto, removerFoto } from "@/lib/fotos";
+import { urlFoto } from "@/lib/fotos";
 import {
   Plus,
   X,
@@ -32,9 +30,9 @@ import {
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
-import { PhotoEditor } from "@/components/photo-editor";
 import { persistOrcamento } from "@/lib/orcamentos";
 import { handleEnterNav } from "@/lib/forms";
+import { ItemEditorModal } from "@/components/item-editor-modal";
 
 type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number; draftKey?: string };
 
@@ -449,25 +447,16 @@ function PassoItensFlash({
         <span className="text-display text-lg">Adicionar item</span>
       </button>
 
-      {editando && (
-        <div className="fixed inset-0 z-50 bg-midnight flex flex-col animate-fade-in">
-          <div className="bg-surface border-b-2 border-white/10 p-5 flex items-center justify-between">
-            <h3 className="text-display text-lg">Item</h3>
-            <button onClick={() => setEditando(null)} className="text-brand" aria-label="Fechar">
-              <X className="size-6" strokeWidth={3} />
-            </button>
-          </div>
-          <ItemEditor
-            item={editando}
-            onSave={salvar}
-            onCancel={() => setEditando(null)}
-            onDelete={() => {
-              remover(editando.id);
-              setEditando(null);
-            }}
-          />
-        </div>
-      )}
+      <ItemEditorModal
+        open={!!editando}
+        item={editando}
+        mode="flash"
+        onSave={salvar}
+        onCancel={() => setEditando(null)}
+        onDelete={editando
+          ? () => { remover(editando.id); setEditando(null); }
+          : undefined}
+      />
     </div>
   );
 }
@@ -787,34 +776,28 @@ function PassoAmbientesFoto({
         />
       )}
 
-      {editandoItem && (
-        <div className="fixed inset-0 z-50 bg-midnight  flex flex-col animate-fade-in">
-          <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
-            <h3 className="text-display text-lg">
-              Item · {orc.ambientes.find((a) => a.id === editandoItem.ambId)?.nome}
-            </h3>
-            <button
-              onClick={() => setEditandoItem(null)}
-              className="text-brand"
-              aria-label="Fechar"
-            >
-              <X className="size-6" strokeWidth={3} />
-            </button>
-          </div>
-          <ItemEditor
-            item={editandoItem.item}
-            onSave={(it) => {
-              atualizarItem(editandoItem.ambId, it);
-              setEditandoItem(null);
-            }}
-            onCancel={() => setEditandoItem(null)}
-            onDelete={() => {
+      <ItemEditorModal
+        open={!!editandoItem}
+        item={editandoItem?.item ?? null}
+        mode="detalhado"
+        title={
+          editandoItem
+            ? `Item · ${orc.ambientes.find((a) => a.id === editandoItem.ambId)?.nome ?? ""}`
+            : undefined
+        }
+        onSave={(it) => {
+          if (!editandoItem) return;
+          atualizarItem(editandoItem.ambId, it);
+          setEditandoItem(null);
+        }}
+        onCancel={() => setEditandoItem(null)}
+        onDelete={editandoItem
+          ? () => {
               removerItem(editandoItem.ambId, editandoItem.item.id);
               setEditandoItem(null);
-            }}
-          />
-        </div>
-      )}
+            }
+          : undefined}
+      />
     </div>
   );
 }
@@ -864,422 +847,73 @@ function ItensModal({
     <div className="fixed inset-0 z-50 bg-midnight  flex flex-col animate-fade-in">
       <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
         <h3 className="text-display text-lg">Itens · {ambiente.nome}</h3>
-        <button onClick={onClose} className="text-brand" aria-label="Fechar">
-          <X className="size-6" strokeWidth={3} />
+        <button onClick={onClose} className="text-foreground active:scale-95 size-9 rounded-full bg-muted grid place-items-center" aria-label="Fechar">
+          <X className="size-5" strokeWidth={2.5} />
         </button>
       </div>
 
-      {!editing ? (
-        <>
-          <div className="flex-1 overflow-y-auto p-5 space-y-3">
-            {itens.length === 0 && (
-              <div className="brutal-border-thin border-dashed p-8 text-center text-foreground/50 text-sm font-bold uppercase">
-                Nenhum item ainda
-              </div>
-            )}
-            {itens.map((it) => (
-              <button
-                key={it.id}
-                onClick={() => setEditing(it)}
-                className="w-full glass p-5 text-left glass-press group"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-black uppercase">{it.nome}</p>
-                    {it.altura && it.comprimento && (
-                      <p className="text-mono text-[10px] text-foreground/40">
-                        {it.altura}m × {it.comprimento}m ={" "}
-                        {(it.altura * it.comprimento).toFixed(2)}m²
-                      </p>
-                    )}
-                  </div>
-                  <p className="text-display text-lg italic text-brand">
-                    {formatBRL(it.preco || 0).replace(",00", "")}
-                  </p>
-                </div>
-              </button>
-            ))}
+      <div className="flex-1 overflow-y-auto p-5 space-y-3">
+        {itens.length === 0 && (
+          <div className="brutal-border-thin border-dashed p-8 text-center text-foreground/50 text-sm font-bold uppercase">
+            Nenhum item ainda
           </div>
-          <div className="p-4 glass-strong rounded-none border-x-0 border-b-0 flex gap-3">
-            <button
-              onClick={novoItem}
-              className="flex-1 glass-brand text-white glass-press px-4 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
-            >
-              <Plus className="size-4" strokeWidth={3} /> Novo Item
-            </button>
-            <button
-              onClick={() => onSave(itens)}
-              className="flex-1 glass glass-brand border-white/40 text-white glass-press px-4 py-3.5 text-xs font-bold uppercase tracking-widest"
-            >
-              Concluir
-            </button>
-          </div>
-        </>
-      ) : (
-        <ItemEditor
-          item={editing}
-          onSave={salvar}
-          onCancel={() => setEditing(null)}
-          onDelete={() => {
-            setItens((p) => p.filter((x) => x.id !== editing.id));
-            setEditing(null);
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-const NOMES_ITEM = ["Parede", "Teto", "Porta", "Janela", "Rodapé", "Sanca", "Pilar", "Muro"];
-
-function ItemEditor({
-  item,
-  onSave,
-  onCancel,
-  onDelete,
-}: {
-  item: ItemAmbiente;
-  onSave: (i: ItemAmbiente) => void;
-  onCancel: () => void;
-  onDelete: () => void;
-}) {
-  const [it, setIt] = useState<ItemAmbiente>(item);
-  const [cameraOpen, setCameraOpen] = useState(false);
-  const [showNomeSug, setShowNomeSug] = useState(false);
-  const [showServSug, setShowServSug] = useState(false);
-
-  async function addFoto(file: File) {
-    const id = await salvarFoto(file);
-    setIt({ ...it, fotos: [...it.fotos, id] });
-  }
-
-  function toggleServico(s: string) {
-    setIt({
-      ...it,
-      servicos: it.servicos.includes(s)
-        ? it.servicos.filter((x) => x !== s)
-        : [...it.servicos, s],
-    });
-  }
-
-  return (
-    <>
-      <div className="flex-1 overflow-y-auto p-5 space-y-5">
-        <button
-          type="button"
-          onClick={() => setShowNomeSug(true)}
-          className="w-full text-left rounded-2xl border-2 border-slate-300 bg-white p-4 shadow-sm active:scale-[0.99] transition"
-        >
-          <div className="flex items-center justify-between gap-3 mb-2">
-            <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60">
-              Nome do item
-            </div>
-            <span className="inline-flex items-center gap-1 rounded-full border border-brand-2/30 bg-brand-2/10 px-3 py-1 text-[11px] font-bold text-brand-2">
-              ≡ Sugestões
-            </span>
-          </div>
-          <div className="text-lg font-semibold text-slate-950">{it.nome || "Toque para escolher"}</div>
-        </button>
-
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Altura (m)">
-            <input
-              type="number"
-              step="0.01"
-              inputMode="decimal"
-              value={it.altura ?? ""}
-              onChange={(e) =>
-                setIt({ ...it, altura: e.target.value ? parseFloat(e.target.value) : undefined })
-              }
-              className="w-full"
-            />
-          </Field>
-          <Field label="Comprimento (m)">
-            <input
-              type="number"
-              step="0.01"
-              inputMode="decimal"
-              value={it.comprimento ?? ""}
-              onChange={(e) =>
-                setIt({
-                  ...it,
-                  comprimento: e.target.value ? parseFloat(e.target.value) : undefined,
-                })
-              }
-              className="w-full"
-            />
-          </Field>
-        </div>
-
-        <Field label="Preço (R$)">
-          <input
-            type="number"
-            step="0.01"
-            inputMode="decimal"
-            value={it.preco || ""}
-            onChange={(e) => setIt({ ...it, preco: parseFloat(e.target.value) || 0 })}
-            className="w-full text-display text-2xl"
-          />
-        </Field>
-
-        <button
-          type="button"
-          onClick={() => setShowServSug(true)}
-          className="w-full text-left rounded-2xl border-2 border-slate-300 bg-white p-4 shadow-sm active:scale-[0.99] transition"
-        >
-          <div className="flex items-center justify-between gap-3 mb-2">
-            <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60">
-              Observação
-            </div>
-            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-700">
-              ≡ Serviços
-            </span>
-          </div>
-          <div className="min-h-[60px] text-base text-slate-950">
-            {it.observacao?.trim() || "Toque para adicionar observações, serviços e materiais"}
-          </div>
-          {it.servicos.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {it.servicos.map((s) => (
-                <span
-                  key={s}
-                  className="inline-flex items-center gap-1 rounded-full border border-brand-2/30 bg-brand-2/15 px-2.5 py-1 text-[10px] font-bold text-brand-2"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          )}
-        </button>
-
-        <div>
-          <div className="text-[10px] font-black uppercase tracking-widest text-foreground/60 mb-2">
-            Fotos ({it.fotos.length})
-          </div>
-          <div className="grid grid-cols-3 gap-2 mb-2">
-            {it.fotos.map((fid) => (
-              <FotoThumb
-                key={fid}
-                id={fid}
-                onRemove={() => {
-                  removerFoto(fid);
-                  setIt({ ...it, fotos: it.fotos.filter((x) => x !== fid) });
-                }}
-                onReplace={(newId) => {
-                  setIt({ ...it, fotos: it.fotos.map((x) => (x === fid ? newId : x)) });
-                }}
-              />
-            ))}
-            <button 
-              onClick={() => setCameraOpen(true)}
-              className="aspect-square glass-brand text-white grid place-items-center glass-press"
-            >
-              <Camera className="size-8" strokeWidth={2.5} />
-              <span className="text-[9px] font-black uppercase">Câmera</span>
-            </button>
-          </div>
-        </div>
-
-        {cameraOpen && (
-          <CameraModal
-            onClose={() => setCameraOpen(false)}
-            onPhotosCaptured={(ids) => {
-              setIt({ ...it, fotos: [...it.fotos, ...ids] });
-            }}
-          />
         )}
+        {itens.map((it) => (
+          <button
+            key={it.id}
+            onClick={() => setEditing(it)}
+            className="w-full glass p-5 text-left glass-press group"
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-black uppercase">{it.nome}</p>
+                {it.altura && it.comprimento && (
+                  <p className="text-mono text-[10px] text-foreground/40">
+                    {it.altura}m × {it.comprimento}m ={" "}
+                    {(it.altura * it.comprimento).toFixed(2)}m²
+                  </p>
+                )}
+              </div>
+              <p className="text-display text-lg italic text-brand-2">
+                {formatBRL(it.preco || 0).replace(",00", "")}
+              </p>
+            </div>
+          </button>
+        ))}
+      </div>
+      <div className="p-4 glass-strong rounded-none border-x-0 border-b-0 flex gap-3 safe-area-bottom relative">
+        <button
+          onClick={novoItem}
+          className="flex-1 text-white px-4 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95"
+          style={{ background: "linear-gradient(135deg,#ff6b35,#7b5cff)" }}
+        >
+          <Plus className="size-4" strokeWidth={3} /> Novo Item
+        </button>
+        <button
+          onClick={() => onSave(itens)}
+          className="flex-1 rounded-2xl bg-muted border border-border text-foreground px-4 py-3.5 text-xs font-bold uppercase tracking-widest active:scale-95"
+        >
+          Concluir
+        </button>
       </div>
 
-      <div className="p-3 border-t-4 border-ink flex gap-2">
-        <button
-          onClick={onDelete}
-          className="brutal-border-thin px-3 py-3 brutal-press text-destructive"
-          aria-label="Excluir item"
-        >
-          <Trash2 className="size-4" />
-        </button>
-        <button
-          onClick={onCancel}
-          className="flex-1 brutal-border-thin px-4 py-3 text-xs font-black uppercase tracking-widest brutal-press"
-        >
-          Cancelar
-        </button>
-        <button
-          onClick={() => onSave(it)}
-          className="flex-[2] bg-brand text-ink brutal-border-thin brutal-shadow-sm brutal-press px-4 py-3 text-xs font-black uppercase tracking-widest"
-        >
-          Salvar Item
-        </button>
-      </div>
-
-      {showNomeSug && (
-        <SugestoesSheet
-          title="Selecione o item"
-          onClose={() => setShowNomeSug(false)}
-        >
-          <div className="space-y-4">
-            <Field label="Nome do item">
-              <input
-                value={it.nome}
-                onChange={(e) => setIt({ ...it, nome: e.target.value })}
-                placeholder="Ex.: Janela da sala"
-                className="w-full"
-                autoFocus
-              />
-            </Field>
-            <div className="text-[11px] font-black uppercase tracking-widest text-brand-2">
-              Sugestões rápidas
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {NOMES_ITEM.map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => {
-                    setIt({ ...it, nome: n });
-                    setShowNomeSug(false);
-                  }}
-                  className="rounded-xl border-2 border-slate-300 bg-white px-3 py-3 text-sm font-bold text-slate-900 transition active:scale-95 hover:border-brand-2 hover:bg-brand-2/5"
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowNomeSug(false)}
-              className="w-full rounded-full bg-brand px-4 py-3 text-sm font-bold uppercase tracking-wider text-ink"
-            >
-              Usar este nome
-            </button>
-          </div>
-        </SugestoesSheet>
-      )}
-
-      {showServSug && (
-        <SugestoesSheet
-          title="Serviços e Materiais"
-          onClose={() => setShowServSug(false)}
-        >
-          <div className="space-y-4">
-            <Field label="Observação">
-              <textarea
-                rows={4}
-                value={it.observacao ?? ""}
-                onChange={(e) => setIt({ ...it, observacao: e.target.value })}
-                placeholder="Ex.: precisa lixar, remover ferragem, corrigir trinca..."
-                className="w-full resize-none"
-              />
-            </Field>
-            <div>
-              <div className="text-[11px] font-black uppercase tracking-widest text-brand-2 mb-2">
-                Serviços
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {SERVICOS_PADRAO.map((s) => {
-                  const active = it.servicos.includes(s);
-                  return (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => toggleServico(s)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition active:scale-95 ${
-                        active
-                          ? "bg-[#7b5cff] text-white border-[#7b5cff]"
-                          : "bg-white text-[#7b5cff] border-[#7b5cff]/40"
-                      }`}
-                    >
-                      {s}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <div>
-              <div className="text-[11px] font-black uppercase tracking-widest text-emerald-700 mb-2">
-                Materiais
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {MATERIAIS_PADRAO.map((m) => {
-                  const active = it.servicos.includes(m);
-                  return (
-                    <button
-                      key={m}
-                      type="button"
-                      onClick={() => toggleServico(m)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition active:scale-95 ${
-                        active
-                          ? "bg-emerald-600 text-white border-emerald-600"
-                          : "bg-white text-emerald-700 border-emerald-600/40"
-                      }`}
-                    >
-                      {m}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowServSug(false)}
-              className="w-full mt-2 py-3 rounded-full text-sm font-bold uppercase tracking-wider text-white"
-              style={{ background: "linear-gradient(135deg, #ff6b35, #7b5cff)" }}
-            >
-              Confirmar
-            </button>
-          </div>
-        </SugestoesSheet>
-      )}
-    </>
-  );
-}
-
-function FotoThumb({
-  id,
-  onRemove,
-  onReplace,
-}: {
-  id: string;
-  onRemove: () => void;
-  onReplace?: (newId: string) => void;
-}) {
-  const [url, setUrl] = useState<string | null>(null);
-  const [editing, setEditing] = useState(false);
-  useEffect(() => {
-    urlFoto(id).then(setUrl);
-  }, [id]);
-  return (
-    <div className="relative aspect-square bg-midnight brutal-border-thin overflow-hidden">
-      {url && <img src={url} alt="Foto" className="size-full object-cover" />}
-      <button
-        onClick={onRemove}
-        className="absolute top-1 right-1 bg-destructive text-white p-1 brutal-border-thin"
-        aria-label="Remover foto"
-      >
-        <X className="size-3" strokeWidth={3} />
-      </button>
-      {onReplace && (
-        <button
-          onClick={() => setEditing(true)}
-          className="absolute bottom-1 right-1 bg-brand text-ink px-1.5 py-0.5 brutal-border-thin text-[9px] font-black uppercase"
-          aria-label="Editar foto"
-        >
-          Editar
-        </button>
-      )}
-      {editing && onReplace && (
-        <PhotoEditor
-          photoId={id}
-          onClose={() => setEditing(false)}
-          onSave={(newId) => {
-            onReplace(newId);
-            setEditing(false);
-          }}
-        />
-      )}
+      <ItemEditorModal
+        open={!!editing}
+        item={editing}
+        mode="detalhado"
+        onSave={salvar}
+        onCancel={() => setEditing(null)}
+        onDelete={editing
+          ? () => {
+              setItens((p) => p.filter((x) => x.id !== editing.id));
+              setEditing(null);
+            }
+          : undefined}
+      />
     </div>
   );
 }
+
 
 function PassoPagamento({
   orc,
@@ -1447,38 +1081,3 @@ function PassoRevisao({
   );
 }
 
-function SugestoesSheet({
-  title,
-  onClose,
-  children,
-}: {
-  title: string;
-  onClose: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4 animate-fade-in"
-      style={{ background: "rgba(0,0,0,0.45)" }}
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-md bg-white rounded-3xl shadow-2xl animate-scale-in overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-          <h3 className="text-lg font-bold text-slate-900">{title}</h3>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Fechar"
-            className="size-9 rounded-full bg-slate-100 grid place-items-center active:scale-95"
-          >
-            <X className="size-5 text-slate-700" strokeWidth={2.5} />
-          </button>
-        </div>
-        <div className="p-5 max-h-[70vh] overflow-y-auto">{children}</div>
-      </div>
-    </div>
-  );
-}
