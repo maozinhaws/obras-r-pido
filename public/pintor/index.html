@@ -4635,8 +4635,8 @@ function renderRooms(){
 
 function tCard(id){ document.getElementById(id)?.classList.toggle('collapsed'); }
 function delRoom(ri,e){ if(e)e.stopPropagation(); askDelete('Deseja excluir este local e suas medidas?', () => { S.rooms.splice(ri,1); renderRooms(); toast('<svg class="ico" aria-hidden="true"><use href="#ico-trash"/></svg> Local Removido'); S.isDirty=true; }); }
-function addItem(ri){ curRi = ri; S.tempItem = {name:'',alt:'',comp:'',services:[],price:0,perMeter:false,obs:'',photos:[]}; isNewItem = true; _detailNomeFirst = true; _detailObsFirst = true; S.rooms[ri].collapsed = false; document.getElementById('item-modal-form').style.display = 'flex'; renderItemModal(); }
-function editItem(ri, ii){ curRi = ri; curIi = ii; S.tempItem = JSON.parse(JSON.stringify(S.rooms[ri].items[ii])); isNewItem = false; _detailNomeFirst = false; _detailObsFirst = false; document.getElementById('item-modal-form').style.display = 'flex'; renderItemModal(); }
+function addItem(ri){ curRi = ri; S.tempItem = {name:'',alt:'',comp:'',services:[],price:0,perMeter:false,obs:'',photos:[]}; isNewItem = true; _detailNomeFirst = true; _detailObsFirst = true; S.rooms[ri].collapsed = false; document.getElementById('item-modal-title').textContent = 'Novo item'; document.getElementById('item-modal-form').style.display = 'flex'; renderItemModal(); }
+function editItem(ri, ii){ curRi = ri; curIi = ii; S.tempItem = JSON.parse(JSON.stringify(S.rooms[ri].items[ii])); isNewItem = false; _detailNomeFirst = false; _detailObsFirst = false; document.getElementById('item-modal-title').textContent = 'Editar item'; document.getElementById('item-modal-form').style.display = 'flex'; renderItemModal(); }
 function removeItem(ri,ii){ askDelete('Excluir este item permanentemente?', () => { S.rooms[ri].items.splice(ii,1); renderRooms(); S.isDirty=true; }); }
 
 function openPhotoChoice() { document.getElementById('photo-choice-modal').style.display = 'flex'; }
@@ -4821,7 +4821,7 @@ function selectDetailNome(n) {
   closeDetailNamePick();
 }
 
-function saveItemModal(){ if(!S.tempItem.name.trim()) S.tempItem.name = 'Item sem nome'; if(isNewItem){ if(!S.rooms[curRi].items) S.rooms[curRi].items=[]; S.rooms[curRi].items.push(S.tempItem); } else { S.rooms[curRi].items[curIi] = S.tempItem; } S.isDirty = true; document.getElementById('item-modal-form').style.display = 'none'; renderRooms(); }
+function saveItemModal(){ if(!S.tempItem.name.trim()) S.tempItem.name = 'Item sem nome'; if(isNewItem){ if(!S.rooms[curRi].items) S.rooms[curRi].items=[]; S.rooms[curRi].items.push(S.tempItem); } else { S.rooms[curRi].items[curIi] = S.tempItem; } S.isDirty = true; document.getElementById('item-modal-form').style.display = 'none'; curRi = null; curIi = null; S.tempItem = null; renderRooms(); }
 function cancelItemModal(){ document.getElementById('item-modal-form').style.display = 'none'; curRi = null; curIi = null; S.tempItem = null; }
 
 // Stub para compatibilidade — openDetailedCamera é fornecida pelo sistema de câmera do ATUAL
@@ -6876,8 +6876,19 @@ function showFaq() { document.getElementById('info-modal-title').textContent = '
   // em vez de empurrá-las para cima. Reaparecem ao perder o foco.
   (function(){
     function isTxt(el){ if(!el) return false; var t=(el.tagName||'').toLowerCase(); if(t==='textarea'||t==='select') return true; if(t!=='input') return false; var ty=(el.type||'text').toLowerCase(); return ['text','search','tel','url','email','number','password'].indexOf(ty)>=0; }
+    function closeKbIfNeeded(){ setTimeout(function(){ if(!isTxt(document.activeElement)) document.documentElement.classList.remove('kbd-open'); }, 80); }
     document.addEventListener('focusin', function(e){ if(isTxt(e.target)) document.documentElement.classList.add('kbd-open'); });
-    document.addEventListener('focusout', function(){ setTimeout(function(){ if(!isTxt(document.activeElement)) document.documentElement.classList.remove('kbd-open'); }, 80); });
+    document.addEventListener('focusout', closeKbIfNeeded);
+    if (window.visualViewport) {
+      var baseHeight = window.visualViewport.height;
+      window.visualViewport.addEventListener('resize', function(){
+        var active = document.activeElement;
+        var typing = isTxt(active);
+        var reduced = (baseHeight - window.visualViewport.height) > 120;
+        if (typing && reduced) document.documentElement.classList.add('kbd-open');
+        if (!reduced) closeKbIfNeeded();
+      });
+    }
   })();
 
 
