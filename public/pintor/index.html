@@ -7450,14 +7450,20 @@ async function gDriveSyncClientes() {
 <script>
 (function(){
   function goDashboard(){
+    console.log('[pp] goDashboard click');
+    // Vai direto na showPage para evitar bloqueios de canNavigateAsync/S.isDirty
     try {
-      if (typeof homeTab === 'function') { homeTab('dashboard'); return; }
-    } catch(e){ console.warn('homeTab falhou, tentando showPage', e); }
-    try {
-      if (typeof showPage === 'function') { showPage('pg-dashboard'); }
-      if (typeof renderDashboard === 'function') { renderDashboard(); }
-    } catch(e){ console.error('Fallback dashboard falhou', e); }
+      if (typeof showPage === 'function') {
+        showPage('pg-dashboard');
+        if (typeof renderDashboard === 'function') renderDashboard();
+        console.log('[pp] showPage(pg-dashboard) OK');
+        return;
+      }
+    } catch(e){ console.error('[pp] showPage falhou', e); }
+    // Último recurso: troca o hash da URL
+    try { location.hash = '#pg-dashboard'; } catch(e){}
   }
+
   window.__ppGoDashboard = goDashboard;
   function attach(){
     document.querySelectorAll('.identity-center').forEach(function(el){
