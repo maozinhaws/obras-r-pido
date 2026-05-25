@@ -334,7 +334,7 @@
 
   /* CTA pill — gradient action button (sidebar + page headers) */
   .cta-pill {
-    background: linear-gradient(135deg, #ff6b35 0%, #ff6b35 35%, #ec4899 65%, #a78bfa 100%);
+    background: linear-gradient(135deg, #8b3fd6 0%, #7b5cff 55%, #a78bfa 100%);
     color: #ffffff;
     border: none;
     border-radius: 9999px;
