@@ -847,68 +847,69 @@ function ItensModal({
     <div className="fixed inset-0 z-50 bg-midnight  flex flex-col animate-fade-in">
       <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
         <h3 className="text-display text-lg">Itens · {ambiente.nome}</h3>
-        <button onClick={onClose} className="text-brand" aria-label="Fechar">
-          <X className="size-6" strokeWidth={3} />
+        <button onClick={onClose} className="text-foreground active:scale-95 size-9 rounded-full bg-muted grid place-items-center" aria-label="Fechar">
+          <X className="size-5" strokeWidth={2.5} />
         </button>
       </div>
 
-      {!editing ? (
-        <>
-          <div className="flex-1 overflow-y-auto p-5 space-y-3">
-            {itens.length === 0 && (
-              <div className="brutal-border-thin border-dashed p-8 text-center text-foreground/50 text-sm font-bold uppercase">
-                Nenhum item ainda
-              </div>
-            )}
-            {itens.map((it) => (
-              <button
-                key={it.id}
-                onClick={() => setEditing(it)}
-                className="w-full glass p-5 text-left glass-press group"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-black uppercase">{it.nome}</p>
-                    {it.altura && it.comprimento && (
-                      <p className="text-mono text-[10px] text-foreground/40">
-                        {it.altura}m × {it.comprimento}m ={" "}
-                        {(it.altura * it.comprimento).toFixed(2)}m²
-                      </p>
-                    )}
-                  </div>
-                  <p className="text-display text-lg italic text-brand">
-                    {formatBRL(it.preco || 0).replace(",00", "")}
+      <div className="flex-1 overflow-y-auto p-5 space-y-3">
+        {itens.length === 0 && (
+          <div className="brutal-border-thin border-dashed p-8 text-center text-foreground/50 text-sm font-bold uppercase">
+            Nenhum item ainda
+          </div>
+        )}
+        {itens.map((it) => (
+          <button
+            key={it.id}
+            onClick={() => setEditing(it)}
+            className="w-full glass p-5 text-left glass-press group"
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-black uppercase">{it.nome}</p>
+                {it.altura && it.comprimento && (
+                  <p className="text-mono text-[10px] text-foreground/40">
+                    {it.altura}m × {it.comprimento}m ={" "}
+                    {(it.altura * it.comprimento).toFixed(2)}m²
                   </p>
-                </div>
-              </button>
-            ))}
-          </div>
-          <div className="p-4 glass-strong rounded-none border-x-0 border-b-0 flex gap-3">
-            <button
-              onClick={novoItem}
-              className="flex-1 glass-brand text-white glass-press px-4 py-3.5 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
-            >
-              <Plus className="size-4" strokeWidth={3} /> Novo Item
-            </button>
-            <button
-              onClick={() => onSave(itens)}
-              className="flex-1 glass glass-brand border-white/40 text-white glass-press px-4 py-3.5 text-xs font-bold uppercase tracking-widest"
-            >
-              Concluir
-            </button>
-          </div>
-        </>
-      ) : (
-        <ItemEditor
-          item={editing}
-          onSave={salvar}
-          onCancel={() => setEditing(null)}
-          onDelete={() => {
-            setItens((p) => p.filter((x) => x.id !== editing.id));
-            setEditing(null);
-          }}
-        />
-      )}
+                )}
+              </div>
+              <p className="text-display text-lg italic text-brand-2">
+                {formatBRL(it.preco || 0).replace(",00", "")}
+              </p>
+            </div>
+          </button>
+        ))}
+      </div>
+      <div className="p-4 glass-strong rounded-none border-x-0 border-b-0 flex gap-3 safe-area-bottom relative">
+        <button
+          onClick={novoItem}
+          className="flex-1 text-white px-4 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95"
+          style={{ background: "linear-gradient(135deg,#ff6b35,#7b5cff)" }}
+        >
+          <Plus className="size-4" strokeWidth={3} /> Novo Item
+        </button>
+        <button
+          onClick={() => onSave(itens)}
+          className="flex-1 rounded-2xl bg-muted border border-border text-foreground px-4 py-3.5 text-xs font-bold uppercase tracking-widest active:scale-95"
+        >
+          Concluir
+        </button>
+      </div>
+
+      <ItemEditorModal
+        open={!!editing}
+        item={editing}
+        mode="detalhado"
+        onSave={salvar}
+        onCancel={() => setEditing(null)}
+        onDelete={editing
+          ? () => {
+              setItens((p) => p.filter((x) => x.id !== editing.id));
+              setEditing(null);
+            }
+          : undefined}
+      />
     </div>
   );
 }
