@@ -359,7 +359,7 @@ html.dark .rcard-del {
   backdrop-filter: blur(12px) !important;
 }
 .fmt-card.on {
-  background: linear-gradient(135deg, #ff6b35, #7b5cff) !important;
+  background: linear-gradient(135deg, var(--bl), var(--bl2)) !important;
   border-color: transparent !important;
 }
 
