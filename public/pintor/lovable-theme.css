@@ -445,8 +445,8 @@ html.dark .page > .topnav button[onclick="toggleSidebar()"] {
 /* Botão home global — fixo ao lado do menu */
 .btn-home-global {
   position: fixed !important;
-  top: 14px !important;
-  left: 66px !important;
+  top: calc(14px + env(safe-area-inset-top, 0px)) !important;
+  left: 14px !important;
   z-index: 60 !important;
   width: 44px !important;
   height: 44px !important;
