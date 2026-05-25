@@ -7449,6 +7449,16 @@ async function gDriveSyncClientes() {
 <!-- Fallback: garantir clique no nome da empresa abre o dashboard -->
 <script>
 (function(){
+  function goDashboard(){
+    try {
+      if (typeof homeTab === 'function') { homeTab('dashboard'); return; }
+    } catch(e){ console.warn('homeTab falhou, tentando showPage', e); }
+    try {
+      if (typeof showPage === 'function') { showPage('pg-dashboard'); }
+      if (typeof renderDashboard === 'function') { renderDashboard(); }
+    } catch(e){ console.error('Fallback dashboard falhou', e); }
+  }
+  window.__ppGoDashboard = goDashboard;
   function attach(){
     document.querySelectorAll('.identity-center').forEach(function(el){
       if (el.__ppDashWired) return;
@@ -7456,23 +7466,21 @@ async function gDriveSyncClientes() {
       el.style.cursor = 'pointer';
       el.setAttribute('role','button');
       el.setAttribute('tabindex','0');
-      el.addEventListener('click', function(ev){
-        ev.preventDefault();
-        ev.stopPropagation();
-        try { if (typeof homeTab === 'function') homeTab('dashboard'); } catch(e){ console.error('dashboard nav', e); }
-      }, true);
+      // Substitui o onclick inline para evitar dependência de escopo
+      el.onclick = function(ev){ ev.preventDefault(); goDashboard(); };
       el.addEventListener('keydown', function(ev){
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); try { homeTab('dashboard'); } catch(e){} }
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); goDashboard(); }
       });
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attach);
   else attach();
-  // Reanexa após qualquer re-render
-  setTimeout(attach, 500);
-  setTimeout(attach, 1500);
+  setTimeout(attach, 300);
+  setTimeout(attach, 1200);
+  setTimeout(attach, 3000);
 })();
 </script>
+
 
 </body>
 </html>
