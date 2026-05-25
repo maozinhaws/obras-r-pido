@@ -339,7 +339,7 @@ html.dark .rcard-del {
 
 /* 14) Toggle switch */
 .toggle-sw { background: rgba(15,5,40,0.18) !important; }
-.toggle-sw.on { background: linear-gradient(135deg, #ff6b35, #7b5cff) !important; }
+.toggle-sw.on { background: linear-gradient(135deg, var(--bl), var(--bl2)) !important; }
 
 /* 15) Toast */
 #toast {
