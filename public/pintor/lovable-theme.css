@@ -764,3 +764,13 @@ html.dark #pg-s3 .step-pill.done, html.dark #pg-s4 .step-pill.done {
   font-size: 12px !important;
   color: var(--ink) !important;
 }
+
+/* ==========================================================
+   25) MODO FLASH — única página que mantém o laranja vibrante.
+   Todo o resto do app usa roxo (cor do logotipo).
+   ========================================================== */
+#pg-flash, #pg-flash * {
+  --bl: #ff6b35 !important;
+  --bld: #e85520 !important;
+  --bll: rgba(255,107,53,0.14) !important;
+}
