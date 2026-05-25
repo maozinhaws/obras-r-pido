@@ -3994,6 +3994,21 @@ function checkAlarms() {
 
 // NAVEGAÇÃO & UI (HISTORY API PWA)
 let _ppReadyDispatched = false;
+function _ppSyncTopnavHeight(el){
+  if(!el) return;
+  const tn = el.querySelector(':scope > .topnav');
+  if(!tn) return;
+  const apply = () => {
+    const h = tn.getBoundingClientRect().height;
+    if(h>0) el.style.setProperty('--tn-h', h + 'px');
+  };
+  apply();
+  requestAnimationFrame(apply);
+  setTimeout(apply, 120);
+  if(!el._ppTnObs){
+    try { el._ppTnObs = new ResizeObserver(apply); el._ppTnObs.observe(tn); } catch(e) {}
+  }
+}
 function showPage(id, skipHistory = false) { 
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); 
   const el = document.getElementById(id); 
@@ -4001,6 +4016,7 @@ function showPage(id, skipHistory = false) {
     el.classList.add('active'); 
     if(!skipHistory) try { history.pushState({ page: id }, '', '#' + id); } catch(e) {}
     setTimeout(() => { const scr = el.querySelector('.scr'); if(scr) scr.scrollTop = 0; }, 10); 
+    _ppSyncTopnavHeight(el);
     if (id === 'pg-home' && !_ppReadyDispatched) {
       _ppReadyDispatched = true;
       window.dispatchEvent(new CustomEvent('pp-ready'));
