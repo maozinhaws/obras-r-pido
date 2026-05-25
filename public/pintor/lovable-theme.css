@@ -320,8 +320,8 @@ html.dark .chk-item {
   border-color: rgba(255,255,255,0.10) !important;
 }
 
-/* 12) Steps pill — laranja vibrante */
-.step-pill.done, .step-pill.active { background: #ff6b35 !important; }
+/* 12) Steps pill */
+.step-pill.done, .step-pill.active { background: var(--bl) !important; }
 
 /* 13) Botões secundários do card (menu, deletar) */
 .card-menu-btn, .item-del, .rcard-del {
