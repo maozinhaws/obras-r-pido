@@ -6821,6 +6821,15 @@ function showFaq() { document.getElementById('info-modal-title').textContent = '
 
   // Sai do Flash e volta ao PintorPlus
   window.exitFlash = function() {
+    const draftRaw = localStorage.getItem('orcamento-pocket-draft');
+    if (draftRaw && !isBlockingModalOpen()) {
+      try {
+        const draft = JSON.parse(draftRaw);
+        const hasDraft = !!((draft.cliente || '').trim() || (draft.telefone || '').trim() || (draft.items || []).length || (draft.valorTexto || '').trim());
+        if (hasDraft) { openDraftConfirmModal(function(){ window.exitFlash(); }); return; }
+      } catch(e) {}
+    }
+    if (isBlockingModalOpen()) return;
     // Para o stream de câmera no iframe antes de ocultar
     const flashIframe = document.getElementById('flash-iframe');
     try { flashIframe?.contentWindow?.postMessage({ type: 'stop-camera' }, '*'); } catch(e) {}
@@ -6917,19 +6926,26 @@ function showFaq() { document.getElementById('info-modal-title').textContent = '
   // em vez de empurrá-las para cima. Reaparecem ao perder o foco.
   (function(){
     function isTxt(el){ if(!el) return false; var t=(el.tagName||'').toLowerCase(); if(t==='textarea'||t==='select') return true; if(t!=='input') return false; var ty=(el.type||'text').toLowerCase(); return ['text','search','tel','url','email','number','password'].indexOf(ty)>=0; }
-    function closeKbIfNeeded(){ setTimeout(function(){ if(!isTxt(document.activeElement)) document.documentElement.classList.remove('kbd-open'); }, 80); }
-    document.addEventListener('focusin', function(e){ if(isTxt(e.target)) document.documentElement.classList.add('kbd-open'); });
-    document.addEventListener('focusout', closeKbIfNeeded);
-    if (window.visualViewport) {
-      var baseHeight = window.visualViewport.height;
-      window.visualViewport.addEventListener('resize', function(){
-        var active = document.activeElement;
-        var typing = isTxt(active);
-        var reduced = (baseHeight - window.visualViewport.height) > 120;
-        if (typing && reduced) document.documentElement.classList.add('kbd-open');
-        if (!reduced) closeKbIfNeeded();
-      });
+    function setKbOpen(open){ document.documentElement.classList.toggle('kbd-open', !!open); document.body.classList.toggle('kbd-open', !!open); }
+    function updateViewportInset(){
+      if (!window.visualViewport) { document.documentElement.style.setProperty('--kb-inset','0px'); return; }
+      var vv = window.visualViewport;
+      var inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      document.documentElement.style.setProperty('--kb-inset', Math.round(inset) + 'px');
+      var active = document.activeElement;
+      var typing = isTxt(active);
+      setKbOpen(typing && inset > 80);
     }
+    function closeKbIfNeeded(){ setTimeout(function(){ if(!isTxt(document.activeElement)) { setKbOpen(false); document.documentElement.style.setProperty('--kb-inset','0px'); } }, 80); }
+    document.addEventListener('focusin', function(e){ if(isTxt(e.target)) { setKbOpen(true); updateViewportInset(); } });
+    document.addEventListener('focusout', closeKbIfNeeded);
+    window.addEventListener('resize', updateViewportInset);
+    window.addEventListener('orientationchange', function(){ setTimeout(updateViewportInset, 120); });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateViewportInset);
+      window.visualViewport.addEventListener('scroll', updateViewportInset);
+    }
+    updateViewportInset();
   })();
 
 
