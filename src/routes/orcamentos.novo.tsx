@@ -447,25 +447,16 @@ function PassoItensFlash({
         <span className="text-display text-lg">Adicionar item</span>
       </button>
 
-      {editando && (
-        <div className="fixed inset-0 z-50 bg-midnight flex flex-col animate-fade-in">
-          <div className="bg-surface border-b-2 border-white/10 p-5 flex items-center justify-between">
-            <h3 className="text-display text-lg">Item</h3>
-            <button onClick={() => setEditando(null)} className="text-brand" aria-label="Fechar">
-              <X className="size-6" strokeWidth={3} />
-            </button>
-          </div>
-          <ItemEditor
-            item={editando}
-            onSave={salvar}
-            onCancel={() => setEditando(null)}
-            onDelete={() => {
-              remover(editando.id);
-              setEditando(null);
-            }}
-          />
-        </div>
-      )}
+      <ItemEditorModal
+        open={!!editando}
+        item={editando}
+        mode="flash"
+        onSave={salvar}
+        onCancel={() => setEditando(null)}
+        onDelete={editando
+          ? () => { remover(editando.id); setEditando(null); }
+          : undefined}
+      />
     </div>
   );
 }
