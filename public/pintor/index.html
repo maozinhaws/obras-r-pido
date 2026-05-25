@@ -2439,15 +2439,25 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
             <span><svg class="ico" aria-hidden="true"><use href="#ico-eye"/></svg></span><span>Acessibilidade</span><span class="cfg-chev">›</span>
           </button>
           <div class="cfg-card-body" id="cc-acessibilidade">
-            <div style="font-size:12px;color:var(--ink3);margin-bottom:14px;line-height:1.55;">Ativa fontes maiores, botões e espaçamentos aumentados para facilitar leitura e toque. Também ajusta o contraste para melhor visibilidade.</div>
-            <div class="toggle-row" style="margin-bottom:0;" onclick="var sw=document.getElementById('cfg-acessibilidade-sw');sw.classList.toggle('on');S.config.acessibilidade=sw.classList.contains('on');document.body.classList.toggle('acessivel',S.config.acessibilidade);_cfgDirty=true;">
+            <div style="font-size:12px;color:var(--ink3);margin-bottom:14px;line-height:1.55;">Personalize o tamanho da fonte e reforce o contraste das bordas e textos do app — útil para uso sob sol forte ou baixa visão.</div>
+
+            <div class="flbl" style="margin-bottom:6px;">Tamanho da fonte</div>
+            <div class="a-fs-row" id="cfg-fs-row">
+              <button type="button" class="a-fs-btn fs-p-sample"  data-fs="p"  onclick="ppSetFsScale('p')"><span class="a-fs-prev">Aa</span><span class="a-fs-lbl">Pequeno</span></button>
+              <button type="button" class="a-fs-btn fs-m-sample"  data-fs="m"  onclick="ppSetFsScale('m')"><span class="a-fs-prev">Aa</span><span class="a-fs-lbl">Médio</span></button>
+              <button type="button" class="a-fs-btn fs-g-sample"  data-fs="g"  onclick="ppSetFsScale('g')"><span class="a-fs-prev">Aa</span><span class="a-fs-lbl">Grande</span></button>
+              <button type="button" class="a-fs-btn fs-xg-sample" data-fs="xg" onclick="ppSetFsScale('xg')"><span class="a-fs-prev">Aa</span><span class="a-fs-lbl">Extra</span></button>
+            </div>
+
+            <div class="toggle-row" style="margin-bottom:0;" onclick="ppToggleContraste()">
               <div>
-                <div class="toggle-lbl">Modo Acessibilidade</div>
-                <div class="toggle-sub">Textos e botões maiores</div>
+                <div class="toggle-lbl">Reforçar contraste</div>
+                <div class="toggle-sub">Bordas e textos mais escuros nos formulários e cards</div>
               </div>
-              <div class="toggle-sw" id="cfg-acessibilidade-sw"></div>
+              <div class="toggle-sw" id="cfg-contraste-sw"></div>
             </div>
           </div>
+
         </div>
 
         <!-- CARD: Backup -->
