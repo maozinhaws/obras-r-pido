@@ -3330,6 +3330,7 @@ html.dark .dash-bar-row .barwrap{background:rgba(183,133,240,0.10);}
     </div>
     <div class="sidebar-links">
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('home')"><svg class="ico" aria-hidden="true"><use href="#ico-home"/></svg> Início</div>
+      <div class="sidebar-link" onclick="toggleSidebar(); homeTab('dashboard')"><svg class="ico" aria-hidden="true"><use href="#ico-trending-up"/></svg> Dashboard</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('orcamentos')"><svg class="ico" aria-hidden="true"><use href="#ico-file"/></svg> Meus Orçamentos</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('clientes')"><svg class="ico" aria-hidden="true"><use href="#ico-users"/></svg> Contatos</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('fornecedores')"><svg class="ico" aria-hidden="true"><use href="#ico-truck"/></svg> Fornecedores</div>
@@ -7431,6 +7432,36 @@ async function gDriveSyncClientes() {
     document.addEventListener('DOMContentLoaded', run);
   } else { run(); }
 })();
+</script>
+
+<!-- Fallback: garantir clique no nome da empresa abre o dashboard -->
+<script>
+(function(){
+  function attach(){
+    document.querySelectorAll('.identity-center').forEach(function(el){
+      if (el.__ppDashWired) return;
+      el.__ppDashWired = true;
+      el.style.cursor = 'pointer';
+      el.setAttribute('role','button');
+      el.setAttribute('tabindex','0');
+      el.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        try { if (typeof homeTab === 'function') homeTab('dashboard'); } catch(e){ console.error('dashboard nav', e); }
+      }, true);
+      el.addEventListener('keydown', function(ev){
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); try { homeTab('dashboard'); } catch(e){} }
+      });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attach);
+  else attach();
+  // Reanexa após qualquer re-render
+  setTimeout(attach, 500);
+  setTimeout(attach, 1500);
+})();
+</script>
+
 </script>
 
 </body>
