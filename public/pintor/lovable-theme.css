@@ -12,9 +12,9 @@
 /* 1) Tokens — força paleta clara do Lovable como padrão */
 :root,
 html:not(.dark) {
-  --bl: #ff6b35 !important;
-  --bld: #e85520 !important;
-  --bll: rgba(255,107,53,0.10) !important;
+  --bl: #8b3fd6 !important;             /* roxo do logo — cor principal do app */
+  --bld: #5b1e96 !important;
+  --bll: rgba(139,63,214,0.12) !important;
   --bl2: #7b5cff !important;
   --bl2l: rgba(123,92,255,0.10) !important;
 
