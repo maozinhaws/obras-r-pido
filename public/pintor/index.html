@@ -3330,7 +3330,6 @@ html.dark .dash-bar-row .barwrap{background:rgba(183,133,240,0.10);}
     </div>
     <div class="sidebar-links">
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('home')"><svg class="ico" aria-hidden="true"><use href="#ico-home"/></svg> Início</div>
-      <div class="sidebar-link" onclick="toggleSidebar(); homeTab('dashboard')"><svg class="ico" aria-hidden="true"><use href="#ico-trending-up"/></svg> Dashboard</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('orcamentos')"><svg class="ico" aria-hidden="true"><use href="#ico-file"/></svg> Meus Orçamentos</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('clientes')"><svg class="ico" aria-hidden="true"><use href="#ico-users"/></svg> Contatos</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('fornecedores')"><svg class="ico" aria-hidden="true"><use href="#ico-truck"/></svg> Fornecedores</div>
@@ -7450,6 +7449,22 @@ async function gDriveSyncClientes() {
 <!-- Fallback: garantir clique no nome da empresa abre o dashboard -->
 <script>
 (function(){
+  function goDashboard(){
+    console.log('[pp] goDashboard click');
+    // Vai direto na showPage para evitar bloqueios de canNavigateAsync/S.isDirty
+    try {
+      if (typeof showPage === 'function') {
+        showPage('pg-dashboard');
+        if (typeof renderDashboard === 'function') renderDashboard();
+        console.log('[pp] showPage(pg-dashboard) OK');
+        return;
+      }
+    } catch(e){ console.error('[pp] showPage falhou', e); }
+    // Último recurso: troca o hash da URL
+    try { location.hash = '#pg-dashboard'; } catch(e){}
+  }
+
+  window.__ppGoDashboard = goDashboard;
   function attach(){
     document.querySelectorAll('.identity-center').forEach(function(el){
       if (el.__ppDashWired) return;
@@ -7457,25 +7472,22 @@ async function gDriveSyncClientes() {
       el.style.cursor = 'pointer';
       el.setAttribute('role','button');
       el.setAttribute('tabindex','0');
-      el.addEventListener('click', function(ev){
-        ev.preventDefault();
-        ev.stopPropagation();
-        try { if (typeof homeTab === 'function') homeTab('dashboard'); } catch(e){ console.error('dashboard nav', e); }
-      }, true);
+      // Substitui o onclick inline para evitar dependência de escopo
+      el.onclick = function(ev){ ev.preventDefault(); goDashboard(); };
       el.addEventListener('keydown', function(ev){
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); try { homeTab('dashboard'); } catch(e){} }
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); goDashboard(); }
       });
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attach);
   else attach();
-  // Reanexa após qualquer re-render
-  setTimeout(attach, 500);
-  setTimeout(attach, 1500);
+  setTimeout(attach, 300);
+  setTimeout(attach, 1200);
+  setTimeout(attach, 3000);
 })();
 </script>
 
-</script>
 
 </body>
 </html>
+
