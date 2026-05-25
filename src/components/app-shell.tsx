@@ -105,7 +105,7 @@ function NavRow({
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-lg text-[15px] transition-colors border",
         active
-          ? "bg-secondary border-border font-extrabold text-foreground dark:text-white"
+          ? "border-transparent font-extrabold text-white shadow-[0_6px_14px_-4px_rgba(255,107,53,0.45),0_16px_36px_-10px_rgba(123,92,255,0.55)] bg-[linear-gradient(135deg,#ff6b35_0%,#ff6b35_35%,#ec4899_65%,#a78bfa_100%)]"
           : "border-transparent font-semibold hover:bg-secondary/60 text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white",
       )}
     >
@@ -247,13 +247,14 @@ export const PageHeader = memo(({
         ref={ref}
         className="fixed top-3 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-2rem)] max-w-md"
         style={{
-          background: "var(--card-solid)",
-          backdropFilter: "blur(28px) saturate(170%)",
-          WebkitBackdropFilter: "blur(28px) saturate(170%)",
-          border: "1px solid var(--card-border-strong)",
+          background: "color-mix(in oklab, var(--card) 42%, transparent)",
+          backdropFilter: "blur(36px) saturate(200%)",
+          WebkitBackdropFilter: "blur(36px) saturate(200%)",
+          border: "1px solid color-mix(in oklab, var(--foreground) 10%, transparent)",
           borderRadius: 24,
           padding: "16px 16px 18px",
-          boxShadow: "0 10px 32px -8px rgba(15,5,40,0.18)",
+          boxShadow:
+            "inset 0 1px 0 rgba(255,255,255,0.45), 0 10px 32px -8px rgba(15,5,40,0.22)",
           color: "var(--on-hero)",
         }}
       >
