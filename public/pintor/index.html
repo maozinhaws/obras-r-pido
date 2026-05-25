@@ -1892,7 +1892,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
           <button class="orbital-btn" onclick="toggleSidebar()" aria-label="Menu">
             <svg class="ico" aria-hidden="true"><use href="#ico-menu"/></svg>
           </button>
-          <div class="identity-center" onclick="homeTab('config')" style="cursor:pointer;" title="Configurações da empresa">
+          <div class="identity-center" onclick="homeTab('dashboard')" style="cursor:pointer;" title="Ver dashboard">
             <div class="empresa-nome" id="home-saudacao"></div>
             <div class="empresa-tagline-wrap">
               <span class="tagline-a">Pintor Profissional</span>
@@ -2563,6 +2563,38 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
       </div>
     </div>
 
+    <!-- DASHBOARD -->
+    <div class="page" id="pg-dashboard">
+      <div class="topnav">
+        <div class="topnav-row">
+          <button onclick="toggleSidebar()" style="position:absolute;left:0;background:none;border:none;font-size:24px;cursor:pointer;color:var(--ink);padding:0;"><svg class="ico" aria-hidden="true"><use href="#ico-menu"/></svg></button>
+          <div class="title-big">DASHBOARD</div>
+          <button class="btn-home-global dark-nav" onclick="homeTab('home')" style="position:absolute;right:0;" aria-label="Página inicial" title="Página inicial"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></button>
+        </div>
+      </div>
+      <div class="scr">
+        <div style="padding:14px;background:var(--bg-card);border:1px solid var(--bdr);border-radius:16px;margin-bottom:12px;">
+          <div style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:8px;">PERÍODO</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;" id="dash-ranges">
+            <button class="dash-rg" data-range="7" type="button" onclick="dashSetRange(7,this)">7 dias</button>
+            <button class="dash-rg active" data-range="30" type="button" onclick="dashSetRange(30,this)">30 dias</button>
+            <button class="dash-rg" data-range="90" type="button" onclick="dashSetRange(90,this)">90 dias</button>
+            <button class="dash-rg" data-range="365" type="button" onclick="dashSetRange(365,this)">1 ano</button>
+            <button class="dash-rg" data-range="all" type="button" onclick="dashSetRange('all',this)">Tudo</button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-end;">
+            <div style="flex:1;"><label class="flbl">DE</label><input type="date" class="finput" id="dash-de" onchange="dashCustomRange()"></div>
+            <div style="flex:1;"><label class="flbl">ATÉ</label><input type="date" class="finput" id="dash-ate" onchange="dashCustomRange()"></div>
+          </div>
+        </div>
+        <div id="dash-kpis" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;"></div>
+        <div style="padding:14px;background:var(--bg-card);border:1px solid var(--bdr);border-radius:16px;margin-bottom:12px;"><div style="font-weight:800;margin-bottom:12px;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:6px;"><svg class="ico" aria-hidden="true"><use href="#ico-trending-up"/></svg> Emissões ao longo do tempo</div><div id="dash-chart-emiss"></div></div>
+        <div style="padding:14px;background:var(--bg-card);border:1px solid var(--bdr);border-radius:16px;margin-bottom:12px;"><div style="font-weight:800;margin-bottom:12px;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:6px;"><svg class="ico" aria-hidden="true"><use href="#ico-dollar"/></svg> Receita por mês</div><div id="dash-chart-rev"></div></div>
+        <div style="padding:14px;background:var(--bg-card);border:1px solid var(--bdr);border-radius:16px;margin-bottom:12px;"><div style="font-weight:800;margin-bottom:12px;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:6px;"><svg class="ico" aria-hidden="true"><use href="#ico-tag"/></svg> Distribuição por status</div><div id="dash-chart-status"></div></div>
+        <div style="height:24px;"></div>
+      </div>
+    </div>
+
     <!-- APP FLASH (externo, embarcado) -->
     <div class="page" id="pg-flash" style="position:fixed;inset:0;z-index:500;display:none;flex-direction:column;background:#000;">
       <!-- Botão home sobreposto ao iframe -->
@@ -3012,6 +3044,264 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
     function confirmObsPick(){ var allKnown=OBS_SERVICOS.concat(OBS_MATERIAIS); var current=els.modalObs.value; var customParts=current.split(',').map(function(s){return s.trim();}).filter(function(s){return s&&allKnown.indexOf(s)<0;}); var selected=state.modalSelectedServices||[]; els.modalObs.value=customParts.concat(selected).join(', '); closeObsPick(); }
     renderSteps(); renderItems(); updateSummary(); setupSwipe(); hideSplash();
   </script>
+
+
+<style>
+.dash-rg{height:32px;padding:0 14px;border-radius:100px;background:rgba(74,28,160,0.08);color:var(--ink2);border:1px solid rgba(74,28,160,0.18);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;white-space:nowrap;}
+.dash-rg:hover{background:rgba(74,28,160,0.16);}
+.dash-rg.active{background:linear-gradient(135deg,var(--bl),var(--bld));color:#fff;border-color:transparent;box-shadow:0 4px 12px -4px rgba(74,28,160,0.5);}
+html.dark .dash-rg{background:rgba(183,133,240,0.10);color:var(--ink2);border-color:rgba(183,133,240,0.20);}
+html.dark .dash-rg.active{color:#fff;}
+.kpi-card{padding:14px;background:var(--bg-card-alt);border:1px solid var(--bdr);border-radius:14px;position:relative;overflow:hidden;}
+.kpi-card .kpi-lbl{font-size:10px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.kpi-card .kpi-val{font-size:18px;font-weight:800;color:var(--ink);font-family:'Sora',sans-serif;line-height:1.1;}
+.kpi-card .kpi-sub{font-size:10.5px;color:var(--ink3);margin-top:4px;font-weight:600;}
+.kpi-card .kpi-up{color:#16a34a;}
+.kpi-card .kpi-dn{color:#dc2626;}
+.dash-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px;}
+.dash-bar-row .lbl{width:64px;color:var(--ink2);font-weight:700;flex-shrink:0;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;}
+.dash-bar-row .barwrap{flex:1;height:14px;background:rgba(74,28,160,0.06);border-radius:7px;overflow:hidden;}
+.dash-bar-row .bar{height:100%;background:linear-gradient(90deg,var(--bl),var(--bld));border-radius:7px;transition:width .5s ease;}
+.dash-bar-row .val{font-weight:800;color:var(--ink);min-width:54px;text-align:right;font-variant-numeric:tabular-nums;}
+html.dark .dash-bar-row .barwrap{background:rgba(183,133,240,0.10);}
+.dash-empty{padding:20px;text-align:center;color:var(--ink3);font-size:12px;font-style:italic;}
+</style>
+<script>
+(function(){
+  let _dashRange = 30; // dias ou 'all'
+  let _dashFrom = null, _dashTo = null; // ms
+
+  function _dashApplyRange(){
+    const now = Date.now();
+    if(_dashRange === 'all'){
+      _dashFrom = 0; _dashTo = now;
+    } else if(typeof _dashRange === 'number'){
+      _dashTo = now;
+      _dashFrom = now - _dashRange * 86400000;
+    }
+  }
+
+  window.dashSetRange = function(r, btn){
+    _dashRange = r;
+    _dashApplyRange();
+    document.querySelectorAll('#dash-ranges .dash-rg').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    const de = document.getElementById('dash-de'), at = document.getElementById('dash-ate');
+    if(de) de.value=''; if(at) at.value='';
+    renderDashboard();
+  };
+
+  window.dashCustomRange = function(){
+    const de = document.getElementById('dash-de').value;
+    const at = document.getElementById('dash-ate').value;
+    if(!de || !at) return;
+    _dashFrom = new Date(de+'T00:00:00').getTime();
+    _dashTo = new Date(at+'T23:59:59').getTime();
+    document.querySelectorAll('#dash-ranges .dash-rg').forEach(b=>b.classList.remove('active'));
+    renderDashboard();
+  };
+
+  function _orcDate(o){ return o.ts || o.tsEdit || 0; }
+  function _money(n){ return 'R$ ' + Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+  function _moneyShort(n){
+    n = Number(n||0);
+    if(n>=1e6) return 'R$ '+(n/1e6).toFixed(1).replace('.',',')+'M';
+    if(n>=1e3) return 'R$ '+(n/1e3).toFixed(1).replace('.',',')+'k';
+    return _money(n);
+  }
+
+  function _statusColor(s){
+    s = (s||'').toLowerCase();
+    if(s.includes('aprov') || s.includes('pago') || s.includes('conclu')) return '#16a34a';
+    if(s.includes('rascun')) return '#94a3b8';
+    if(s.includes('recus') || s.includes('cancel')) return '#dc2626';
+    if(s.includes('andam') || s.includes('execu')) return '#3b82f6';
+    if(s.includes('envia')) return '#a855f7';
+    return '#f59e0b'; // pendente / outro
+  }
+
+  function _filterOrcs(){
+    _dashApplyRange();
+    return (window.S?.orcs || []).filter(o => {
+      const d = _orcDate(o);
+      return d >= _dashFrom && d <= _dashTo;
+    });
+  }
+
+  function _monthKey(ts){
+    const d = new Date(ts);
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  }
+  function _monthLabel(k){
+    const [y,m] = k.split('-');
+    const nm = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+    return nm[parseInt(m,10)-1] + '/' + y.slice(2);
+  }
+
+  function _calcTot(o){
+    try { return (typeof calcOrcTotal === 'function') ? calcOrcTotal(o) : 0; }
+    catch(e){ return 0; }
+  }
+
+  function _renderKPIs(orcs){
+    const wrap = document.getElementById('dash-kpis'); if(!wrap) return;
+    const total = orcs.length;
+    const receita = orcs.reduce((s,o)=>s+_calcTot(o),0);
+    const aprovados = orcs.filter(o=>{ const st=(o.status||'').toLowerCase(); return st.includes('aprov')||st.includes('pago')||st.includes('conclu'); });
+    const receitaAprov = aprovados.reduce((s,o)=>s+_calcTot(o),0);
+    const ticket = total>0 ? receita/total : 0;
+    const taxa = total>0 ? Math.round((aprovados.length/total)*100) : 0;
+    const rascunhos = orcs.filter(o=>(o.status||'')==='Rascunho').length;
+    const pendentes = orcs.filter(o=>!o.status || o.status==='Pendente').length;
+
+    // Comparação período anterior
+    const dur = _dashTo - _dashFrom;
+    const prevFrom = _dashFrom - dur, prevTo = _dashFrom;
+    const prevOrcs = (window.S?.orcs || []).filter(o=>{ const d=_orcDate(o); return d>=prevFrom && d<prevTo; });
+    const prevTotal = prevOrcs.length;
+    const prevReceita = prevOrcs.reduce((s,o)=>s+_calcTot(o),0);
+    const growth = prevTotal>0 ? Math.round(((total-prevTotal)/prevTotal)*100) : (total>0 ? 100 : 0);
+    const growthRev = prevReceita>0 ? Math.round(((receita-prevReceita)/prevReceita)*100) : (receita>0 ? 100 : 0);
+
+    const arrow = (g)=> g>0 ? '↑' : (g<0 ? '↓' : '→');
+    const cls = (g)=> g>0 ? 'kpi-up' : (g<0 ? 'kpi-dn' : '');
+
+    wrap.innerHTML = `
+      <div class="kpi-card"><div class="kpi-lbl">Emitidos</div><div class="kpi-val">${total}</div><div class="kpi-sub ${cls(growth)}">${arrow(growth)} ${Math.abs(growth)}% vs anterior</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">Receita</div><div class="kpi-val">${_moneyShort(receita)}</div><div class="kpi-sub ${cls(growthRev)}">${arrow(growthRev)} ${Math.abs(growthRev)}% vs anterior</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">Aprovados</div><div class="kpi-val">${aprovados.length}</div><div class="kpi-sub">${_moneyShort(receitaAprov)}</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">Taxa aprovação</div><div class="kpi-val">${taxa}%</div><div class="kpi-sub">${aprovados.length}/${total} orçamentos</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">Ticket médio</div><div class="kpi-val">${_moneyShort(ticket)}</div><div class="kpi-sub">por orçamento</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">Pendências</div><div class="kpi-val">${pendentes + rascunhos}</div><div class="kpi-sub">${rascunhos} rascunhos · ${pendentes} pendentes</div></div>
+    `;
+  }
+
+  function _renderLineChart(orcs){
+    const host = document.getElementById('dash-chart-emiss'); if(!host) return;
+    if(!orcs.length){ host.innerHTML = '<div class="dash-empty">Sem dados no período</div>'; return; }
+    // Agrupa por dia ou mês conforme a janela
+    const dur = _dashTo - _dashFrom;
+    const useMonth = dur > 95 * 86400000;
+    const buckets = {};
+    if(useMonth){
+      // últimos N meses dentro do período
+      let cur = new Date(_dashFrom); cur.setDate(1);
+      const end = new Date(_dashTo);
+      while(cur <= end){
+        buckets[cur.getFullYear()+'-'+String(cur.getMonth()+1).padStart(2,'0')] = 0;
+        cur.setMonth(cur.getMonth()+1);
+      }
+      orcs.forEach(o=>{ const k=_monthKey(_orcDate(o)); if(k in buckets) buckets[k]++; });
+    } else {
+      let cur = new Date(_dashFrom); cur.setHours(0,0,0,0);
+      const end = new Date(_dashTo);
+      while(cur <= end){
+        const k = cur.getFullYear()+'-'+String(cur.getMonth()+1).padStart(2,'0')+'-'+String(cur.getDate()).padStart(2,'0');
+        buckets[k] = 0;
+        cur.setDate(cur.getDate()+1);
+      }
+      orcs.forEach(o=>{
+        const d=new Date(_orcDate(o));
+        const k = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+        if(k in buckets) buckets[k]++;
+      });
+    }
+    const keys = Object.keys(buckets);
+    const vals = keys.map(k=>buckets[k]);
+    const max = Math.max(1, ...vals);
+    const W = 320, H = 140, P = 24;
+    const xs = (i)=> P + (keys.length>1 ? (i/(keys.length-1))*(W-P*2) : (W-P*2)/2);
+    const ys = (v)=> H - P - (v/max)*(H-P*2);
+    let path = '', area = '';
+    keys.forEach((k,i)=>{ const x=xs(i), y=ys(vals[i]); path += (i===0?'M':'L')+x.toFixed(1)+','+y.toFixed(1); });
+    area = path + ' L'+xs(keys.length-1).toFixed(1)+','+(H-P)+' L'+xs(0).toFixed(1)+','+(H-P)+' Z';
+    // labels eixo X (mostra 5)
+    const step = Math.max(1, Math.ceil(keys.length/5));
+    let labels = '';
+    keys.forEach((k,i)=>{
+      if(i%step===0 || i===keys.length-1){
+        let lbl;
+        if(useMonth){ lbl = _monthLabel(k); }
+        else { const [y,m,d]=k.split('-'); lbl = d+'/'+m; }
+        labels += `<text x="${xs(i)}" y="${H-6}" text-anchor="middle" font-size="9" fill="currentColor" opacity=".55" font-weight="700">${lbl}</text>`;
+      }
+    });
+    // Y grid
+    let grid = '';
+    for(let i=0;i<=3;i++){
+      const y = P + (i/3)*(H-P*2);
+      const v = Math.round(max - (i/3)*max);
+      grid += `<line x1="${P}" y1="${y}" x2="${W-P}" y2="${y}" stroke="currentColor" stroke-opacity=".08"/>`;
+      grid += `<text x="${P-4}" y="${y+3}" text-anchor="end" font-size="9" fill="currentColor" opacity=".5" font-weight="700">${v}</text>`;
+    }
+    const totalEm = vals.reduce((a,b)=>a+b,0);
+    host.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;color:var(--ink);display:block;">
+        <defs>
+          <linearGradient id="dashLineGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="var(--bl)" stop-opacity=".35"/>
+            <stop offset="100%" stop-color="var(--bl)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        ${grid}
+        <path d="${area}" fill="url(#dashLineGrad)"/>
+        <path d="${path}" fill="none" stroke="var(--bl)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${keys.map((k,i)=>`<circle cx="${xs(i)}" cy="${ys(vals[i])}" r="2.5" fill="var(--bl)"/>`).join('')}
+        ${labels}
+      </svg>
+      <div style="margin-top:8px;font-size:11px;color:var(--ink3);font-weight:600;text-align:center;">${totalEm} emissões · ${useMonth?'mensal':'diário'}</div>
+    `;
+  }
+
+  function _renderRevenueChart(orcs){
+    const host = document.getElementById('dash-chart-rev'); if(!host) return;
+    if(!orcs.length){ host.innerHTML = '<div class="dash-empty">Sem dados no período</div>'; return; }
+    const buckets = {};
+    let cur = new Date(_dashFrom); cur.setDate(1);
+    const end = new Date(_dashTo);
+    while(cur <= end){
+      buckets[cur.getFullYear()+'-'+String(cur.getMonth()+1).padStart(2,'0')] = 0;
+      cur.setMonth(cur.getMonth()+1);
+    }
+    orcs.forEach(o=>{ const k=_monthKey(_orcDate(o)); if(k in buckets) buckets[k] += _calcTot(o); });
+    const keys = Object.keys(buckets);
+    const vals = keys.map(k=>buckets[k]);
+    const max = Math.max(1, ...vals);
+    let html = '';
+    keys.forEach((k,i)=>{
+      const v = vals[i];
+      const pct = Math.round((v/max)*100);
+      html += `<div class="dash-bar-row"><span class="lbl">${_monthLabel(k)}</span><span class="barwrap"><span class="bar" style="width:${pct}%"></span></span><span class="val">${_moneyShort(v)}</span></div>`;
+    });
+    host.innerHTML = html;
+  }
+
+  function _renderStatusChart(orcs){
+    const host = document.getElementById('dash-chart-status'); if(!host) return;
+    if(!orcs.length){ host.innerHTML = '<div class="dash-empty">Sem dados no período</div>'; return; }
+    const counts = {};
+    orcs.forEach(o=>{ const s = o.status || 'Pendente'; counts[s] = (counts[s]||0) + 1; });
+    const total = orcs.length;
+    const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    let html = '';
+    entries.forEach(([s,c])=>{
+      const pct = Math.round((c/total)*100);
+      const col = _statusColor(s);
+      html += `<div class="dash-bar-row"><span class="lbl" style="width:90px;">${s}</span><span class="barwrap"><span class="bar" style="width:${pct}%;background:linear-gradient(90deg,${col},${col}cc);"></span></span><span class="val">${c} · ${pct}%</span></div>`;
+    });
+    host.innerHTML = html;
+  }
+
+  window.renderDashboard = function(){
+    _dashApplyRange();
+    const orcs = _filterOrcs();
+    _renderKPIs(orcs);
+    _renderLineChart(orcs);
+    _renderRevenueChart(orcs);
+    _renderStatusChart(orcs);
+  };
+})();
+</script>
 
 </body>
 </html>">
@@ -5497,7 +5787,7 @@ function homeTab(tab){
     document.getElementById('cfg-save-modal').style.display = 'flex';
     return;
   }
-  if(tab === 'config') { openConfig(); return; } if(tab === 'flash') { canNavigateAsync(() => { S.isDirty = false; openFlash(); }); return; } canNavigateAsync(() => { S.isDirty = false; ['orc-search','cli-search','forn-search'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); if(tab === 'home') { showPage('pg-home'); renderHomeMini(); renderHomeEvents(); renderHomeNews(); } else if(tab === 'orcamentos') { showPage('pg-orcamentos'); renderOrcamentosList(); } else if(tab === 'clientes') { showPage('pg-clientes'); renderClientes(); } else if(tab === 'fornecedores') { showPage('pg-fornecedores'); renderFornecedores(); } else if(tab === 'agenda') { showPage('pg-agenda'); renderAgenda(); } else if(tab === 'backup') { openConfig(); return; } else if(tab === 'termos') { showPage('pg-termos'); } }); }
+  if(tab === 'config') { openConfig(); return; } if(tab === 'flash') { canNavigateAsync(() => { S.isDirty = false; openFlash(); }); return; } canNavigateAsync(() => { S.isDirty = false; ['orc-search','cli-search','forn-search'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); if(tab === 'home') { showPage('pg-home'); renderHomeMini(); renderHomeEvents(); renderHomeNews(); } else if(tab === 'orcamentos') { showPage('pg-orcamentos'); renderOrcamentosList(); } else if(tab === 'clientes') { showPage('pg-clientes'); renderClientes(); } else if(tab === 'fornecedores') { showPage('pg-fornecedores'); renderFornecedores(); } else if(tab === 'agenda') { showPage('pg-agenda'); renderAgenda(); } else if(tab === 'backup') { openConfig(); return; } else if(tab === 'dashboard') { showPage('pg-dashboard'); renderDashboard(); } else if(tab === 'termos') { showPage('pg-termos'); } }); }
 
 // ── TERMOS & PRIVACIDADE — LGPD ──────────────────────────────
 const TERMS_VERSION = '1';
