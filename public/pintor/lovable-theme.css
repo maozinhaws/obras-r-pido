@@ -112,21 +112,23 @@ html .topnav,
 html .hm-hdr,
 html body .topnav,
 html body .hm-hdr {
-  background: rgba(255,255,255,0.32) !important;
-  backdrop-filter: blur(40px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.45) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 10px 28px -12px rgba(15,5,40,0.18) !important;
+  background: rgba(255,255,255,0.18) !important;
+  background-image: none !important;
+  backdrop-filter: blur(36px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(185%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.28) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 10px 28px -16px rgba(15,5,40,0.10) !important;
 }
 html.dark .topnav,
 html.dark .hm-hdr,
 html.dark body .topnav,
 html.dark body .hm-hdr {
-  background: rgba(20,14,30,0.38) !important;
-  backdrop-filter: blur(40px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.10) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 28px -12px rgba(0,0,0,0.55) !important;
+  background: rgba(20,14,30,0.18) !important;
+  background-image: none !important;
+  backdrop-filter: blur(36px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(170%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 10px 28px -18px rgba(0,0,0,0.28) !important;
 }
 /* Modal-box — mesmo glass do sidebar */
 .modal-box {
@@ -151,18 +153,22 @@ html.dark .modal-box {
 
 /* 5) Sidebar — drawer com glass mais translúcido */
 .sidebar {
-  background: rgba(255,255,255,0.42) !important;
-  backdrop-filter: blur(36px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
-  border-right: 1px solid rgba(255,255,255,0.45) !important;
-  box-shadow: 8px 0 32px -12px rgba(15,5,40,0.22) !important;
+  background: rgba(255,255,255,0.22) !important;
+  background-image: none !important;
+  backdrop-filter: blur(34px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(185%) !important;
+  border-right: 1px solid rgba(255,255,255,0.30) !important;
+  box-shadow: 8px 0 32px -16px rgba(15,5,40,0.14) !important;
 }
 html.dark .sidebar {
-  background: rgba(20,14,30,0.45) !important;
+  background: rgba(20,14,30,0.18) !important;
+  background-image: none !important;
   border-right-color: rgba(255,255,255,0.10) !important;
 }
 .sidebar-links,
-.sidebar .sidebar-links { background: transparent !important; }
+.sidebar .sidebar-links,
+.sidebar > .sidebar-hdr,
+.sidebar > .sidebar-links { background: transparent !important; }
 /* Força reset do glass do bundle nos links da sidebar */
 .sidebar .sidebar-link:not(.sidebar-install-cta),
 .sidebar-links .sidebar-link:not(.sidebar-install-cta),
