@@ -181,11 +181,12 @@ html.dark .sidebar {
 .sidebar .sidebar-link:hover,
 .sidebar-links .sidebar-link:hover,
 .sidebar-link:hover {
-  background: rgba(255,107,53,0.14) !important;
+  background: color-mix(in oklab, var(--bl) 10%, transparent) !important;
   background-image: none !important;
-  border-color: rgba(255,107,53,0.35) !important;
+  border-color: color-mix(in oklab, var(--bl) 35%, transparent) !important;
   color: var(--bl) !important;
 }
+
 .sidebar .sidebar-link.active,
 .sidebar .sidebar-link[aria-current="page"],
 .sidebar .sidebar-link.on,
