@@ -8,8 +8,6 @@ import {
   type ItemAmbiente,
   type Cliente,
   AMBIENTES_PADRAO,
-  MATERIAIS_PADRAO,
-  SERVICOS_PADRAO,
   FORMAS_PAGAMENTO,
   formatBRL,
   calcularTotal,
@@ -17,7 +15,7 @@ import {
 // PageHeader removido: uso header compacto inline para uso em campo
 import { Field } from "./clientes";
 import { uid } from "@/lib/utils";
-import { salvarFoto, urlFoto, removerFoto } from "@/lib/fotos";
+import { urlFoto } from "@/lib/fotos";
 import {
   Plus,
   X,
@@ -32,9 +30,9 @@ import {
 import { gerarPdfOrcamento, gerarMensagemWhatsapp, baixarBlob } from "@/lib/pdf";
 import { whatsappLink } from "@/lib/utils";
 import { CameraModal } from "@/components/camera-modal";
-import { PhotoEditor } from "@/components/photo-editor";
 import { persistOrcamento } from "@/lib/orcamentos";
 import { handleEnterNav } from "@/lib/forms";
+import { ItemEditorModal } from "@/components/item-editor-modal";
 
 type SearchParams = { modo?: "flash" | "foto" | "detalhado"; editId?: number; draftKey?: string };
 
