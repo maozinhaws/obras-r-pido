@@ -34,7 +34,7 @@ html:not(.dark) {
   /* Cards: translúcidos brancos para o efeito glass */
   --bg-card: rgba(255,255,255,0.72) !important;
   --bg-card-alt: rgba(255,255,255,0.78) !important;
-  --bg-modal: rgba(255,255,255,0.92) !important;
+  --bg-modal: rgba(255,255,255,0.42) !important;
   --bg-yellow: #fff8f5 !important;
 
   --sh: 0 1px 2px rgba(15,23,42,.06), 0 12px 28px -8px rgba(15,5,40,.16) !important;
