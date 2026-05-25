@@ -130,6 +130,42 @@ html.dark body .hm-hdr {
   border-bottom: 1px solid rgba(255,255,255,0.07) !important;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 10px 28px -18px rgba(0,0,0,0.28) !important;
 }
+
+#pg-home > .hm-hdr,
+html #pg-home > .hm-hdr,
+html body #pg-home > .hm-hdr {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 30 !important;
+  background: rgba(255,255,255,0.14) !important;
+  background-image: none !important;
+  backdrop-filter: blur(34px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(185%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.30) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 28px -18px rgba(15,5,40,0.14) !important;
+}
+
+html.dark #pg-home > .hm-hdr,
+html.dark body #pg-home > .hm-hdr {
+  background: rgba(20,14,30,0.14) !important;
+  background-image: none !important;
+  backdrop-filter: blur(34px) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(175%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 12px 30px -18px rgba(0,0,0,0.34) !important;
+}
+
+#pg-home > .hm-hdr .header-top,
+#pg-home > .hm-hdr .header-metrics {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+#pg-home > .scr {
+  padding-top: calc(max(20px, env(safe-area-inset-top, 20px)) + 140px) !important;
+}
 /* Modal-box — mesmo glass do sidebar */
 .modal-box {
   background: rgba(255,255,255,0.42) !important;
