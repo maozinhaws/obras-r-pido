@@ -1036,6 +1036,28 @@ html.dark .modal-overlay > div:not(.modal-top):not(.modal-close){
   box-shadow: 0 28px 70px -12px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08) inset !important;
 }
 
+#nomePickModal,
+#obsPickModal,
+#item-modal-form,
+#services-modal,
+#detail-nome-pick-modal {
+  align-items: center !important;
+  justify-content: center !important;
+  padding: max(16px, env(safe-area-inset-top, 16px)) 16px max(16px, env(safe-area-inset-bottom, 16px)) !important;
+}
+
+#nomePickModal > div,
+#obsPickModal > div,
+#services-modal > div,
+#detail-nome-pick-modal > div,
+#item-modal-form .item-modal-sheet,
+#itemModal .modal-sheet {
+  width: 100% !important;
+  max-width: 430px !important;
+  max-height: min(86dvh, 760px) !important;
+  border-radius: 28px !important;
+}
+
 /* ============================================================
    ONDA 5 — Botões padronizados (último passo de uniformização)
    Qualquer <button> sem classe específica recebe o padrão glass.
