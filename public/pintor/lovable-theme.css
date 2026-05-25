@@ -12,9 +12,9 @@
 /* 1) Tokens — força paleta clara do Lovable como padrão */
 :root,
 html:not(.dark) {
-  --bl: #ff6b35 !important;
-  --bld: #e85520 !important;
-  --bll: rgba(255,107,53,0.10) !important;
+  --bl: #8b3fd6 !important;             /* roxo do logo — cor principal do app */
+  --bld: #5b1e96 !important;
+  --bll: rgba(139,63,214,0.12) !important;
   --bl2: #7b5cff !important;
   --bl2l: rgba(123,92,255,0.10) !important;
 
@@ -43,8 +43,10 @@ html:not(.dark) {
 /* Dark mode: usa tokens escuros mas com glass translúcido */
 html.dark,
 :root.dark {
-  --bl: #ff6b35 !important;
-  --bl2: #7b5cff !important;
+  --bl: #b785f0 !important;             /* roxo claro p/ contraste no escuro */
+  --bld: #8b3fd6 !important;
+  --bll: rgba(183,133,240,0.18) !important;
+  --bl2: #a78bfa !important;
   --ink: #ededf0 !important;
   --ink2: #c5c5d0 !important;
   --ink3: #8a8a98 !important;
@@ -296,8 +298,8 @@ input[type="email"], input[type="date"], textarea, select {
 }
 .finput:focus, .fta:focus, .fsel:focus, .item-title-inp:focus,
 input:focus, textarea:focus, select:focus {
-  border-color: #ff6b35 !important;
-  box-shadow: 0 0 0 3px rgba(255,107,53,0.18) !important;
+  border-color: var(--bl) !important;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--bl) 28%, transparent) !important;
   outline: none !important;
 }
 .finput::placeholder, .fta::placeholder { color: #94a3b8 !important; }
@@ -310,7 +312,7 @@ input:focus, textarea:focus, select:focus {
   backdrop-filter: blur(12px) !important;
 }
 .chk-item.on {
-  background: rgba(255,107,53,0.10) !important;
+  background: var(--bll) !important;
   border-color: var(--bl) !important;
 }
 html.dark .chk-item {
@@ -318,8 +320,8 @@ html.dark .chk-item {
   border-color: rgba(255,255,255,0.10) !important;
 }
 
-/* 12) Steps pill — laranja vibrante */
-.step-pill.done, .step-pill.active { background: #ff6b35 !important; }
+/* 12) Steps pill */
+.step-pill.done, .step-pill.active { background: var(--bl) !important; }
 
 /* 13) Botões secundários do card (menu, deletar) */
 .card-menu-btn, .item-del, .rcard-del {
@@ -337,7 +339,7 @@ html.dark .rcard-del {
 
 /* 14) Toggle switch */
 .toggle-sw { background: rgba(15,5,40,0.18) !important; }
-.toggle-sw.on { background: linear-gradient(135deg, #ff6b35, #7b5cff) !important; }
+.toggle-sw.on { background: linear-gradient(135deg, var(--bl), var(--bl2)) !important; }
 
 /* 15) Toast */
 #toast {
@@ -357,7 +359,7 @@ html.dark .rcard-del {
   backdrop-filter: blur(12px) !important;
 }
 .fmt-card.on {
-  background: linear-gradient(135deg, #ff6b35, #7b5cff) !important;
+  background: linear-gradient(135deg, var(--bl), var(--bl2)) !important;
   border-color: transparent !important;
 }
 
@@ -426,9 +428,9 @@ html.dark #pg-login > div {
   border-radius: 100px !important;
 }
 #pg-login button[onclick="ppLoginOffline()"]:hover {
-  background: rgba(255,107,53,0.08) !important;
-  border-color: #ff6b35 !important;
-  color: #ff6b35 !important;
+  background: color-mix(in oklab, var(--bl) 8%, transparent) !important;
+  border-color: var(--bl) !important;
+  color: var(--bl) !important;
 }
 html.dark #pg-login button[onclick="ppLoginOffline()"] {
   background: rgba(255,255,255,0.08) !important;
@@ -665,10 +667,10 @@ html.dark #pg-s3 > .wizard-nav .wbtn-back, html.dark #pg-s4 > .wizard-nav .wbtn-
   font-size: 15px !important;
   font-weight: 800 !important;
   border-radius: 16px !important;
-  background: linear-gradient(135deg, #ff6b35 0%, #ff6b35 45%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, var(--bl) 0%, var(--bl) 45%, var(--bl2) 100%) !important;
   color: #fff !important;
   border: none !important;
-  box-shadow: 0 10px 24px -6px rgba(255,107,53,0.55) !important;
+  box-shadow: 0 10px 24px -6px color-mix(in oklab, var(--bl) 55%, transparent) !important;
 }
 
 /* Reserva espaço de scroll para o conteúdo não ficar atrás do footer fixo.
@@ -739,7 +741,7 @@ html.dark .wiz-x-btn {
 #pg-s1 .step-pill.active, #pg-s2 .step-pill.active,
 #pg-s3 .step-pill.active, #pg-s4 .step-pill.active {
   background: linear-gradient(90deg, var(--bl), var(--bl2)) !important;
-  box-shadow: 0 2px 10px rgba(255,107,53,0.45) !important;
+  box-shadow: 0 2px 10px color-mix(in oklab, var(--bl) 45%, transparent) !important;
   transform: scaleY(1.4);
 }
 html.dark #pg-s1 .step-pill, html.dark #pg-s2 .step-pill,
@@ -748,7 +750,7 @@ html.dark #pg-s3 .step-pill, html.dark #pg-s4 .step-pill {
 }
 html.dark #pg-s1 .step-pill.done, html.dark #pg-s2 .step-pill.done,
 html.dark #pg-s3 .step-pill.done, html.dark #pg-s4 .step-pill.done {
-  background: #ff6b35 !important;
+  background: var(--bl) !important;
 }
 
 /* Label do passo com numeração visível (1/4 · Dados do Cliente) */
@@ -761,4 +763,14 @@ html.dark #pg-s3 .step-pill.done, html.dark #pg-s4 .step-pill.done {
   margin-top: 10px !important;
   font-size: 12px !important;
   color: var(--ink) !important;
+}
+
+/* ==========================================================
+   25) MODO FLASH — única página que mantém o laranja vibrante.
+   Todo o resto do app usa roxo (cor do logotipo).
+   ========================================================== */
+#pg-flash, #pg-flash * {
+  --bl: #ff6b35 !important;
+  --bld: #e85520 !important;
+  --bll: rgba(255,107,53,0.14) !important;
 }
