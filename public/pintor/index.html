@@ -4455,7 +4455,19 @@ function discardAndExit() {
   closeDraftConfirmModal();
   if (cb) cb();
 }
+function isBlockingModalOpen() {
+  const ids = ['draft-confirm-modal','item-modal-form','services-modal','detail-nome-pick-modal','status-picker-modal','terms-modal','cameraModal','view-orc-modal','del-confirm-modal','backup-confirm-modal','cfg-save-modal','photo-choice-modal','send-opts-modal','share-opts-modal','quote-forn-modal','modal-recibo','modal-suporte','modal-evento','modal-client-picker','info-modal','mode-selector-modal'];
+  return ids.some(id => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    return el.classList.contains('open') || el.style.display === 'flex' || el.style.display === 'block';
+  });
+}
+function syncBlockingUiState() {
+  document.documentElement.classList.toggle('modal-blocking-open', isBlockingModalOpen());
+}
 function canNavigateAsync(callback) {
+  if (isBlockingModalOpen()) return;
   if (S.isDirty) {
     try {
       const orc = collectOrc();
