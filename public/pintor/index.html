@@ -6943,6 +6943,11 @@ function showFaq() { document.getElementById('info-modal-title').textContent = '
       const btn = document.getElementById('flash-home-btn');
       if (btn) btn.style.opacity = e.data.open ? '0' : '1', btn.style.pointerEvents = e.data.open ? 'none' : 'auto';
     }
+    if (e.data && e.data.type === 'flash-modal-state') {
+      document.documentElement.classList.toggle('modal-blocking-open', !!e.data.open);
+      const btn = document.getElementById('flash-home-btn');
+      if (btn) btn.style.opacity = e.data.open ? '0' : '1', btn.style.pointerEvents = e.data.open ? 'none' : 'auto';
+    }
   });
 
   // Teclado virtual no app principal: oculta barras de ação fixas
