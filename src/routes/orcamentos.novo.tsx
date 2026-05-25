@@ -776,34 +776,28 @@ function PassoAmbientesFoto({
         />
       )}
 
-      {editandoItem && (
-        <div className="fixed inset-0 z-50 bg-midnight  flex flex-col animate-fade-in">
-          <div className="glass-strong rounded-none border-x-0 border-t-0 p-5 flex items-center justify-between">
-            <h3 className="text-display text-lg">
-              Item · {orc.ambientes.find((a) => a.id === editandoItem.ambId)?.nome}
-            </h3>
-            <button
-              onClick={() => setEditandoItem(null)}
-              className="text-brand"
-              aria-label="Fechar"
-            >
-              <X className="size-6" strokeWidth={3} />
-            </button>
-          </div>
-          <ItemEditor
-            item={editandoItem.item}
-            onSave={(it) => {
-              atualizarItem(editandoItem.ambId, it);
-              setEditandoItem(null);
-            }}
-            onCancel={() => setEditandoItem(null)}
-            onDelete={() => {
+      <ItemEditorModal
+        open={!!editandoItem}
+        item={editandoItem?.item ?? null}
+        mode="detalhado"
+        title={
+          editandoItem
+            ? `Item · ${orc.ambientes.find((a) => a.id === editandoItem.ambId)?.nome ?? ""}`
+            : undefined
+        }
+        onSave={(it) => {
+          if (!editandoItem) return;
+          atualizarItem(editandoItem.ambId, it);
+          setEditandoItem(null);
+        }}
+        onCancel={() => setEditandoItem(null)}
+        onDelete={editandoItem
+          ? () => {
               removerItem(editandoItem.ambId, editandoItem.item.id);
               setEditandoItem(null);
-            }}
-          />
-        </div>
-      )}
+            }
+          : undefined}
+      />
     </div>
   );
 }
