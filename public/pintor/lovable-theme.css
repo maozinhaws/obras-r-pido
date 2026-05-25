@@ -363,6 +363,86 @@ button[class*="primary"] {
 }
 .act-save:hover { transform: translateY(-1px); filter: brightness(1.05); }
 
+.act-btn.act-save,
+.wbtn-next,
+#btnSalvarItem,
+#btn-salvar-item-modal,
+#services-modal button[onclick="confirmItemObsPick()"],
+#obsPickModal button[onclick="confirmObsPick()"],
+#draft-confirm-modal button[onclick="saveAsDraftAndExit()"] {
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow:
+    0 8px 18px -6px rgba(255,107,53,0.45),
+    0 22px 42px -12px rgba(123,92,255,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.28) !important;
+}
+
+.act-btn.act-soft,
+.wbtn-back,
+#btnCancelarItem,
+#draft-confirm-modal button[onclick="discardAndExit()"] {
+  background: rgba(255,255,255,0.56) !important;
+  color: var(--ink) !important;
+  border: 1.5px solid rgba(15,5,40,0.10) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  box-shadow: 0 6px 18px -6px rgba(15,5,40,0.14) !important;
+}
+
+html.dark .act-btn.act-soft,
+html.dark .wbtn-back,
+html.dark #btnCancelarItem,
+html.dark #draft-confirm-modal button[onclick="discardAndExit()"] {
+  background: rgba(28,18,42,0.56) !important;
+  color: #ededf0 !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+.chip,
+#nomePickGrid button,
+#detail-nome-pick-grid button,
+#obsServGrid button,
+#obsMatGrid button,
+#services-modal-body button,
+#services-modal-mat-body button {
+  border-radius: 999px !important;
+  font-weight: 800 !important;
+  border: 1px solid color-mix(in oklab, var(--bl) 24%, transparent) !important;
+  background: rgba(255,255,255,0.82) !important;
+  color: var(--bl) !important;
+  backdrop-filter: blur(14px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(165%) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55) !important;
+}
+
+#obsMatGrid button,
+#services-modal-mat-body button {
+  color: #059669 !important;
+  border-color: color-mix(in oklab, #10b981 28%, transparent) !important;
+}
+
+html.dark .chip,
+html.dark #nomePickGrid button,
+html.dark #detail-nome-pick-grid button,
+html.dark #obsServGrid button,
+html.dark #obsMatGrid button,
+html.dark #services-modal-body button,
+html.dark #services-modal-mat-body button {
+  background: rgba(28,18,42,0.72) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+#obsServGrid button[style*="#ff6b35"],
+#services-modal-body button[style*="#7c3aed"],
+#obsMatGrid button[style*="#059669"],
+#services-modal-mat-body button[style*="#059669"] {
+  color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: 0 10px 24px -10px rgba(15,5,40,0.32) !important;
+}
+
 .add-room-btn {
   border: 2px dashed rgba(255,107,53,0.45) !important;
   color: var(--bl) !important;
@@ -403,6 +483,24 @@ input:focus, textarea:focus, select:focus {
   outline: none !important;
 }
 .finput::placeholder, .fta::placeholder { color: #94a3b8 !important; }
+
+#app input::placeholder,
+#app textarea::placeholder,
+.item-title-inp::placeholder,
+.item-obs-inp::placeholder,
+.minp::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+html.dark #app input::placeholder,
+html.dark #app textarea::placeholder,
+html.dark .item-title-inp::placeholder,
+html.dark .item-obs-inp::placeholder,
+html.dark .minp::placeholder {
+  color: #94a3b8 !important;
+}
 
 /* 11) Checkbox / chk-item */
 .chk-item {
@@ -936,6 +1034,28 @@ html.dark .modal-overlay > div:not(.modal-top):not(.modal-close){
   background: rgba(22,14,34,0.62) !important;
   border-color: rgba(255,255,255,0.10) !important;
   box-shadow: 0 28px 70px -12px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08) inset !important;
+}
+
+#nomePickModal,
+#obsPickModal,
+#item-modal-form,
+#services-modal,
+#detail-nome-pick-modal {
+  align-items: center !important;
+  justify-content: center !important;
+  padding: max(16px, env(safe-area-inset-top, 16px)) 16px max(16px, env(safe-area-inset-bottom, 16px)) !important;
+}
+
+#nomePickModal > div,
+#obsPickModal > div,
+#services-modal > div,
+#detail-nome-pick-modal > div,
+#item-modal-form .item-modal-sheet,
+#itemModal .modal-sheet {
+  width: 100% !important;
+  max-width: 430px !important;
+  max-height: min(86dvh, 760px) !important;
+  border-radius: 28px !important;
 }
 
 /* ============================================================
