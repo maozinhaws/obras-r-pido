@@ -788,7 +788,7 @@ function PassoAmbientesFoto({
             ? `Item · ${orc.ambientes.find((a) => a.id === editandoItem.ambId)?.nome ?? ""}`
             : undefined
         }
-        onSave={(it) => {
+        onSave={(it: ItemAmbiente) => {
           if (!editandoItem) return;
           atualizarItem(editandoItem.ambId, it);
           setEditandoItem(null);

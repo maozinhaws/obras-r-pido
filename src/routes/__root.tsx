@@ -23,7 +23,7 @@ import appCss from "../styles.css?url";
 import { Sidebar, SidebarProvider, MenuButton } from "@/components/app-shell";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TermsGate } from "@/components/terms-gate";
-import { useVisualViewportInset } from "@/hooks/use-vv-inset";
+
 
 
 
@@ -160,7 +160,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  useVisualViewportInset();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <SidebarProvider>
