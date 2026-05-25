@@ -2439,15 +2439,25 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
             <span><svg class="ico" aria-hidden="true"><use href="#ico-eye"/></svg></span><span>Acessibilidade</span><span class="cfg-chev">›</span>
           </button>
           <div class="cfg-card-body" id="cc-acessibilidade">
-            <div style="font-size:12px;color:var(--ink3);margin-bottom:14px;line-height:1.55;">Ativa fontes maiores, botões e espaçamentos aumentados para facilitar leitura e toque. Também ajusta o contraste para melhor visibilidade.</div>
-            <div class="toggle-row" style="margin-bottom:0;" onclick="var sw=document.getElementById('cfg-acessibilidade-sw');sw.classList.toggle('on');S.config.acessibilidade=sw.classList.contains('on');document.body.classList.toggle('acessivel',S.config.acessibilidade);_cfgDirty=true;">
+            <div style="font-size:12px;color:var(--ink3);margin-bottom:14px;line-height:1.55;">Personalize o tamanho da fonte e reforce o contraste das bordas e textos do app — útil para uso sob sol forte ou baixa visão.</div>
+
+            <div class="flbl" style="margin-bottom:6px;">Tamanho da fonte</div>
+            <div class="a-fs-row" id="cfg-fs-row">
+              <button type="button" class="a-fs-btn fs-p-sample"  data-fs="p"  onclick="ppSetFsScale('p')"><span class="a-fs-prev">Aa</span><span class="a-fs-lbl">Pequeno</span></button>
+              <button type="button" class="a-fs-btn fs-m-sample"  data-fs="m"  onclick="ppSetFsScale('m')"><span class="a-fs-prev">Aa</span><span class="a-fs-lbl">Médio</span></button>
+              <button type="button" class="a-fs-btn fs-g-sample"  data-fs="g"  onclick="ppSetFsScale('g')"><span class="a-fs-prev">Aa</span><span class="a-fs-lbl">Grande</span></button>
+              <button type="button" class="a-fs-btn fs-xg-sample" data-fs="xg" onclick="ppSetFsScale('xg')"><span class="a-fs-prev">Aa</span><span class="a-fs-lbl">Extra</span></button>
+            </div>
+
+            <div class="toggle-row" style="margin-bottom:0;" onclick="ppToggleContraste()">
               <div>
-                <div class="toggle-lbl">Modo Acessibilidade</div>
-                <div class="toggle-sub">Textos e botões maiores</div>
+                <div class="toggle-lbl">Reforçar contraste</div>
+                <div class="toggle-sub">Bordas e textos mais escuros nos formulários e cards</div>
               </div>
-              <div class="toggle-sw" id="cfg-acessibilidade-sw"></div>
+              <div class="toggle-sw" id="cfg-contraste-sw"></div>
             </div>
           </div>
+
         </div>
 
         <!-- CARD: Backup -->
@@ -4224,7 +4234,32 @@ if (S.config && S.config.msg && !S.config.msg.includes('{total}')) {
   S.config.msg += '\\n\\n*Valor Total: {total}*';
   localStorage.setItem('pp-config', JSON.stringify(S.config));
 }
-if (S.config.acessibilidade) document.body.classList.add('acessivel');
+// ── Acessibilidade: escala de fonte + reforço de contraste ──
+function ppApplyA11y() {
+  var fs = (S.config && S.config.fsScale) || 'm';
+  // Compat legado: acessibilidade:true => grande
+  if (S.config && S.config.acessibilidade && !S.config.fsScale) fs = 'g';
+  document.body.classList.remove('fs-p','fs-m','fs-g','fs-xg','acessivel');
+  document.body.classList.add('fs-' + fs);
+  if (fs === 'g' || fs === 'xg') document.body.classList.add('acessivel');
+  document.body.classList.toggle('contraste-alto', !!(S.config && S.config.contrasteAlto));
+}
+function ppSetFsScale(v) {
+  S.config.fsScale = v;
+  ppApplyA11y();
+  document.querySelectorAll('#cfg-fs-row .a-fs-btn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-fs') === v);
+  });
+  if (typeof _cfgDirty !== 'undefined') _cfgDirty = true;
+}
+function ppToggleContraste() {
+  S.config.contrasteAlto = !S.config.contrasteAlto;
+  var sw = document.getElementById('cfg-contraste-sw');
+  if (sw) sw.classList.toggle('on', !!S.config.contrasteAlto);
+  ppApplyA11y();
+  if (typeof _cfgDirty !== 'undefined') _cfgDirty = true;
+}
+ppApplyA11y();
 
 S.DEFAULT_SERVICES = (S.config.servicos || defCfg.servicos).split(',').map(s=>s.trim()).filter(Boolean);
 S.statusArr = (S.config.statusList || defCfg.statusList).split(',').map(s=>s.trim()).filter(Boolean);
@@ -5865,10 +5900,10 @@ function renderLogoPreview() {
   }
 }
 
-function openConfig() { canNavigateAsync(() => { S.isDirty = false; document.getElementById('cfg-empresa').value = S.config.empresa || ''; document.getElementById('cfg-tel').value = S.config.tel || ''; document.getElementById('cfg-email-empresa').value = S.config.emailEmpresa || ''; document.getElementById('cfg-end-empresa').value = S.config.endEmpresa || ''; document.getElementById('cfg-doc').value = S.config.doc || ''; document.getElementById('cfg-msg').value = S.config.msg || defCfg.msg; document.getElementById('cfg-servicos').value = S.config.servicos || defCfg.servicos; document.getElementById('cfg-pgto').value = S.config.pgto || defCfg.pgto; document.getElementById('cfg-status').value = S.config.statusList || defCfg.statusList; const fn=document.getElementById('cfg-flash-nomes'); if(fn) fn.value=S.config.flashNomes||defCfg.flashNomes; const fs=document.getElementById('cfg-flash-servicos'); if(fs) fs.value=S.config.flashServicos||defCfg.flashServicos; const fm=document.getElementById('cfg-flash-materiais'); if(fm) fm.value=S.config.flashMateriais||defCfg.flashMateriais; renderLogoPreview(); renderSigPreview(); const accSw = document.getElementById('cfg-acessibilidade-sw'); if(accSw) accSw.classList.toggle('on', !!S.config.acessibilidade); _cfgDirty = false; const cu = window.ppGetUser?.(); if(cu){ const av=document.getElementById('cfg-user-avatar'); const nm=document.getElementById('cfg-user-name'); const em=document.getElementById('cfg-user-email'); if(av&&cu.picture){av.src=cu.picture;av.style.display='block';} if(nm)nm.textContent=cu.name||'Usuário'; if(em)em.textContent=cu.email||'Modo offline'; } window.renderGoogleStatus?.(); showPage('pg-config'); }); }
+function openConfig() { canNavigateAsync(() => { S.isDirty = false; document.getElementById('cfg-empresa').value = S.config.empresa || ''; document.getElementById('cfg-tel').value = S.config.tel || ''; document.getElementById('cfg-email-empresa').value = S.config.emailEmpresa || ''; document.getElementById('cfg-end-empresa').value = S.config.endEmpresa || ''; document.getElementById('cfg-doc').value = S.config.doc || ''; document.getElementById('cfg-msg').value = S.config.msg || defCfg.msg; document.getElementById('cfg-servicos').value = S.config.servicos || defCfg.servicos; document.getElementById('cfg-pgto').value = S.config.pgto || defCfg.pgto; document.getElementById('cfg-status').value = S.config.statusList || defCfg.statusList; const fn=document.getElementById('cfg-flash-nomes'); if(fn) fn.value=S.config.flashNomes||defCfg.flashNomes; const fs=document.getElementById('cfg-flash-servicos'); if(fs) fs.value=S.config.flashServicos||defCfg.flashServicos; const fm=document.getElementById('cfg-flash-materiais'); if(fm) fm.value=S.config.flashMateriais||defCfg.flashMateriais; renderLogoPreview(); renderSigPreview(); const _fs=(S.config.fsScale)||(S.config.acessibilidade?'g':'m'); document.querySelectorAll('#cfg-fs-row .a-fs-btn').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-fs')===_fs); }); const ctSw=document.getElementById('cfg-contraste-sw'); if(ctSw) ctSw.classList.toggle('on', !!S.config.contrasteAlto); _cfgDirty = false; const cu = window.ppGetUser?.(); if(cu){ const av=document.getElementById('cfg-user-avatar'); const nm=document.getElementById('cfg-user-name'); const em=document.getElementById('cfg-user-email'); if(av&&cu.picture){av.src=cu.picture;av.style.display='block';} if(nm)nm.textContent=cu.name||'Usuário'; if(em)em.textContent=cu.email||'Modo offline'; } window.renderGoogleStatus?.(); showPage('pg-config'); }); }
 function saveConfig() {
-  S.config = { empresa: document.getElementById('cfg-empresa').value, tel: document.getElementById('cfg-tel').value, emailEmpresa: document.getElementById('cfg-email-empresa').value, endEmpresa: document.getElementById('cfg-end-empresa').value, doc: document.getElementById('cfg-doc').value, msg: document.getElementById('cfg-msg').value, servicos: document.getElementById('cfg-servicos').value, pgto: document.getElementById('cfg-pgto').value, statusList: document.getElementById('cfg-status').value, skipDelConfirm: S.config.skipDelConfirm || false, skipDirtyConfirm: S.config.skipDirtyConfirm || false, logo: S.config.logo || '', assinatura: S.config.assinatura || '', acessibilidade: S.config.acessibilidade || false, flashNomes: (document.getElementById('cfg-flash-nomes')||{}).value||defCfg.flashNomes, flashServicos: (document.getElementById('cfg-flash-servicos')||{}).value||defCfg.flashServicos, flashMateriais: (document.getElementById('cfg-flash-materiais')||{}).value||defCfg.flashMateriais };
-  document.body.classList.toggle('acessivel', !!S.config.acessibilidade);
+  S.config = { empresa: document.getElementById('cfg-empresa').value, tel: document.getElementById('cfg-tel').value, emailEmpresa: document.getElementById('cfg-email-empresa').value, endEmpresa: document.getElementById('cfg-end-empresa').value, doc: document.getElementById('cfg-doc').value, msg: document.getElementById('cfg-msg').value, servicos: document.getElementById('cfg-servicos').value, pgto: document.getElementById('cfg-pgto').value, statusList: document.getElementById('cfg-status').value, skipDelConfirm: S.config.skipDelConfirm || false, skipDirtyConfirm: S.config.skipDirtyConfirm || false, logo: S.config.logo || '', assinatura: S.config.assinatura || '', acessibilidade: S.config.acessibilidade || false, fsScale: S.config.fsScale || 'm', contrasteAlto: !!S.config.contrasteAlto, flashNomes: (document.getElementById('cfg-flash-nomes')||{}).value||defCfg.flashNomes, flashServicos: (document.getElementById('cfg-flash-servicos')||{}).value||defCfg.flashServicos, flashMateriais: (document.getElementById('cfg-flash-materiais')||{}).value||defCfg.flashMateriais };
+  ppApplyA11y();
   S.DEFAULT_SERVICES = S.config.servicos.split(',').map(s=>s.trim()).filter(Boolean); 
   if(!S.DEFAULT_SERVICES.length) S.DEFAULT_SERVICES = defCfg.servicos.split(',').map(s=>s.trim()); 
   S.statusArr = (S.config.statusList || defCfg.statusList).split(',').map(s=>s.trim()).filter(Boolean); 
