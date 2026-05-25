@@ -247,13 +247,14 @@ export const PageHeader = memo(({
         ref={ref}
         className="fixed top-3 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-2rem)] max-w-md"
         style={{
-          background: "var(--card-solid)",
-          backdropFilter: "blur(28px) saturate(170%)",
-          WebkitBackdropFilter: "blur(28px) saturate(170%)",
-          border: "1px solid var(--card-border-strong)",
+          background: "color-mix(in oklab, var(--card) 42%, transparent)",
+          backdropFilter: "blur(36px) saturate(200%)",
+          WebkitBackdropFilter: "blur(36px) saturate(200%)",
+          border: "1px solid color-mix(in oklab, var(--foreground) 10%, transparent)",
           borderRadius: 24,
           padding: "16px 16px 18px",
-          boxShadow: "0 10px 32px -8px rgba(15,5,40,0.18)",
+          boxShadow:
+            "inset 0 1px 0 rgba(255,255,255,0.45), 0 10px 32px -8px rgba(15,5,40,0.22)",
           color: "var(--on-hero)",
         }}
       >
