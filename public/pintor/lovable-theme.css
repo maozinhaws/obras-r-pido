@@ -585,28 +585,42 @@ body:has(#pg-s4.active) .page > .topnav button[onclick="toggleSidebar()"] {
   pointer-events: auto;
 }
 
-/* Botão Cancelar/Voltar — estilo glass igual aos botões globais */
+/* Botão Cancelar — só ícone X, quadrado 44x44 igual ao menu hambúrguer */
 #pg-s1 .wbtn-back, #pg-s2 .wbtn-back,
 #pg-s3 .wbtn-back, #pg-s4 .wbtn-back {
-  height: 38px !important;
+  width: 44px !important;
+  height: 44px !important;
   min-width: 0 !important;
-  padding: 0 14px !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
+  padding: 0 !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  color: transparent !important;
   border-radius: 14px !important;
   background: rgba(255,255,255,0.65) !important;
   backdrop-filter: blur(18px) saturate(170%) !important;
   -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
   border: 1px solid rgba(15,5,40,0.10) !important;
   box-shadow: 0 6px 18px -6px rgba(15,5,40,0.18) !important;
-  color: var(--ink) !important;
+  display: grid !important;
+  place-items: center !important;
   margin-right: auto;
+}
+#pg-s1 .wbtn-back svg, #pg-s2 .wbtn-back svg,
+#pg-s3 .wbtn-back svg, #pg-s4 .wbtn-back svg {
+  width: 20px !important;
+  height: 20px !important;
+  color: var(--ink) !important;
+  stroke: var(--ink) !important;
 }
 html.dark #pg-s1 .wbtn-back, html.dark #pg-s2 .wbtn-back,
 html.dark #pg-s3 .wbtn-back, html.dark #pg-s4 .wbtn-back {
   background: rgba(28,18,42,0.70) !important;
   border-color: rgba(255,255,255,0.12) !important;
+}
+html.dark #pg-s1 .wbtn-back svg, html.dark #pg-s2 .wbtn-back svg,
+html.dark #pg-s3 .wbtn-back svg, html.dark #pg-s4 .wbtn-back svg {
   color: #ededf0 !important;
+  stroke: #ededf0 !important;
 }
 
 /* Botão Avançar — pill gradiente compacto à direita */
