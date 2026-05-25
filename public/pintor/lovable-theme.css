@@ -970,3 +970,35 @@ svg:not([data-brand])[stroke]:not([stroke="none"]):not(:where([data-brand] *)) {
 svg[data-filled] { fill: currentColor !important; }
 /* Garante que SVGs reutilizando símbolos #ico-* respeitem o stroke 2 */
 svg.ico { stroke-width: 2 !important; stroke-linecap: round !important; stroke-linejoin: round !important; fill: none !important; }
+
+/* ============================================================
+   KEYBOARD HANDLING (Lovable v25)
+   Quando um input/textarea recebe foco no app principal,
+   <html> ganha a classe .kbd-open. Em vez de deixar o teclado
+   empurrar as barras de ação para cima (sticky/fixed bottom),
+   nós as ocultamos enquanto o teclado está aberto — voltam
+   automaticamente assim que o campo perde foco.
+   Também aplicado ao footer do item-modal-form (Cancelar | Salvar)
+   que já fica side-by-side no mobile.
+   ============================================================ */
+html.kbd-open #item-modal-form > div > div:last-child,
+html.kbd-open .footer-nav,
+html.kbd-open .step1-actions,
+html.kbd-open .nav-row {
+  display: none !important;
+}
+
+/* No celular, garante que Cancelar/Salvar do item-modal-form fiquem
+   sempre lado a lado, ambos com mesma proporção, e botões compactos. */
+@media (max-width: 480px) {
+  #item-modal-form > div > div:last-child {
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 12px 14px calc(12px + env(safe-area-inset-bottom,0px)) !important;
+  }
+  #item-modal-form > div > div:last-child > button {
+    flex: 1 1 0 !important;
+    height: 48px !important;
+    font-size: 14px !important;
+  }
+}

@@ -1741,7 +1741,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
 <link rel="stylesheet" href="/photo-annotator.css">
   <script type="module" crossorigin src="/pintor/assets/app-7mkkXZ-j.js"></script>
   <link rel="stylesheet" crossorigin href="/pintor/assets/app-BL-_ECWx.css">
-  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=24">
+  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=25">
 <script>(function(){try{if(!localStorage.getItem("pp-theme"))localStorage.setItem("pp-theme","light");document.documentElement.classList.remove("dark");}catch(e){}})();</script>
 </head>
 <body>
@@ -2602,8 +2602,8 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
         onclick="exitFlash()"
         aria-label="Cancelar e sair"
         title="Cancelar"
-        style="position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:14px;z-index:9999;width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,0.65);color:var(--ink,#0a0a0a);border:1px solid rgba(15,5,40,0.10);backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%);box-shadow:0 6px 18px -6px rgba(15,5,40,0.18);display:grid;place-items:center;padding:0;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        style="position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:9999;width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,0.65);color:var(--ink,#0a0a0a);border:1px solid rgba(15,5,40,0.10);backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%);box-shadow:0 4px 12px -4px rgba(15,5,40,0.18);display:grid;place-items:center;padding:0;transition:opacity .15s,transform .15s;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
       <iframe id="flash-iframe"
         allow="camera; microphone"
@@ -2670,9 +2670,13 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
     .finput{height:50px;padding:0 14px}.step1-form-card .finput{height:64px;font-size:17px;border-radius:18px;padding:0 16px}.fta{min-height:74px;padding:10px 14px;resize:none}
     .finput:focus,.fta:focus{border-color:var(--accent-b);box-shadow:0 0 0 4px rgba(249,115,22,.14)}.finput.invalid{border-color:var(--danger);box-shadow:0 0 0 4px var(--danger-soft)}
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.measure-note{margin-top:-2px;margin-bottom:8px;font-size:12px;color:var(--muted);line-height:1.35}
-    .nav-row,.step1-actions{display:grid;grid-template-columns:1fr;gap:8px}
+    .nav-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .nav-row .act-btn{margin-bottom:0;width:100%}
+    .step1-actions{display:grid;grid-template-columns:1fr;gap:8px}
     .step1-actions{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:1fr;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg, rgba(247,248,252,0) 0%, var(--bg) 38%);z-index:10;backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%)}
     body.dark .step1-actions{background:linear-gradient(180deg, rgba(13,15,19,0) 0%, var(--bg) 38%)}
+    /* Quando o teclado abre (input/textarea focado), oculta a barra de ações em vez de empurrá-la para cima */
+    body.kbd-open .nav-row, body.kbd-open .step1-actions, body.kbd-open .footer-nav{ display:none !important; }
     .act-danger{border:none;background:linear-gradient(135deg,#DC2626,#EF4444);color:#fff;box-shadow:0 10px 20px rgba(220,38,38,.22)}
     .act-cancel{background:var(--card);color:var(--text-2);border:2px solid var(--border-2)}
     .footer-nav{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:1fr 1.4fr;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg, rgba(247,248,252,0) 0%, var(--bg) 38%);z-index:10;backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%)}
@@ -2856,8 +2860,8 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
         <textarea class=&quot;fta&quot; id=&quot;modalObs&quot; name=&quot;item_observacao_app&quot; autocomplete=&quot;off&quot; data-form-type=&quot;other&quot; autocorrect=&quot;off&quot; spellcheck=&quot;false&quot; placeholder=&quot;Ex.: precisa lixar, remover ferragem, corrigir trinca...&quot; onclick=&quot;_onObsFieldClick()&quot;></textarea>
       </div>
       <div class=&quot;nav-row&quot;>
-        <button class=&quot;act-btn act-save&quot; id=&quot;btnSalvarItem&quot;>Salvar Item</button>
         <button class=&quot;act-btn act-soft&quot; id=&quot;btnCancelarItem&quot;>Cancelar</button>
+        <button class=&quot;act-btn act-save&quot; id=&quot;btnSalvarItem&quot;>Salvar Item</button>
       </div>
     </div>
   </div>
@@ -3039,6 +3043,10 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
     function toggleService(s){ var svcs=state.modalSelectedServices||[]; var i=svcs.indexOf(s); if(i>=0) svcs.splice(i,1); else svcs.push(s); state.modalSelectedServices=svcs; _renderObsChips(OBS_SERVICOS,'obsServGrid','srv'); _renderObsChips(OBS_MATERIAIS,'obsMatGrid','mat'); }
     function confirmObsPick(){ var allKnown=OBS_SERVICOS.concat(OBS_MATERIAIS); var current=els.modalObs.value; var customParts=current.split(',').map(function(s){return s.trim();}).filter(function(s){return s&&allKnown.indexOf(s)<0;}); var selected=state.modalSelectedServices||[]; els.modalObs.value=customParts.concat(selected).join(', '); closeObsPick(); }
     renderSteps(); renderItems(); updateSummary(); setupSwipe(); hideSplash();
+    /* Teclado virtual: oculta barras de ação (nav-row/step1-actions/footer-nav) e
+       o botão flutuante X quando um input/textarea recebe foco — em vez de empurrar
+       o conteúdo para cima. Avisa o documento pai para esconder o X global também. */
+    (function(){ function isTxt(el){ if(!el) return false; var t=(el.tagName||'').toLowerCase(); if(t==='textarea'||t==='select') return true; if(t!=='input') return false; var ty=(el.type||'text').toLowerCase(); return ['text','search','tel','url','email','number','password','decimal'].indexOf(ty)>=0; } function open(){ document.body.classList.add('kbd-open'); try{ parent.postMessage({type:'kbd-state',open:true},'*'); }catch(_){} } function close(){ document.body.classList.remove('kbd-open'); try{ parent.postMessage({type:'kbd-state',open:false},'*'); }catch(_){} } document.addEventListener('focusin', function(e){ if(isTxt(e.target)) open(); }); document.addEventListener('focusout', function(){ setTimeout(function(){ if(!isTxt(document.activeElement)) close(); },80); }); })();
   </script>
 
 
@@ -6811,7 +6819,21 @@ function showFaq() { document.getElementById('info-modal-title').textContent = '
     if (e.data && e.data.type === 'flash-exit') {
       exitFlash();
     }
+    // Quando o teclado virtual abre dentro do iframe Flash, esconde o X flutuante
+    if (e.data && e.data.type === 'kbd-state') {
+      const btn = document.getElementById('flash-home-btn');
+      if (btn) btn.style.opacity = e.data.open ? '0' : '1', btn.style.pointerEvents = e.data.open ? 'none' : 'auto';
+    }
   });
+
+  // Teclado virtual no app principal: oculta barras de ação fixas
+  // (footer de modais, .step1-actions, .footer-nav) quando um campo recebe foco,
+  // em vez de empurrá-las para cima. Reaparecem ao perder o foco.
+  (function(){
+    function isTxt(el){ if(!el) return false; var t=(el.tagName||'').toLowerCase(); if(t==='textarea'||t==='select') return true; if(t!=='input') return false; var ty=(el.type||'text').toLowerCase(); return ['text','search','tel','url','email','number','password'].indexOf(ty)>=0; }
+    document.addEventListener('focusin', function(e){ if(isTxt(e.target)) document.documentElement.classList.add('kbd-open'); });
+    document.addEventListener('focusout', function(){ setTimeout(function(){ if(!isTxt(document.activeElement)) document.documentElement.classList.remove('kbd-open'); }, 80); });
+  })();
 
 
 
