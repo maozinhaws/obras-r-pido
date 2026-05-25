@@ -9,13 +9,16 @@ import {
   type Cliente,
   AMBIENTES_PADRAO,
   FORMAS_PAGAMENTO,
+  SERVICOS_PADRAO,
+  MATERIAIS_PADRAO,
   formatBRL,
   calcularTotal,
 } from "@/lib/db";
 // PageHeader removido: uso header compacto inline para uso em campo
 import { Field } from "./clientes";
 import { uid } from "@/lib/utils";
-import { urlFoto } from "@/lib/fotos";
+import { urlFoto, salvarFoto, removerFoto } from "@/lib/fotos";
+import { PhotoEditor } from "@/components/photo-editor";
 import {
   Plus,
   X,
