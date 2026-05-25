@@ -312,7 +312,7 @@ input:focus, textarea:focus, select:focus {
   backdrop-filter: blur(12px) !important;
 }
 .chk-item.on {
-  background: rgba(255,107,53,0.10) !important;
+  background: var(--bll) !important;
   border-color: var(--bl) !important;
 }
 html.dark .chk-item {
