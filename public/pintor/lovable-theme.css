@@ -404,6 +404,24 @@ input:focus, textarea:focus, select:focus {
 }
 .finput::placeholder, .fta::placeholder { color: #94a3b8 !important; }
 
+#app input::placeholder,
+#app textarea::placeholder,
+.item-title-inp::placeholder,
+.item-obs-inp::placeholder,
+.minp::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+html.dark #app input::placeholder,
+html.dark #app textarea::placeholder,
+html.dark .item-title-inp::placeholder,
+html.dark .item-obs-inp::placeholder,
+html.dark .minp::placeholder {
+  color: #94a3b8 !important;
+}
+
 /* 11) Checkbox / chk-item */
 .chk-item {
   background: rgba(255,255,255,0.72) !important;
