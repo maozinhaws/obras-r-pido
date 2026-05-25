@@ -7440,12 +7440,16 @@ async function gDriveSyncClientes() {
 <script>
 (function(){
   function goDashboard(){
-    try { if (typeof homeTab === 'function') { homeTab('dashboard'); return; } } catch(e){}
     try {
-      if (typeof showPage === 'function') showPage('pg-dashboard');
-      if (typeof renderDashboard === 'function') renderDashboard();
-    } catch(e){ console.error('Fallback dashboard falhou', e); }
+      if (typeof showPage === 'function') {
+        showPage('pg-dashboard');
+        if (typeof renderDashboard === 'function') renderDashboard();
+        return;
+      }
+    } catch(e){ console.error('[pp] showPage falhou', e); }
+    try { location.hash = '#pg-dashboard'; } catch(e){}
   }
+
   window.__ppGoDashboard = goDashboard;
   function attach(){
     document.querySelectorAll('.identity-center').forEach(function(el){
