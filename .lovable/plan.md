@@ -1,69 +1,65 @@
+## Contexto
 
-# Refatorar modo claro/escuro — uma página por vez
+As 5 tarefas têm impacto e complexidade muito diferentes. O app vive em dois arquivos gigantes (`public/pintor/index.html` e `app.html`, ~7.400 linhas cada), com boa parte do Flash dentro de um `iframe[data-srcdoc]`. Vou organizar em **4 ondas** por prioridade (impacto × risco), confirmar uma dúvida sobre a tarefa 4 e executar.
 
-## Problema
-Modo claro e escuro estão quase idênticos — só a cor da fonte muda. Motivo: a Home (`src/routes/index.tsx`) usa **cores hard-coded inline** (`#0b0d12`, `rgba(20,23,29,0.5)`, `rgba(255,255,255,0.06)`, `text-white`, etc.) em vez de tokens semânticos do design system. O `ThemeToggle` adiciona/remove a classe `.dark`, mas como os estilos não usam `var(--background)` / `var(--foreground)` / `var(--card)`, nada muda visualmente.
+## Prioridades
 
-Além disso, o **default é fundo escuro fixo** (gradiente radial preto), o que contradiz a regra de memória: *"Modo claro é o padrão e mais usado (uso em campo sob sol forte)"*.
+| # | Tarefa | Prioridade | Por quê |
+|---|--------|------------|---------|
+| 2 | Dashboard com gráficos | **P0** | Promete entregue mas só tem markup, sem JS de render |
+| 1 | Câmera personalizada | **P0** | Funcionalidade quebrada, bloqueia uso real em campo |
+| 3 | Modais centralizados + glass | **P1** | Inconsistência visual, mas app funciona |
+| 5 | Botões fora do padrão | **P1** | Polimento visual |
+| 4 | Prefixo `MT_`/`SV_` no DB | **P2** | Mudança estrutural com risco de quebrar dados existentes |
 
-## Estratégia
-Fazer **uma página por vez**, começando pela **Home** (`/`). Só avançar para a próxima página depois que o usuário aprovar o resultado da Home.
+## Onda 1 — Dashboard funcional (P0)
 
-## Escopo desta rodada: APENAS Home (`src/routes/index.tsx`)
+A página `#pg-dashboard` já existe (index.html L2567+) com KPIs, filtros de período e 3 contêineres de gráfico vazios. Falta a lógica.
 
-### O que muda
-1. **Trocar fundo fixo escuro por tokens responsivos ao tema**
-   - Claro: fundo claro neutro (off-white quente, alto contraste para sol) com gleams sutis laranja/roxo.
-   - Escuro: o fundo atual (gradiente radial laranja→roxo→preto).
-   - Implementar via `var(--bg-hero)` definido em `src/styles.css` para `:root` e `.dark`.
+- Adicionar `renderDashboard()` que:
+  - Lê `orcamentos` do IndexedDB/localStorage
+  - Filtra pelo range ativo (7/30/90/365/tudo + custom DE/ATÉ)
+  - Calcula KPIs: total emitidos, receita total, ticket médio, taxa de conversão
+  - Renderiza 3 gráficos SVG inline (sem dependência externa):
+    - Emissões por dia (linha)
+    - Receita por mês (barras)
+    - Distribuição por status (donut)
+- Wire-up `dashSetRange()`, `dashCustomRange()`, e auto-render ao abrir a tab
+- Replicar nos dois arquivos
 
-2. **Substituir cores inline por tokens semânticos**
-   - `text-white` → `text-foreground`
-   - `text-white/60`, `text-white/55` → `text-muted-foreground`
-   - `rgba(20,23,29,0.5)` (cards glass) → `var(--card)` + `var(--card-border)` com opacidade ajustada por tema
-   - `rgba(255,255,255,0.06)` (pills, item rows) → `var(--surface-2)`
-   - `#a78bfa` (links Histórico/Ver agenda) → `var(--brand-2)` ou `text-accent`
+## Onda 2 — Câmera (P0)
 
-3. **Manter intacto**
-   - O CTA Hero "Novo Orçamento" (gradiente laranja→roxo) — fica igual nos dois modos, é a identidade da marca.
-   - Estrutura, layout, animações, ícones, copy.
-   - Toda a lógica (modal, query Dexie, navegação).
+Sintoma: abre o seletor de arquivos em vez da câmera. O código tem `getUserMedia` mas o iframe pode não estar recebendo permissão. Investigar:
 
-4. **Garantir contraste em sol forte (modo claro)**
-   - Texto principal: preto puro (`#0a0a0a`).
-   - Bordas dos cards: 1.5px sólidas escuras (não translúcidas).
-   - Pills de métrica: fundo branco sólido, borda escura.
-   - Linhas de orçamento: fundo branco, borda slate-300.
+- Confirmar `allow="camera; microphone"` no iframe (já tem L2609)
+- Verificar se `sandbox` está bloqueando (allow-same-origin já está)
+- O `input[type=file] accept="image/*"` está sendo acionado como fallback automático — descobrir se a Promise de `getUserMedia` está rejeitando silenciosamente
+- Garantir HTTPS no preview (sandbox usa HTTPS, ok)
+- Testar no preview com browser tool e ler console do iframe
 
-### Tokens novos em `src/styles.css`
-Adicionar (sem quebrar o existente):
-```css
-:root {
-  --bg-hero: radial-gradient(80% 50% at 50% 0%, rgba(255,107,53,0.08), transparent 70%),
-             radial-gradient(60% 50% at 100% 100%, rgba(123,92,255,0.08), transparent 70%),
-             #faf8f5;
-  --card-solid: #ffffff;
-  --card-border-strong: #cbd5e1;
-  --surface-2: #f1f5f9;
-}
-.dark {
-  --bg-hero: radial-gradient(80% 50% at 50% 0%, rgba(255,107,53,0.5), transparent 70%),
-             radial-gradient(60% 50% at 100% 100%, rgba(123,92,255,0.6), transparent 70%),
-             #0b0d12;
-  --card-solid: rgba(20,23,29,0.5);
-  --card-border-strong: rgba(255,255,255,0.08);
-  --surface-2: rgba(255,255,255,0.06);
-}
-```
+## Onda 3 — Modais centralizados + glassmorphism (P1)
 
-### Não-objetivos (próximas rodadas)
-- `/orcamentos/novo`, `/orcamentos`, `/agenda`, `/clientes`, `/configuracoes`, `/mais` — ficam para depois.
-- Não vou mexer no `ThemeToggle`, nem na regra global de inputs brancos (já validada).
+- Atualizar `.modal-overlay` para `align-items:center` (hoje é `flex-end`)
+- Aplicar `.glass` / `.glass-strong` (já existe no design system) em todos os `.modal-sheet`, `.modal-glass`, sheets do PWA, picker, etc.
+- Garantir cantos arredondados 28-32px conforme memória do projeto
+- Sweep nos dois arquivos
 
-## Como saberemos que ficou bom
-- Alternar o toggle ☀️/🌙 muda visivelmente fundo, cards e bordas — não só texto.
-- No modo claro, a tela é legível sob luz solar simulada (alto contraste, sem translucidez fraca).
-- No modo escuro, mantém o visual atual de glass premium.
+## Onda 4 — Botões fora do padrão (P1)
 
-## Próximos passos
-Aprovar este plano → implemento só a Home → você valida nos dois modos → escolhemos a próxima página (sugiro `/orcamentos/novo` por ser a mais usada em campo).
+Auditar e padronizar:
+- CTAs principais → `.cta-pill` (gradiente quadricolor)
+- Secundários → `.glass` com borda
+- Destrutivos → vermelho semantizado
+- Remover `style=` inline duplicado por classes
+
+## Onda 5 — Prefixo MT_/SV_ (P2) — **precisa de confirmação**
+
+Esta mexe no schema de dados. Antes de executar, preciso confirmar:
+
+**Pergunta:** os orçamentos já salvos em IndexedDB de usuários reais devem ser migrados automaticamente (script que renomeia chaves existentes na primeira abertura), ou só novos cadastros recebem o prefixo? E o prefixo deve aparecer só internamente (chave/ID) ou também no texto exibido?
+
+Vou executar 1→4 e só depois fazer a 5 com a confirmação.
+
+## Verificação
+
+Ao final de cada onda: abrir o preview, conferir visualmente, ler console por erros. Reportar progresso entre ondas.
