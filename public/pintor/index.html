@@ -4002,7 +4002,7 @@ function checkAlarms() {
 let _ppReadyDispatched = false;
 function _ppSyncTopnavHeight(el){
   if(!el) return;
-  const tn = el.querySelector(':scope > .topnav');
+  const tn = el.querySelector(':scope > .topnav, :scope > .hm-hdr');
   if(!tn) return;
   const apply = () => {
     const h = tn.getBoundingClientRect().height;
