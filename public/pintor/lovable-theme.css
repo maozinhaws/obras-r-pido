@@ -428,9 +428,9 @@ html.dark #pg-login > div {
   border-radius: 100px !important;
 }
 #pg-login button[onclick="ppLoginOffline()"]:hover {
-  background: rgba(255,107,53,0.08) !important;
-  border-color: #ff6b35 !important;
-  color: #ff6b35 !important;
+  background: color-mix(in oklab, var(--bl) 8%, transparent) !important;
+  border-color: var(--bl) !important;
+  color: var(--bl) !important;
 }
 html.dark #pg-login button[onclick="ppLoginOffline()"] {
   background: rgba(255,255,255,0.08) !important;
