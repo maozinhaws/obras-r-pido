@@ -168,15 +168,15 @@ html.dark body #pg-home > .hm-hdr {
 }
 /* Modal-box — mesmo glass do sidebar */
 .modal-box {
-  background: rgba(255,255,255,0.42) !important;
-  backdrop-filter: blur(36px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
-  border: 1px solid rgba(255,255,255,0.45) !important;
+  background: rgba(255,255,255,0.88) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border: 1px solid rgba(255,255,255,0.6) !important;
   box-shadow: 0 20px 60px -20px rgba(15,5,40,0.35) !important;
 }
 html.dark .modal-box {
-  background: rgba(20,14,30,0.55) !important;
-  border-color: rgba(255,255,255,0.10) !important;
+  background: rgba(20,14,30,0.78) !important;
+  border-color: rgba(255,255,255,0.12) !important;
   box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6) !important;
 }
 /* Sidebar-hdr — sem divisor visual, herda blur do .sidebar */
