@@ -4437,8 +4437,8 @@ function _autoSaveRascunho() {
   toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> Rascunho salvo — altere o status para enviar');
 }
 let _navCallback = null;
-function openDraftConfirmModal(cb) { _navCallback = cb; document.getElementById('draft-confirm-modal').style.display = 'flex'; }
-function closeDraftConfirmModal() { _navCallback = null; document.getElementById('draft-confirm-modal').style.display = 'none'; }
+function openDraftConfirmModal(cb) { _navCallback = cb; document.getElementById('draft-confirm-modal').style.display = 'flex'; syncBlockingUiState(); }
+function closeDraftConfirmModal() { _navCallback = null; document.getElementById('draft-confirm-modal').style.display = 'none'; syncBlockingUiState(); }
 function saveAsDraftAndExit() {
   const orc = collectOrc();
   orc.status = 'Rascunho';
@@ -4674,8 +4674,8 @@ function renderRooms(){
 
 function tCard(id){ document.getElementById(id)?.classList.toggle('collapsed'); }
 function delRoom(ri,e){ if(e)e.stopPropagation(); askDelete('Deseja excluir este local e suas medidas?', () => { S.rooms.splice(ri,1); renderRooms(); toast('<svg class="ico" aria-hidden="true"><use href="#ico-trash"/></svg> Local Removido'); S.isDirty=true; }); }
-function addItem(ri){ curRi = ri; S.tempItem = {name:'',alt:'',comp:'',services:[],price:0,perMeter:false,obs:'',photos:[]}; isNewItem = true; _detailNomeFirst = true; _detailObsFirst = true; S.rooms[ri].collapsed = false; document.getElementById('item-modal-title').textContent = 'Novo item'; document.getElementById('item-modal-form').style.display = 'flex'; renderItemModal(); }
-function editItem(ri, ii){ curRi = ri; curIi = ii; S.tempItem = JSON.parse(JSON.stringify(S.rooms[ri].items[ii])); isNewItem = false; _detailNomeFirst = false; _detailObsFirst = false; document.getElementById('item-modal-title').textContent = 'Editar item'; document.getElementById('item-modal-form').style.display = 'flex'; renderItemModal(); }
+function addItem(ri){ curRi = ri; S.tempItem = {name:'',alt:'',comp:'',services:[],price:0,perMeter:false,obs:'',photos:[]}; isNewItem = true; _detailNomeFirst = true; _detailObsFirst = true; S.rooms[ri].collapsed = false; document.getElementById('item-modal-title').textContent = 'Novo item'; document.getElementById('item-modal-form').style.display = 'flex'; syncBlockingUiState(); renderItemModal(); }
+function editItem(ri, ii){ curRi = ri; curIi = ii; S.tempItem = JSON.parse(JSON.stringify(S.rooms[ri].items[ii])); isNewItem = false; _detailNomeFirst = false; _detailObsFirst = false; document.getElementById('item-modal-title').textContent = 'Editar item'; document.getElementById('item-modal-form').style.display = 'flex'; syncBlockingUiState(); renderItemModal(); }
 function removeItem(ri,ii){ askDelete('Excluir este item permanentemente?', () => { S.rooms[ri].items.splice(ii,1); renderRooms(); S.isDirty=true; }); }
 
 function openPhotoChoice() { document.getElementById('photo-choice-modal').style.display = 'flex'; }
@@ -4772,9 +4772,10 @@ function renderItemModal() {
 function openServicesModal() {
   if (!S.tempItem) return;
   document.getElementById('services-modal').style.display = 'flex';
+  syncBlockingUiState();
   _renderItemObsChips();
 }
-function closeServicesModal() { document.getElementById('services-modal').style.display = 'none'; }
+function closeServicesModal() { document.getElementById('services-modal').style.display = 'none'; syncBlockingUiState(); }
 
 // Helpers de prefixo MT_/SV_ (Onda 4 — diferencia material e serviço com mesmo nome)
 window._ppStripPrefix = function(s){ return typeof s==='string' ? s.replace(/^(MT|SV)_/,'') : s; };
@@ -4851,8 +4852,9 @@ function openDetailNamePick() {
     `<button type="button" data-nm="${_esc(n)}" onclick="selectDetailNome(this.dataset.nm)" style="padding:10px 4px;border-radius:10px;border:1.5px solid var(--bdr-input);background:var(--bg2);font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;text-align:center;">${_esc(n)}</button>`
   ).join('');
   document.getElementById('detail-nome-pick-modal').style.display = 'flex';
+  syncBlockingUiState();
 }
-function closeDetailNamePick() { document.getElementById('detail-nome-pick-modal').style.display = 'none'; }
+function closeDetailNamePick() { document.getElementById('detail-nome-pick-modal').style.display = 'none'; syncBlockingUiState(); }
 function selectDetailNome(n) {
   S.tempItem.name = n;
   const inp = document.querySelector('#item-modal-body .item-title-inp');
@@ -4860,8 +4862,8 @@ function selectDetailNome(n) {
   closeDetailNamePick();
 }
 
-function saveItemModal(){ if(!S.tempItem.name.trim()) S.tempItem.name = 'Item sem nome'; if(isNewItem){ if(!S.rooms[curRi].items) S.rooms[curRi].items=[]; S.rooms[curRi].items.push(S.tempItem); } else { S.rooms[curRi].items[curIi] = S.tempItem; } S.isDirty = true; document.getElementById('item-modal-form').style.display = 'none'; curRi = null; curIi = null; S.tempItem = null; renderRooms(); }
-function cancelItemModal(){ document.getElementById('item-modal-form').style.display = 'none'; curRi = null; curIi = null; S.tempItem = null; }
+function saveItemModal(){ if(!S.tempItem.name.trim()) S.tempItem.name = 'Item sem nome'; if(isNewItem){ if(!S.rooms[curRi].items) S.rooms[curRi].items=[]; S.rooms[curRi].items.push(S.tempItem); } else { S.rooms[curRi].items[curIi] = S.tempItem; } S.isDirty = true; document.getElementById('item-modal-form').style.display = 'none'; curRi = null; curIi = null; S.tempItem = null; syncBlockingUiState(); renderRooms(); }
+function cancelItemModal(){ document.getElementById('item-modal-form').style.display = 'none'; curRi = null; curIi = null; S.tempItem = null; syncBlockingUiState(); }
 
 // Stub para compatibilidade — openDetailedCamera é fornecida pelo sistema de câmera do ATUAL
 if (!window.openDetailedCamera) {
