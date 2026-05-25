@@ -4234,7 +4234,32 @@ if (S.config && S.config.msg && !S.config.msg.includes('{total}')) {
   S.config.msg += '\\n\\n*Valor Total: {total}*';
   localStorage.setItem('pp-config', JSON.stringify(S.config));
 }
-if (S.config.acessibilidade) document.body.classList.add('acessivel');
+// ── Acessibilidade: escala de fonte + reforço de contraste ──
+function ppApplyA11y() {
+  var fs = (S.config && S.config.fsScale) || 'm';
+  // Compat legado: acessibilidade:true => grande
+  if (S.config && S.config.acessibilidade && !S.config.fsScale) fs = 'g';
+  document.body.classList.remove('fs-p','fs-m','fs-g','fs-xg','acessivel');
+  document.body.classList.add('fs-' + fs);
+  if (fs === 'g' || fs === 'xg') document.body.classList.add('acessivel');
+  document.body.classList.toggle('contraste-alto', !!(S.config && S.config.contrasteAlto));
+}
+function ppSetFsScale(v) {
+  S.config.fsScale = v;
+  ppApplyA11y();
+  document.querySelectorAll('#cfg-fs-row .a-fs-btn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-fs') === v);
+  });
+  if (typeof _cfgDirty !== 'undefined') _cfgDirty = true;
+}
+function ppToggleContraste() {
+  S.config.contrasteAlto = !S.config.contrasteAlto;
+  var sw = document.getElementById('cfg-contraste-sw');
+  if (sw) sw.classList.toggle('on', !!S.config.contrasteAlto);
+  ppApplyA11y();
+  if (typeof _cfgDirty !== 'undefined') _cfgDirty = true;
+}
+ppApplyA11y();
 
 S.DEFAULT_SERVICES = (S.config.servicos || defCfg.servicos).split(',').map(s=>s.trim()).filter(Boolean);
 S.statusArr = (S.config.statusList || defCfg.statusList).split(',').map(s=>s.trim()).filter(Boolean);
