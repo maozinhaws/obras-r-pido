@@ -60,7 +60,7 @@ html.dark,
 
   --bg-card: rgba(28,18,42,0.55) !important;
   --bg-card-alt: rgba(28,18,42,0.62) !important;
-  --bg-modal: rgba(20,14,30,0.92) !important;
+  --bg-modal: rgba(20,14,30,0.45) !important;
 
   --sh: 0 2px 6px rgba(0,0,0,.35), 0 18px 40px -10px rgba(0,0,0,.55) !important;
 }
