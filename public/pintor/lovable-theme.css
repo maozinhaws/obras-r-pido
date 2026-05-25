@@ -572,7 +572,7 @@ body:has(#pg-s4.active) .page > .topnav button[onclick="toggleSidebar()"] {
   left: 14px !important;
   right: 14px !important;
   margin: 0 !important;
-  height: 38px !important;
+  height: 44px !important;
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
