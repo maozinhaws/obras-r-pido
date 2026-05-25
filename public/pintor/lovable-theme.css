@@ -949,3 +949,24 @@ html.dark .modal-overlay > div:not(.modal-top):not(.modal-close){
   transition: transform .15s ease, box-shadow .2s ease;
 }
 .modal-sheet button:not(.cta-pill):not(.btn-primary):active{ transform: translateY(1px); }
+
+/* ============================================================
+   ICON NORMALIZATION (Lovable v24)
+   Força todos os SVGs de linha (com stroke) a usarem
+   exatamente o mesmo estilo: stroke 2px, cantos arredondados,
+   sem preenchimento. Vale para a câmera personalizada, ações
+   inline, botões e cabeçalhos. Não afeta logos de marca
+   (Google/Drive) que usam fill colorido sem stroke, nem SVGs
+   marcados com data-brand.
+   ============================================================ */
+svg:not([data-brand])[stroke]:not([stroke="none"]):not(:where([data-brand] *)) {
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  vector-effect: non-scaling-stroke;
+  fill: none !important;
+}
+/* Mantém preenchimento intencional em ícones-bolha como o WhatsApp/share quando explicitamente marcado */
+svg[data-filled] { fill: currentColor !important; }
+/* Garante que SVGs reutilizando símbolos #ico-* respeitem o stroke 2 */
+svg.ico { stroke-width: 2 !important; stroke-linecap: round !important; stroke-linejoin: round !important; fill: none !important; }
