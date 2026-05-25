@@ -6819,7 +6819,21 @@ function showFaq() { document.getElementById('info-modal-title').textContent = '
     if (e.data && e.data.type === 'flash-exit') {
       exitFlash();
     }
+    // Quando o teclado virtual abre dentro do iframe Flash, esconde o X flutuante
+    if (e.data && e.data.type === 'kbd-state') {
+      const btn = document.getElementById('flash-home-btn');
+      if (btn) btn.style.opacity = e.data.open ? '0' : '1', btn.style.pointerEvents = e.data.open ? 'none' : 'auto';
+    }
   });
+
+  // Teclado virtual no app principal: oculta barras de ação fixas
+  // (footer de modais, .step1-actions, .footer-nav) quando um campo recebe foco,
+  // em vez de empurrá-las para cima. Reaparecem ao perder o foco.
+  (function(){
+    function isTxt(el){ if(!el) return false; var t=(el.tagName||'').toLowerCase(); if(t==='textarea'||t==='select') return true; if(t!=='input') return false; var ty=(el.type||'text').toLowerCase(); return ['text','search','tel','url','email','number','password'].indexOf(ty)>=0; }
+    document.addEventListener('focusin', function(e){ if(isTxt(e.target)) document.documentElement.classList.add('kbd-open'); });
+    document.addEventListener('focusout', function(){ setTimeout(function(){ if(!isTxt(document.activeElement)) document.documentElement.classList.remove('kbd-open'); }, 80); });
+  })();
 
 
 
