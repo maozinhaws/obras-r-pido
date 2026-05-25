@@ -1741,7 +1741,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
 <link rel="stylesheet" href="/photo-annotator.css">
   <script type="module" crossorigin src="/pintor/assets/app-7mkkXZ-j.js"></script>
   <link rel="stylesheet" crossorigin href="/pintor/assets/app-BL-_ECWx.css">
-  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=21">
+  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=22">
 <script>(function(){try{if(!localStorage.getItem("pp-theme"))localStorage.setItem("pp-theme","light");document.documentElement.classList.remove("dark");}catch(e){}})();</script>
 </head>
 <body>
@@ -2971,7 +2971,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
     function removeModalPhoto(i){ state.modalPhotos.splice(i, 1); renderModalPhotos(); }
     window.removeModalPhoto = removeModalPhoto;
     function handleModalPhotos(files){ Array.from(files||[]).forEach(f => { const r = new FileReader(); r.onload = e => { state.modalPhotos.push(e.target.result); renderModalPhotos(); }; r.readAsDataURL(f); }); els.modalFotosGaleria.value = ''; }
-    async function openCameraModal(){ try { if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showToast('\u26A0\uFE0F C\u00E2mera indispon\u00EDvel. Use a galeria.'); if(els.modalFotosGaleria)els.modalFotosGaleria.click(); return; } const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } }, audio: false }).catch(()=>navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false })); state.cameraStream = stream; state.torchOn = false; els.cameraVideo.srcObject = stream; els.cameraModal.classList.add('open'); renderModalPhotos(); const _track = stream.getVideoTracks()[0]; const _caps = _track.getCapabilities ? _track.getCapabilities() : {}; const _bt = document.getElementById('btnTorch'); const _zc = document.getElementById('zoomControl'); const _zs = document.getElementById('zoomSlider'); if(_bt &amp;&amp; _caps.torch){ _bt.style.display='flex'; _bt.onclick=function(){ state.torchOn=!state.torchOn; _track.applyConstraints({advanced:[{torch:state.torchOn}]}); _bt.style.background=state.torchOn?'rgba(251,191,36,0.8)':'rgba(255,255,255,0.15)'; }; } if(_zc &amp;&amp; _zs &amp;&amp; _caps.zoom){ _zs.min=_caps.zoom.min; _zs.max=_caps.zoom.max; _zs.step=(_caps.zoom.max-_caps.zoom.min)/20; _zs.value=_caps.zoom.min; _zc.style.display='block'; _zs.oninput=function(){ _track.applyConstraints({advanced:[{zoom:parseFloat(_zs.value)}]}); }; } } catch(err) { if(err&amp;&amp;err.name==='NotAllowedError'){ showToast('\u26A0\uFE0F Permiss\u00E3o de c\u00E2mera negada. Libere nas configura\u00E7\u00F5es do app.'); }else{ showToast('\u26A0\uFE0F C\u00E2mera indispon\u00EDvel. Use a galeria.'); if(els.modalFotosGaleria)els.modalFotosGaleria.click(); } } }
+    async function openCameraModal(){ try { if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showToast('\u26A0\uFE0F C\u00E2mera indispon\u00EDvel. Use a galeria.'); if(els.cameraErro){els.cameraErro.classList.add('show');els.cameraErro.textContent='Câmera indisponível neste ambiente. Use o botão Galeria.';} return; } const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } }, audio: false }).catch(()=>navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false })); state.cameraStream = stream; state.torchOn = false; els.cameraVideo.srcObject = stream; els.cameraModal.classList.add('open'); renderModalPhotos(); const _track = stream.getVideoTracks()[0]; const _caps = _track.getCapabilities ? _track.getCapabilities() : {}; const _bt = document.getElementById('btnTorch'); const _zc = document.getElementById('zoomControl'); const _zs = document.getElementById('zoomSlider'); if(_bt &amp;&amp; _caps.torch){ _bt.style.display='flex'; _bt.onclick=function(){ state.torchOn=!state.torchOn; _track.applyConstraints({advanced:[{torch:state.torchOn}]}); _bt.style.background=state.torchOn?'rgba(251,191,36,0.8)':'rgba(255,255,255,0.15)'; }; } if(_zc &amp;&amp; _zs &amp;&amp; _caps.zoom){ _zs.min=_caps.zoom.min; _zs.max=_caps.zoom.max; _zs.step=(_caps.zoom.max-_caps.zoom.min)/20; _zs.value=_caps.zoom.min; _zc.style.display='block'; _zs.oninput=function(){ _track.applyConstraints({advanced:[{zoom:parseFloat(_zs.value)}]}); }; } } catch(err) { if(err&amp;&amp;err.name==='NotAllowedError'){ showToast('\u26A0\uFE0F Permiss\u00E3o de c\u00E2mera negada. Libere nas configura\u00E7\u00F5es do app.'); }else{ showToast('\u26A0\uFE0F C\u00E2mera indispon\u00EDvel. Use a galeria.'); if(els.cameraErro){els.cameraErro.classList.add('show');els.cameraErro.textContent='Câmera indisponível. Verifique permissões ou use a Galeria.';} } } }
     function stopCameraStream(){ if (state.cameraStream) { state.cameraStream.getTracks().forEach(t => t.stop()); state.cameraStream = null; } els.cameraVideo.srcObject = null; state.torchOn = false; const _bt=document.getElementById('btnTorch'); if(_bt)_bt.style.display='none'; const _zc=document.getElementById('zoomControl'); if(_zc)_zc.style.display='none'; }
     function closeCameraModal(){ els.cameraModal.classList.remove('open'); stopCameraStream(); }
     function captureCameraPhoto(){ const v = els.cameraVideo; if (!v.videoWidth) { showToast('\u26A0\uFE0F Aguarde a c\u00E2mera'); return; } const c = els.cameraCanvas; c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0, c.width, c.height); state.modalPhotos.push(c.toDataURL('image/jpeg', 0.75)); renderModalPhotos(); showToast('\uD83D\uDCF8 Foto capturada'); }
@@ -4682,41 +4682,54 @@ function openServicesModal() {
 }
 function closeServicesModal() { document.getElementById('services-modal').style.display = 'none'; }
 
+// Helpers de prefixo MT_/SV_ (Onda 4 — diferencia material e serviço com mesmo nome)
+window._ppStripPrefix = function(s){ return typeof s==='string' ? s.replace(/^(MT|SV)_/,'') : s; };
+window._ppHasPrefix = function(s){ return typeof s==='string' && /^(MT|SV)_/.test(s); };
+
 function _renderItemObsChips() {
   const sel = S.tempItem.services || [];
   const srvList = S.DEFAULT_SERVICES;
   const matList = (S.config.flashMateriais || defCfg.flashMateriais).split(',').map(s=>s.trim()).filter(Boolean);
   const chip = (s, type) => {
-    const on = sel.includes(s);
+    const key = (type==='srv' ? 'SV_' : 'MT_') + s;
+    // back-compat: marca como ativo também se o item antigo (sem prefixo) está selecionado
+    const on = sel.includes(key) || sel.includes(s);
     const bg = on ? (type==='srv' ? '#7c3aed' : '#059669') : '#f1f5f9';
     const col = on ? '#fff' : (type==='srv' ? '#7c3aed' : '#059669');
     const bdr = on ? 'transparent' : (type==='srv' ? '#ddd6fe' : '#d1fae5');
-    return `<button type="button" data-srv="${_esc(s)}" onclick="toggleItemObsSvc(this.dataset.srv)" style="padding:7px 12px;border-radius:20px;border:1.5px solid ${bdr};background:${bg};font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:${col};cursor:pointer;">${_esc(s)}</button>`;
+    return `<button type="button" data-key="${_esc(key)}" onclick="toggleItemObsSvc(this.dataset.key)" style="padding:7px 12px;border-radius:20px;border:1.5px solid ${bdr};background:${bg};font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:${col};cursor:pointer;">${_esc(s)}</button>`;
   };
   document.getElementById('services-modal-body').innerHTML = srvList.map(s=>chip(s,'srv')).join('');
   document.getElementById('services-modal-mat-body').innerHTML = matList.map(s=>chip(s,'mat')).join('');
 }
 
-function toggleItemObsSvc(s) {
+function toggleItemObsSvc(key) {
   if (!S.tempItem.services) S.tempItem.services = [];
-  const i = S.tempItem.services.indexOf(s);
-  if (i >= 0) S.tempItem.services.splice(i, 1);
-  else S.tempItem.services.push(s);
+  const bare = window._ppStripPrefix(key);
+  const wasOn = S.tempItem.services.includes(key) || S.tempItem.services.includes(bare);
+  // remove ambas as variantes (com e sem prefixo) para evitar duplicidade
+  S.tempItem.services = S.tempItem.services.filter(x => x !== key && x !== bare);
+  if (!wasOn) S.tempItem.services.push(key); // sempre persiste com prefixo
   S.isDirty = true;
   _renderItemObsChips();
 }
 
+
 function confirmItemObsPick() {
   const ta = document.querySelector('#item-modal-body .item-obs-inp');
   const currentText = (ta ? ta.value : '') || (S.tempItem.obs || '');
-  const allKnown = [...(S.DEFAULT_SERVICES||[]), ...(S.config.flashMateriais || defCfg.flashMateriais).split(',').map(s=>s.trim()).filter(Boolean)];
+  const srvList = S.DEFAULT_SERVICES || [];
+  const matList = (S.config.flashMateriais || defCfg.flashMateriais).split(',').map(s=>s.trim()).filter(Boolean);
+  const allKnown = [...srvList, ...matList, ...srvList.map(s=>'SV_'+s), ...matList.map(s=>'MT_'+s)];
   const customParts = currentText.split(',').map(s=>s.trim()).filter(s => s && !allKnown.includes(s));
-  const selected = S.tempItem.services || [];
-  const merged = [...customParts, ...selected];
+  // exibe sem o prefixo
+  const selectedDisplay = (S.tempItem.services || []).map(window._ppStripPrefix);
+  const merged = [...customParts, ...selectedDisplay];
   S.tempItem.obs = merged.join(', ');
   if (ta) ta.value = S.tempItem.obs;
   closeServicesModal();
 }
+
 
 function _detailNomeClick() { if (_detailNomeFirst) { _detailNomeFirst = false; openDetailNamePick(); } }
 function _detailObsClick() { if (_detailObsFirst) { _detailObsFirst = false; openServicesModal(); } }

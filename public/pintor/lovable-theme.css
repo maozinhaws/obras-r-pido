@@ -851,3 +851,39 @@ html.dark .wbtn-back {
   background: rgba(28,18,42,0.55) !important;
   border-color: rgba(255,255,255,0.12) !important;
 }
+
+/* ============================================================
+   ONDA 3 — Modais SEMPRE centralizados + glassmorphism unificado
+   ============================================================ */
+.modal-overlay{
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+}
+.modal-sheet,
+.modal-overlay > div:not(.modal-top):not(.modal-close){
+  border-radius: 28px !important;
+  background: rgba(255,255,255,0.62) !important;
+  backdrop-filter: blur(28px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(170%) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  box-shadow: 0 28px 70px -12px rgba(15,5,40,0.34), 0 0 0 1px rgba(255,255,255,0.45) inset !important;
+}
+html.dark .modal-sheet,
+html.dark .modal-overlay > div:not(.modal-top):not(.modal-close){
+  background: rgba(22,14,34,0.62) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+  box-shadow: 0 28px 70px -12px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08) inset !important;
+}
+
+/* ============================================================
+   ONDA 5 — Botões padronizados (último passo de uniformização)
+   Qualquer <button> sem classe específica recebe o padrão glass.
+   CTAs primários continuam respeitando .cta-pill, .btn-primary, etc.
+   ============================================================ */
+.modal-sheet button:not(.cta-pill):not(.btn-primary):not(.camera-btn):not(.capture-main):not(.send-main):not(.camera-topbtn):not(.modal-close):not(.photo-remove):not([data-variant]){
+  border-radius: 16px !important;
+  font-weight: 800 !important;
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.modal-sheet button:not(.cta-pill):not(.btn-primary):active{ transform: translateY(1px); }
