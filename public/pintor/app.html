@@ -4669,26 +4669,32 @@ function openServicesModal() {
 }
 function closeServicesModal() { document.getElementById('services-modal').style.display = 'none'; }
 
+// Helpers de prefixo MT_/SV_ (Onda 4)
+window._ppStripPrefix = function(s){ return typeof s==='string' ? s.replace(/^(MT|SV)_/,'') : s; };
+window._ppHasPrefix = function(s){ return typeof s==='string' && /^(MT|SV)_/.test(s); };
+
 function _renderItemObsChips() {
   const sel = S.tempItem.services || [];
   const srvList = S.DEFAULT_SERVICES;
   const matList = (S.config.flashMateriais || defCfg.flashMateriais).split(',').map(s=>s.trim()).filter(Boolean);
   const chip = (s, type) => {
-    const on = sel.includes(s);
+    const key = (type==='srv' ? 'SV_' : 'MT_') + s;
+    const on = sel.includes(key) || sel.includes(s);
     const bg = on ? (type==='srv' ? '#7c3aed' : '#059669') : '#f1f5f9';
     const col = on ? '#fff' : (type==='srv' ? '#7c3aed' : '#059669');
     const bdr = on ? 'transparent' : (type==='srv' ? '#ddd6fe' : '#d1fae5');
-    return `<button type="button" data-srv="${_esc(s)}" onclick="toggleItemObsSvc(this.dataset.srv)" style="padding:7px 12px;border-radius:20px;border:1.5px solid ${bdr};background:${bg};font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:${col};cursor:pointer;">${_esc(s)}</button>`;
+    return `<button type="button" data-key="${_esc(key)}" onclick="toggleItemObsSvc(this.dataset.key)" style="padding:7px 12px;border-radius:20px;border:1.5px solid ${bdr};background:${bg};font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:${col};cursor:pointer;">${_esc(s)}</button>`;
   };
   document.getElementById('services-modal-body').innerHTML = srvList.map(s=>chip(s,'srv')).join('');
   document.getElementById('services-modal-mat-body').innerHTML = matList.map(s=>chip(s,'mat')).join('');
 }
 
-function toggleItemObsSvc(s) {
+function toggleItemObsSvc(key) {
   if (!S.tempItem.services) S.tempItem.services = [];
-  const i = S.tempItem.services.indexOf(s);
-  if (i >= 0) S.tempItem.services.splice(i, 1);
-  else S.tempItem.services.push(s);
+  const bare = window._ppStripPrefix(key);
+  const wasOn = S.tempItem.services.includes(key) || S.tempItem.services.includes(bare);
+  S.tempItem.services = S.tempItem.services.filter(x => x !== key && x !== bare);
+  if (!wasOn) S.tempItem.services.push(key);
   S.isDirty = true;
   _renderItemObsChips();
 }
@@ -4696,14 +4702,17 @@ function toggleItemObsSvc(s) {
 function confirmItemObsPick() {
   const ta = document.querySelector('#item-modal-body .item-obs-inp');
   const currentText = (ta ? ta.value : '') || (S.tempItem.obs || '');
-  const allKnown = [...(S.DEFAULT_SERVICES||[]), ...(S.config.flashMateriais || defCfg.flashMateriais).split(',').map(s=>s.trim()).filter(Boolean)];
+  const srvList = S.DEFAULT_SERVICES || [];
+  const matList = (S.config.flashMateriais || defCfg.flashMateriais).split(',').map(s=>s.trim()).filter(Boolean);
+  const allKnown = [...srvList, ...matList, ...srvList.map(s=>'SV_'+s), ...matList.map(s=>'MT_'+s)];
   const customParts = currentText.split(',').map(s=>s.trim()).filter(s => s && !allKnown.includes(s));
-  const selected = S.tempItem.services || [];
-  const merged = [...customParts, ...selected];
+  const selectedDisplay = (S.tempItem.services || []).map(window._ppStripPrefix);
+  const merged = [...customParts, ...selectedDisplay];
   S.tempItem.obs = merged.join(', ');
   if (ta) ta.value = S.tempItem.obs;
   closeServicesModal();
 }
+
 
 function _detailNomeClick() { if (_detailNomeFirst) { _detailNomeFirst = false; openDetailNamePick(); } }
 function _detailObsClick() { if (_detailObsFirst) { _detailObsFirst = false; openServicesModal(); } }
