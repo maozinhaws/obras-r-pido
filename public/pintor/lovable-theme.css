@@ -465,16 +465,22 @@ html.dark .hbadge.hbg { color: #86efac !important; }
 html.dark .hbadge.hby { color: #fcd34d !important; }
 html.dark .hbadge.hbr { color: #fca5a5 !important; }
 
-/* 10) Inputs — regra fixa: sempre brancos sólidos, borda slate 2px, text-base */
+/* 10) Inputs — brancos sólidos, borda glass translúcida, text-base.
+       Texto digitado #0a0a0a (preto), placeholder #cbd5e1 (cinza claro),
+       label .flbl #475569 (slate-600 — mais escuro que o placeholder,
+       mais claro que o texto digitado). Alto contraste reativa borda sólida. */
 .finput, .fta, .fsel, .item-title-inp,
 input[type="text"], input[type="number"], input[type="tel"],
 input[type="email"], input[type="date"], textarea, select {
   background: #ffffff !important;
   color: #0a0a0a !important;
-  border: 2px solid #64748b !important;
+  border: 1px solid rgba(15,5,40,0.12) !important;
   border-radius: 14px !important;
   font-size: 16px !important;
   font-family: 'Manrope', system-ui, sans-serif !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    0 1px 2px rgba(15,5,40,0.04) !important;
 }
 .finput:focus, .fta:focus, .fsel:focus, .item-title-inp:focus,
 input:focus, textarea:focus, select:focus {
@@ -482,24 +488,49 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--bl) 28%, transparent) !important;
   outline: none !important;
 }
-.finput::placeholder, .fta::placeholder { color: #94a3b8 !important; }
 
+/* Labels — slate-600 (entre placeholder e texto digitado) */
+.flbl, label, .step-label {
+  color: #475569 !important;
+}
+html.dark .flbl, html.dark label, html.dark .step-label {
+  color: #cbd5e1 !important;
+}
+
+/* Placeholders — cinza claro em qualquer formulário */
+.finput::placeholder, .fta::placeholder,
 #app input::placeholder,
 #app textarea::placeholder,
 .item-title-inp::placeholder,
 .item-obs-inp::placeholder,
-.minp::placeholder {
-  color: #94a3b8 !important;
+.minp::placeholder,
+input::placeholder, textarea::placeholder {
+  color: #cbd5e1 !important;
   opacity: 1 !important;
-  font-weight: 500 !important;
+  font-weight: 400 !important;
 }
-
-html.dark #app input::placeholder,
-html.dark #app textarea::placeholder,
-html.dark .item-title-inp::placeholder,
-html.dark .item-obs-inp::placeholder,
+html.dark input::placeholder, html.dark textarea::placeholder,
+html.dark .finput::placeholder, html.dark .fta::placeholder,
+html.dark #app input::placeholder, html.dark #app textarea::placeholder,
+html.dark .item-title-inp::placeholder, html.dark .item-obs-inp::placeholder,
 html.dark .minp::placeholder {
   color: #94a3b8 !important;
+}
+
+/* Alto contraste / brutalista — borda sólida slate-500 2px */
+:root[data-theme="brutalista"] .finput,
+:root[data-theme="brutalista"] .fta,
+:root[data-theme="brutalista"] .fsel,
+:root[data-theme="brutalista"] .item-title-inp,
+:root[data-theme="brutalista"] input[type="text"],
+:root[data-theme="brutalista"] input[type="number"],
+:root[data-theme="brutalista"] input[type="tel"],
+:root[data-theme="brutalista"] input[type="email"],
+:root[data-theme="brutalista"] input[type="date"],
+:root[data-theme="brutalista"] textarea,
+:root[data-theme="brutalista"] select {
+  border: 2px solid #64748b !important;
+  box-shadow: none !important;
 }
 
 /* 11) Checkbox / chk-item */
