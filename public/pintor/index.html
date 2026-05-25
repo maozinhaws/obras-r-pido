@@ -6406,8 +6406,31 @@ async function ppLoginOffline() {
   // Cria sessão local sem Google
   const offlineUser = { uid: 'offline-' + Date.now(), email: '', name: 'Modo Offline', picture: '', signedInAt: new Date().toISOString() };
   localStorage.setItem('pp-auth-user', JSON.stringify(offlineUser));
+  // Marca que existe dado local não sincronizado (modo teste)
+  localStorage.setItem('pp-pending-sync', '1');
   _ppShowApp(offlineUser);
 }
+
+// Quando o usuário entra com Google, faz upload automático dos dados
+// criados no modo teste/offline para o Drive da conta conectada.
+async function _ppSyncAfterLogin(user) {
+  try {
+    if (!user || !user.email) return; // modo offline puro
+    // Pede o token do Drive (escopo drive.file) e dispara o backup
+    if (typeof window.gSignIn !== 'function') return;
+    const token = await window.gSignIn();
+    if (!token) return;
+    try { window.renderGoogleStatus?.(); } catch(e) {}
+    if (typeof window.backupAutoSync === 'function') {
+      const ok = await window.backupAutoSync();
+      if (ok) {
+        localStorage.removeItem('pp-pending-sync');
+        try { window.renderSyncStatus?.(); } catch(e) {}
+      }
+    }
+  } catch (e) { console.warn('[pp] sync após login falhou:', e); }
+}
+window._ppSyncAfterLogin = _ppSyncAfterLogin;
 
 function ppConfirm(message, { title = 'Confirmar', okLabel = 'OK', cancelLabel = 'Cancelar', danger = false } = {}) {
   return new Promise((resolve) => {
