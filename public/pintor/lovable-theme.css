@@ -1379,3 +1379,338 @@ html.dark body.contraste-alto .glass-strong { border-color: #f8fafc !important; 
 .a-fs-btn.fs-g-sample  .a-fs-prev { font-size: 18px; }
 .a-fs-btn.fs-xg-sample .a-fs-prev { font-size: 22px; }
 html.dark .a-fs-btn { background: rgba(28,18,42,0.55) !important; border-color: rgba(255,255,255,0.10) !important; color: #ededf0 !important; }
+
+/* ============================================================
+   ONDA 1 — RECLASSIFICAÇÃO 360° DOS BOTÕES
+   Padrão: apenas botões PRIMÁRIOS recebem o gradiente quadricolor
+   (#ff8a3d → #ff6b35 → #ec4899 → #7b5cff). Secundários ficam suaves
+   (glass translúcido). Botões de canal de envio têm cor própria.
+   ============================================================ */
+
+/* 1) SECUNDÁRIOS: chips "Ver todos / Ver agenda / Ver revista" e
+      "Importar agenda do celular", "Enviar sem orçamento" etc.
+      Anulam o degradê herdado da regra global. */
+.page button[onclick*="homeTab"],
+.page button[onclick*="revista"],
+.page button[onclick*="_doQuoteFornNoOrc"],
+.page button[onclick*="openImportContactsModal"],
+.page button[onclick*="importarAgenda"] {
+  background: rgba(123, 92, 255, 0.10) !important;
+  color: #4a1ca0 !important;
+  border: 1.5px solid rgba(123, 92, 255, 0.30) !important;
+  border-radius: 999px !important;
+  font-weight: 800 !important;
+  font-family: 'Sora', system-ui, sans-serif !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55) !important;
+  backdrop-filter: blur(14px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(165%) !important;
+  filter: none !important;
+}
+html.dark .page button[onclick*="homeTab"],
+html.dark .page button[onclick*="revista"],
+html.dark .page button[onclick*="_doQuoteFornNoOrc"],
+html.dark .page button[onclick*="openImportContactsModal"],
+html.dark .page button[onclick*="importarAgenda"] {
+  background: rgba(167, 139, 250, 0.16) !important;
+  color: #d8c6ff !important;
+  border-color: rgba(167, 139, 250, 0.38) !important;
+}
+
+/* 2) WHATSAPP — verde translúcido (canal próprio) */
+.page button[onclick*="_doSendWA"],
+.page button[onclick*="sendWhats"],
+.page button[onclick*="openWa"],
+.glass-overlay button[onclick*="_doSendWA"],
+.modal-overlay button[onclick*="_doSendWA"] {
+  background: rgba(37, 211, 102, 0.18) !important;
+  color: #0e7a3a !important;
+  border: 1.5px solid rgba(37, 211, 102, 0.55) !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 14px -6px rgba(37,211,102,0.30) !important;
+  filter: none !important;
+}
+html.dark .page button[onclick*="_doSendWA"],
+html.dark .glass-overlay button[onclick*="_doSendWA"],
+html.dark .modal-overlay button[onclick*="_doSendWA"] {
+  background: rgba(37, 211, 102, 0.22) !important;
+  color: #6df0a3 !important;
+  border-color: rgba(37, 211, 102, 0.55) !important;
+}
+
+/* 3) PDF — roxo translúcido (canal próprio) */
+.page button[onclick*="_doPDF"],
+.page button[onclick*="gerarPDF"],
+.page button[onclick*="downloadPdf"],
+.glass-overlay button[onclick*="_doPDF"],
+.modal-overlay button[onclick*="_doPDF"] {
+  background: rgba(123, 92, 255, 0.16) !important;
+  color: #4a1ca0 !important;
+  border: 1.5px solid rgba(123, 92, 255, 0.50) !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 14px -6px rgba(123,92,255,0.30) !important;
+  filter: none !important;
+}
+html.dark .page button[onclick*="_doPDF"],
+html.dark .glass-overlay button[onclick*="_doPDF"],
+html.dark .modal-overlay button[onclick*="_doPDF"] {
+  background: rgba(167, 139, 250, 0.22) !important;
+  color: #d8c6ff !important;
+  border-color: rgba(167, 139, 250, 0.55) !important;
+}
+
+/* 4) COMPARTILHAR — roxo SÓLIDO (ação principal do share-opts) */
+.page button[onclick*="_shareDoNative"],
+.glass-overlay button[onclick*="_shareDoNative"],
+.modal-overlay button[onclick*="_shareDoNative"],
+.page button[onclick="triggerAction('share')"] {
+  background: linear-gradient(180deg, #8b3fd6 0%, #6b22b0 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-family: 'Sora', system-ui, sans-serif !important;
+  font-weight: 800 !important;
+  box-shadow: 0 8px 18px -6px rgba(123,92,255,0.55), inset 0 1px 0 rgba(255,255,255,0.25) !important;
+  filter: none !important;
+}
+
+/* 5) DESTRUTIVO — vermelho sólido (apagar / excluir) */
+.page button[onclick*="apagarTudo"],
+.page button[onclick*="deleteAll"],
+.page button[onclick*="confirmDeleteOrc"],
+.page button[onclick*="confirmDelete"],
+.glass-overlay button[onclick*="apagarTudo"],
+.modal-overlay button[onclick*="apagarTudo"],
+#del-confirm-modal button[onclick*="confirm"] {
+  background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 8px 18px -6px rgba(239,68,68,0.55), inset 0 1px 0 rgba(255,255,255,0.25) !important;
+  filter: none !important;
+}
+
+/* 6) BACK / CANCELAR / DESCARTAR — soft glass.
+      Aplica também a "Enviar sem orçamento" e ações utilitárias. */
+.page button[onclick*="closeModal"],
+.page button[onclick*=".style.display='none'"],
+.glass-overlay button[onclick*=".style.display='none'"],
+.modal-overlay button[onclick*=".style.display='none'"],
+.page button[onclick="discardAndExit()"],
+.page button[onclick="closeCfgSaveModal(false)"],
+.glass-overlay button[onclick="closeCfgSaveModal(false)"] {
+  background: rgba(255,255,255,0.66) !important;
+  color: #0f172a !important;
+  border: 1.5px solid rgba(15,5,40,0.14) !important;
+  border-radius: 12px !important;
+  font-family: 'Sora', system-ui, sans-serif !important;
+  font-weight: 700 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 6px 14px -8px rgba(15,5,40,0.18) !important;
+  filter: none !important;
+}
+html.dark .page button[onclick*="closeModal"],
+html.dark .page button[onclick*=".style.display='none'"],
+html.dark .glass-overlay button[onclick*=".style.display='none'"],
+html.dark .modal-overlay button[onclick*=".style.display='none'"],
+html.dark .page button[onclick="discardAndExit()"],
+html.dark .glass-overlay button[onclick="closeCfgSaveModal(false)"] {
+  background: rgba(28,18,42,0.72) !important;
+  color: #ededf0 !important;
+  border-color: rgba(255,255,255,0.16) !important;
+}
+
+/* 7) SALVAR — gradiente quadricolor reforçado (já vinha por regra global,
+      mas garantimos contra overrides inline) */
+.page button[onclick*="saveCfg"],
+.page button[onclick="closeCfgSaveModal(true)"],
+.glass-overlay button[onclick="closeCfgSaveModal(true)"],
+.page button[onclick*="saveEditClient"],
+.page button[onclick*="saveEditFornecedor"],
+.page button[onclick*="saveAsDraftAndExit"],
+.page button[onclick*="salvarEvento"],
+.page button[onclick*="salvarOrc"] {
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-family: 'Sora', system-ui, sans-serif !important;
+  font-weight: 800 !important;
+  box-shadow: 0 8px 18px -6px rgba(255,107,53,0.45), 0 22px 42px -12px rgba(123,92,255,0.45), inset 0 1px 0 rgba(255,255,255,0.28) !important;
+  filter: none !important;
+}
+
+/* 8) Garante que o degradê quadricolor (#ff8a3d → ... → #7b5cff) também
+      esteja em .wbtn-next e .act-save mesmo em alto contraste. */
+.wbtn-next, .act-save, .act-btn.act-save {
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+}
+
+/* ============================================================
+   ONDA 2 — ALTO CONTRASTE COBRINDO O APP INTEIRO
+   Aplica reforço quando body.contraste-alto está ativo, em todos
+   os componentes: botões, modais, header, chips, FAB, sidebar,
+   login, wizard, terms, calendário, cards de Home.
+   ============================================================ */
+
+/* Botões — bordas 2px e texto sempre escuro/claro conforme tema */
+body.contraste-alto .page button,
+body.contraste-alto .glass-overlay button,
+body.contraste-alto .modal-overlay button,
+body.contraste-alto .wbtn-next,
+body.contraste-alto .wbtn-back,
+body.contraste-alto .act-btn,
+body.contraste-alto .cta-pill,
+body.contraste-alto .chip {
+  border-width: 2px !important;
+  font-weight: 800 !important;
+}
+body.contraste-alto .page button[onclick*="homeTab"],
+body.contraste-alto .page button[onclick*="revista"] {
+  background: rgba(123, 92, 255, 0.22) !important;
+  color: #2a0f6e !important;
+  border: 2px solid #4a1ca0 !important;
+}
+body.contraste-alto .page button[onclick*="_doSendWA"] {
+  background: rgba(37, 211, 102, 0.32) !important;
+  color: #064c24 !important;
+  border-color: #0e7a3a !important;
+}
+body.contraste-alto .page button[onclick*="_doPDF"] {
+  background: rgba(123, 92, 255, 0.28) !important;
+  color: #2a0f6e !important;
+  border-color: #4a1ca0 !important;
+}
+
+/* Modais — borda forte */
+body.contraste-alto .modal-box,
+body.contraste-alto .modal-sheet,
+body.contraste-alto .glass-overlay > div,
+body.contraste-alto .modal-overlay > div {
+  border: 2px solid #0f172a !important;
+  background: #ffffff !important;
+}
+html.dark body.contraste-alto .modal-box,
+html.dark body.contraste-alto .modal-sheet,
+html.dark body.contraste-alto .glass-overlay > div,
+html.dark body.contraste-alto .modal-overlay > div {
+  border-color: #f8fafc !important;
+  background: #0b0d12 !important;
+}
+
+/* Header / topnav */
+body.contraste-alto .topnav,
+body.contraste-alto .topnav-row {
+  border-bottom: 2px solid #0f172a !important;
+}
+html.dark body.contraste-alto .topnav,
+html.dark body.contraste-alto .topnav-row { border-color: #f8fafc !important; }
+
+/* FAB / botão flutuante */
+body.contraste-alto .fab,
+body.contraste-alto .btn-home-global,
+body.contraste-alto #pp-theme-global {
+  border: 2px solid #0f172a !important;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.4) !important;
+}
+html.dark body.contraste-alto .fab,
+html.dark body.contraste-alto .btn-home-global,
+html.dark body.contraste-alto #pp-theme-global {
+  border-color: #f8fafc !important;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.5) !important;
+}
+
+/* Sidebar / drawer */
+body.contraste-alto .sidebar,
+body.contraste-alto .drawer,
+body.contraste-alto #side {
+  border-right: 2px solid #0f172a !important;
+  background: #ffffff !important;
+}
+html.dark body.contraste-alto .sidebar,
+html.dark body.contraste-alto .drawer,
+html.dark body.contraste-alto #side {
+  border-color: #f8fafc !important;
+  background: #0b0d12 !important;
+}
+
+/* Calendário (agenda) */
+body.contraste-alto .cal-day,
+body.contraste-alto .cal-cell,
+body.contraste-alto .ag-day {
+  border: 1.5px solid #0f172a !important;
+  color: #0f172a !important;
+}
+html.dark body.contraste-alto .cal-day,
+html.dark body.contraste-alto .cal-cell,
+html.dark body.contraste-alto .ag-day {
+  border-color: #f8fafc !important;
+  color: #f8fafc !important;
+}
+
+/* Login */
+body.contraste-alto #pg-login,
+body.contraste-alto #pg-login .glass {
+  background: #ffffff !important;
+}
+body.contraste-alto #pg-login button {
+  border: 2px solid #0f172a !important;
+}
+html.dark body.contraste-alto #pg-login,
+html.dark body.contraste-alto #pg-login .glass {
+  background: #0b0d12 !important;
+}
+html.dark body.contraste-alto #pg-login button { border-color: #f8fafc !important; }
+
+/* Wizard s1..s4 — passos */
+body.contraste-alto #pg-s1, body.contraste-alto #pg-s2,
+body.contraste-alto #pg-s3, body.contraste-alto #pg-s4 {
+  color: #0f172a !important;
+}
+body.contraste-alto #pg-s1 .step-label,
+body.contraste-alto #pg-s2 .step-label,
+body.contraste-alto #pg-s3 .step-label,
+body.contraste-alto #pg-s4 .step-label,
+body.contraste-alto .wiz-title,
+body.contraste-alto .wiz-sub { color: #0f172a !important; font-weight: 800 !important; }
+html.dark body.contraste-alto #pg-s1,
+html.dark body.contraste-alto #pg-s2,
+html.dark body.contraste-alto #pg-s3,
+html.dark body.contraste-alto #pg-s4,
+html.dark body.contraste-alto .wiz-title,
+html.dark body.contraste-alto .wiz-sub { color: #f8fafc !important; }
+
+/* Termos */
+body.contraste-alto #pg-termos,
+body.contraste-alto #pg-termos * { color: #0f172a !important; }
+html.dark body.contraste-alto #pg-termos,
+html.dark body.contraste-alto #pg-termos * { color: #f8fafc !important; }
+
+/* Home — cards e métricas */
+body.contraste-alto .home-card,
+body.contraste-alto .stat-card,
+body.contraste-alto .mini-stat,
+body.contraste-alto .ultimo-orc-card,
+body.contraste-alto .evt-card {
+  border: 2px solid #0f172a !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+html.dark body.contraste-alto .home-card,
+html.dark body.contraste-alto .stat-card,
+html.dark body.contraste-alto .mini-stat,
+html.dark body.contraste-alto .ultimo-orc-card,
+html.dark body.contraste-alto .evt-card {
+  border-color: #f8fafc !important;
+  background: #0b0d12 !important;
+  color: #f8fafc !important;
+}
+
+/* Item-card (linhas de itens no orçamento) */
+body.contraste-alto .item-card,
+body.contraste-alto .item-row {
+  border: 2px solid #0f172a !important;
+  background: #ffffff !important;
+}
+html.dark body.contraste-alto .item-card,
+html.dark body.contraste-alto .item-row {
+  border-color: #f8fafc !important;
+  background: #0b0d12 !important;
+}
