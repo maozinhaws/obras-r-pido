@@ -4706,30 +4706,14 @@ function _renderItemObsChips() {
 function toggleItemObsSvc(key) {
   if (!S.tempItem.services) S.tempItem.services = [];
   const bare = window._ppStripPrefix(key);
-  // remove tanto a chave com prefixo quanto a versão antiga sem prefixo
+  const wasOn = S.tempItem.services.includes(key) || S.tempItem.services.includes(bare);
+  // remove ambas as variantes (com e sem prefixo) para evitar duplicidade
   S.tempItem.services = S.tempItem.services.filter(x => x !== key && x !== bare);
-  // se já não estava selecionado, adiciona com prefixo
-  const wasOn = (arguments[1] === false); // não usado, mantém assinatura
-  if (!wasOn) {
-    // detecta se o clique foi para ativar (não estava na lista original)
-    // Heurística: se antes do filter continha key OR bare, então estava ativo -> não readiciona
-    // Como filtramos já, precisamos do estado anterior:
-  }
-  // estado anterior real:
-  const prevSel = window._ppPrevSel || [];
-  const wasSelected = prevSel.includes(key) || prevSel.includes(bare);
-  if (!wasSelected) S.tempItem.services.push(key);
+  if (!wasOn) S.tempItem.services.push(key); // sempre persiste com prefixo
   S.isDirty = true;
-  window._ppPrevSel = [...S.tempItem.services];
   _renderItemObsChips();
 }
 
-// Patch: captura estado anterior antes de cada toggle
-const _origToggle = toggleItemObsSvc;
-window.toggleItemObsSvc = function(key){
-  window._ppPrevSel = [...(S.tempItem.services||[])];
-  return _origToggle(key);
-};
 
 function confirmItemObsPick() {
   const ta = document.querySelector('#item-modal-body .item-obs-inp');
