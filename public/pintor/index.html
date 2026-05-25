@@ -1741,7 +1741,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
 <link rel="stylesheet" href="/photo-annotator.css">
   <script type="module" crossorigin src="/pintor/assets/app-7mkkXZ-j.js"></script>
   <link rel="stylesheet" crossorigin href="/pintor/assets/app-BL-_ECWx.css">
-  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=9">
+  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=10">
 <script>(function(){try{if(!localStorage.getItem("pp-theme"))localStorage.setItem("pp-theme","light");document.documentElement.classList.remove("dark");}catch(e){}})();</script>
 </head>
 <body>
@@ -4002,7 +4002,7 @@ function checkAlarms() {
 let _ppReadyDispatched = false;
 function _ppSyncTopnavHeight(el){
   if(!el) return;
-  const tn = el.querySelector(':scope > .topnav');
+  const tn = el.querySelector(':scope > .topnav, :scope > .hm-hdr');
   if(!tn) return;
   const apply = () => {
     const h = tn.getBoundingClientRect().height;
