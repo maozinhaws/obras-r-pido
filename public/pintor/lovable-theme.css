@@ -43,9 +43,9 @@ html:not(.dark) {
 /* Dark mode: usa tokens escuros mas com glass translúcido */
 html.dark,
 :root.dark {
-  --bl: #b785f0 !important;             /* roxo claro p/ contraste no escuro */
-  --bld: #8b3fd6 !important;
-  --bll: rgba(183,133,240,0.18) !important;
+  --bl: #8b3fd6 !important;             /* mesmo roxo do modo claro */
+  --bld: #6d28b8 !important;
+  --bll: rgba(139,63,214,0.20) !important;
   --bl2: #a78bfa !important;
   --ink: #ededf0 !important;
   --ink2: #c5c5d0 !important;
