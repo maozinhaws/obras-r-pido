@@ -192,17 +192,22 @@ html.dark .sidebar {
 .sidebar-link.active,
 .sidebar-link[aria-current="page"],
 .sidebar-link.on {
-  background: transparent !important;
+  background: color-mix(in oklab, var(--bl) 10%, transparent) !important;
   background-image: none !important;
-  border-color: transparent !important;
+  border: 1.5px solid var(--bl) !important;
   color: var(--bl) !important;
   font-weight: 800 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 0 0 3px color-mix(in oklab, var(--bl) 18%, transparent),
+    0 8px 22px -10px color-mix(in oklab, var(--bl) 55%, transparent) !important;
 }
 html.dark .sidebar .sidebar-link:hover,
 html.dark .sidebar-link:hover {
-  background: rgba(255,107,53,0.16) !important;
-  border-color: rgba(255,107,53,0.38) !important;
+  background: color-mix(in oklab, var(--bl) 16%, transparent) !important;
+  border-color: color-mix(in oklab, var(--bl) 45%, transparent) !important;
 }
+
 .sidebar-overlay {
   background: rgba(15,5,40,0.35) !important;
   backdrop-filter: blur(6px) !important;
