@@ -215,12 +215,12 @@ html.dark .modal-box {
 
 /* 5) Sidebar — drawer com glass mais translúcido */
 .sidebar {
-  background: rgba(255,255,255,0.22) !important;
+  background: rgba(255,255,255,0.72) !important;
   background-image: none !important;
-  backdrop-filter: blur(34px) saturate(185%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(185%) !important;
-  border-right: 1px solid rgba(255,255,255,0.30) !important;
-  box-shadow: 8px 0 32px -16px rgba(15,5,40,0.14) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-right: 1px solid rgba(0,0,0,0.06) !important;
+  box-shadow: 8px 0 32px -16px rgba(15,5,40,0.12) !important;
 }
 html.dark .sidebar {
   background: rgba(20,14,30,0.18) !important;
