@@ -96,7 +96,7 @@ html.dark, html.dark body, html.dark #app {
   font-family: 'Manrope', system-ui, sans-serif !important;
 }
 
-/* 4) Topnav / hm-hdr — glassmorphism (conteúdo passa por baixo) */
+/* 4) Topnav / hm-hdr — glassmorphism translúcido idêntico ao sidebar/modais */
 .page > .topnav,
 .page > .hm-hdr {
   position: sticky !important;
@@ -108,21 +108,25 @@ html.dark, html.dark body, html.dark #app {
 .page > .scr {
   padding-top: 12px !important;
 }
-.topnav,
-.hm-hdr {
-  background: rgba(255,255,255,0.42) !important;
-  backdrop-filter: blur(36px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
+html .topnav,
+html .hm-hdr,
+html body .topnav,
+html body .hm-hdr {
+  background: rgba(255,255,255,0.32) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
   border-bottom: 1px solid rgba(255,255,255,0.45) !important;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.55) inset, 0 10px 28px -12px rgba(15,5,40,0.18) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 10px 28px -12px rgba(15,5,40,0.18) !important;
 }
 html.dark .topnav,
-html.dark .hm-hdr {
-  background: rgba(20,14,30,0.45) !important;
-  backdrop-filter: blur(36px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(36px) saturate(180%) !important;
-  border-bottom-color: rgba(255,255,255,0.10) !important;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 10px 28px -12px rgba(0,0,0,0.55) !important;
+html.dark .hm-hdr,
+html.dark body .topnav,
+html.dark body .hm-hdr {
+  background: rgba(20,14,30,0.38) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 28px -12px rgba(0,0,0,0.55) !important;
 }
 /* Modal-box — mesmo glass do sidebar */
 .modal-box {
@@ -143,6 +147,7 @@ html.dark .modal-box {
   border-bottom: none !important;
   box-shadow: none !important;
 }
+
 
 /* 5) Sidebar — drawer com glass mais translúcido */
 .sidebar {
