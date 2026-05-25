@@ -1,9 +1,10 @@
+import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 describe("pintor detailed flow smoke", () => {
   it("keeps the detailed wizard CSS contract stable", () => {
     const cssPath = "/dev-server/public/pintor/lovable-theme.css";
-    const css = Bun.file(cssPath).text();
+    const css = readFile(cssPath, "utf8");
 
     return css.then((content) => {
       expect(content).toContain(".modal-box");
