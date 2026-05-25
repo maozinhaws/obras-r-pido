@@ -900,7 +900,7 @@ html.dark #pg-s3 > .wizard-nav .wbtn-back, html.dark #pg-s4 > .wizard-nav .wbtn-
   color: #ededf0 !important;
 }
 
-/* Botão Avançar — pill gradiente */
+/* Botão Avançar — só layout. O gradiente quadricolor vem da regra global de .wbtn-next */
 #pg-s1 > .wizard-nav .wbtn-next, #pg-s2 > .wizard-nav .wbtn-next,
 #pg-s3 > .wizard-nav .wbtn-next, #pg-s4 > .wizard-nav .wbtn-next {
   height: 54px !important;
@@ -909,10 +909,9 @@ html.dark #pg-s3 > .wizard-nav .wbtn-back, html.dark #pg-s4 > .wizard-nav .wbtn-
   font-size: 15px !important;
   font-weight: 800 !important;
   border-radius: 16px !important;
-  background: linear-gradient(135deg, var(--bl) 0%, var(--bl) 45%, var(--bl2) 100%) !important;
   color: #fff !important;
   border: none !important;
-  box-shadow: 0 10px 24px -6px color-mix(in oklab, var(--bl) 55%, transparent) !important;
+  box-shadow: 0 10px 24px -6px rgba(255, 107, 53, 0.45) !important;
 }
 
 /* Reserva espaço de scroll para o conteúdo não ficar atrás do footer fixo.
