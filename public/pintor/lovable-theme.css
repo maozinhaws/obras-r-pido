@@ -164,9 +164,9 @@ html.dark .sidebar {
 .sidebar-links,
 .sidebar .sidebar-links { background: transparent !important; }
 /* Força reset do glass do bundle nos links da sidebar */
-.sidebar .sidebar-link,
-.sidebar-links .sidebar-link,
-.sidebar-link {
+.sidebar .sidebar-link:not(.sidebar-install-cta),
+.sidebar-links .sidebar-link:not(.sidebar-install-cta),
+.sidebar-link:not(.sidebar-install-cta) {
   border-radius: 14px !important;
   margin: 2px 10px !important;
   padding: 12px 14px !important;
@@ -178,9 +178,9 @@ html.dark .sidebar {
   box-shadow: none !important;
   transition: background .2s, color .2s, border-color .2s, transform .15s !important;
 }
-.sidebar .sidebar-link:hover,
-.sidebar-links .sidebar-link:hover,
-.sidebar-link:hover {
+.sidebar .sidebar-link:not(.sidebar-install-cta):hover,
+.sidebar-links .sidebar-link:not(.sidebar-install-cta):hover,
+.sidebar-link:not(.sidebar-install-cta):hover {
   background: color-mix(in oklab, var(--bl) 8%, transparent) !important;
   background-image: none !important;
   border-color: color-mix(in oklab, var(--bl) 35%, transparent) !important;

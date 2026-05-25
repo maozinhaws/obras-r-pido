@@ -1741,7 +1741,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
 <link rel="stylesheet" href="/photo-annotator.css">
   <script type="module" crossorigin src="/pintor/assets/app-7mkkXZ-j.js"></script>
   <link rel="stylesheet" crossorigin href="/pintor/assets/app-BL-_ECWx.css">
-  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=17">
+  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=18">
 <script>(function(){try{if(!localStorage.getItem("pp-theme"))localStorage.setItem("pp-theme","light");document.documentElement.classList.remove("dark");}catch(e){}})();</script>
 </head>
 <body>
@@ -3031,9 +3031,9 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
     </div>
 
     <!-- Card do usuário logado — toque vai para Configurações -->
-    <div id="sidebar-user-card" onclick="toggleSidebar(); openConfig();" style="margin:0 12px 8px;padding:14px;background:var(--bg2);border-radius:14px;border:1px solid var(--bdr);cursor:pointer;display:flex;align-items:center;gap:10px;">
+    <div id="sidebar-user-card" onclick="toggleSidebar(); openConfig();" style="margin:0 12px 8px;padding:14px;background:transparent;border-radius:14px;border:1px solid color-mix(in oklab, var(--bl) 22%, transparent);cursor:pointer;display:flex;align-items:center;gap:10px;">
       <img id="sidebar-user-avatar" src="/pintor/assets/apple-touch-icon-DWXOgEjU.png"
-        style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--bdr);">
+        style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid color-mix(in oklab, var(--bl) 35%, transparent);">
       <div style="min-width:0;flex:1;">
         <div id="sidebar-user-name" style="font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Usuário</div>
         <div id="sidebar-user-email" style="font-size:11px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;"></div>
@@ -3047,8 +3047,8 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('fornecedores')"><svg class="ico" aria-hidden="true"><use href="#ico-truck"/></svg> Fornecedores</div>
       <div class="sidebar-link" onclick="toggleSidebar(); homeTab('agenda')"><svg class="ico" aria-hidden="true"><use href="#ico-calendar"/></svg> Agenda e Lembretes</div>
       <div class="sidebar-link" onclick="toggleSidebar(); abrirModalSuporte()" style="font-weight:700; font-size:13px; color:var(--ink);"><svg class="ico" aria-hidden="true"><use href="#ico-headphones"/></svg> Suporte / Reportar Bug</div>
-      <div class="sidebar-link" onclick="toggleSidebar(); pwaShowInstallUI()" style="font-weight:800; font-size:13px; color:#fff; background:linear-gradient(135deg,var(--bl),var(--bld)); border-radius:12px; margin:4px 10px; padding:13px 14px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M12 2v13m0 0-4-4m4 4 4-4"/><rect x="2" y="17" width="20" height="5" rx="2"/></svg>
+      <div class="sidebar-link sidebar-install-cta" onclick="toggleSidebar(); pwaShowInstallUI()" style="font-weight:800; font-size:14px; color:#fff !important; background:linear-gradient(135deg,#ff8a3d 0%,#ff6b35 35%,#ec4899 65%,#7b5cff 100%) !important; background-image:linear-gradient(135deg,#ff8a3d 0%,#ff6b35 35%,#ec4899 65%,#7b5cff 100%) !important; border:none !important; border-radius:16px; margin:10px 10px 4px; padding:15px 16px; box-shadow:0 8px 22px -6px rgba(255,107,53,.55), 0 14px 30px -10px rgba(123,92,255,.45); justify-content:center; gap:10px; letter-spacing:.2px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M12 2v13m0 0-4-4m4 4 4-4"/><rect x="2" y="17" width="20" height="5" rx="2"/></svg>
         Instalar App
       </div>
       <div style="margin:8px 12px 0;border-top:1px solid var(--bdr);padding-top:8px;">
