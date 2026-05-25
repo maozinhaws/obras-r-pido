@@ -1169,8 +1169,8 @@ html.dark, body.dark { color-scheme: dark; }
 .finput::placeholder, .fta::placeholder { color: #475569 !important; opacity: 1 !important; }
 
 .finput:focus, .fta:focus, .fsel:focus {
-  border-color: var(--bl) !important;
-  box-shadow: inset 0 1px 2px rgba(15,23,42,.04), 0 0 0 3px rgba(255,107,53,.22) !important;
+  border-color: var(--bl2) !important;
+  box-shadow: inset 0 1px 2px rgba(15,23,42,.04), 0 0 0 3px rgba(123,92,255,.22) !important;
   outline: none;
 }
 
@@ -1188,6 +1188,52 @@ html.dark, body.dark { color-scheme: dark; }
 :root.dark .fsel:focus, html.dark .fsel:focus {
   border-color: var(--bl) !important;
   box-shadow: 0 0 0 3px rgba(255,107,53,.25) !important;
+}
+
+html:not(.dark) .item-title-inp:focus,
+html:not(.dark) .item-obs-inp:focus,
+html:not(.dark) .mbox:focus-within {
+  border-color: var(--bl2) !important;
+  box-shadow: 0 0 0 3px rgba(123,92,255,.18) !important;
+}
+
+html.dark .item-title-inp:focus,
+html.dark .item-obs-inp:focus,
+html.dark .mbox:focus-within {
+  border-color: var(--bl) !important;
+  box-shadow: 0 0 0 3px rgba(255,107,53,.20) !important;
+}
+
+.item-modal-sheet {
+  background: var(--bg-modal);
+  width: 100%;
+  max-width: 430px;
+  max-height: 86dvh;
+  border-radius: 28px 28px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 22px 60px -10px rgba(15,5,40,0.30), 0 0 0 1px rgba(255,255,255,0.42) inset;
+  border: 1px solid rgba(15,5,40,0.10);
+}
+
+html.dark .item-modal-sheet {
+  box-shadow: 0 22px 60px -10px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08) inset;
+  border-color: rgba(255,255,255,0.10);
+}
+
+.item-modal-footer {
+  padding: 14px 16px calc(16px + env(safe-area-inset-bottom,0px));
+  border-top: 1px solid var(--bdr);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: var(--bg-card-alt);
+  flex-shrink: 0;
+}
+
+.item-modal-footer .act-btn {
+  margin-bottom: 0;
 }
 
 :root.dark .chk-item, html.dark .chk-item {
@@ -3789,21 +3835,21 @@ html.dark .dash-bar-row .barwrap{background:rgba(183,133,240,0.10);}
     </div>
   </div>
 
-  <div id="item-modal-form" onclick="if(event.target===this) cancelItemModal()" class="glass-overlay">
-    <div style="background:var(--bg-modal);width:100%;max-width:420px;max-height:90vh;border-radius:24px;display:flex;flex-direction:column;box-shadow:0 20px 40px rgba(0,0,0,0.3);overflow:hidden;">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;background:var(--bg-card-alt);flex-shrink:0;">
-        <div style="font-weight:800;font-size:16px;color:var(--ink);">Detalhes do Item</div>
-        <button onclick="cancelItemModal()" aria-label="Fechar" style="background:var(--bg2);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink2);flex-shrink:0;"><svg class="ico" aria-hidden="true"><use href="#ico-x"/></svg></button>
+  <div id="item-modal-form" class="glass-overlay" style="align-items:flex-end;padding:0;z-index:9999999;">
+    <div class="item-modal-sheet">
+      <div style="padding:16px 18px 12px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;background:var(--bg-card-alt);flex-shrink:0;">
+        <div id="item-modal-title" style="font-weight:800;font-size:16px;color:var(--ink);">Novo item</div>
+        <button onclick="cancelItemModal()" aria-label="Fechar" style="background:var(--bg2);border:none;border-radius:14px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink2);flex-shrink:0;"><svg class="ico" aria-hidden="true"><use href="#ico-x"/></svg></button>
       </div>
-      <div id="item-modal-body" style="flex:1;overflow-y:auto;padding:20px;"></div>
-      <div style="padding:16px 20px;border-top:1px solid var(--bdr);display:flex;gap:12px;background:var(--bg-card-alt);flex-shrink:0;">
-        <button onclick="cancelItemModal()" style="flex:1;height:52px;border-radius:14px;background:var(--bg-input);border:1.5px solid var(--bdr-input);font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--ink2);cursor:pointer;">Cancelar</button>
-        <button onclick="saveItemModal()" id="btn-salvar-item-modal" style="flex:1;height:52px;border-radius:14px;background:var(--bl);border:none;font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(232,120,56,0.3);">Salvar Item</button>
+      <div id="item-modal-body" style="flex:1;overflow-y:auto;padding:16px 16px 8px;"></div>
+      <div class="item-modal-footer">
+        <button onclick="cancelItemModal()" class="act-btn act-soft">Cancelar</button>
+        <button onclick="saveItemModal()" id="btn-salvar-item-modal" class="act-btn act-save">Salvar Item</button>
       </div>
     </div>
   </div>
 
-  <div id="services-modal" onclick="if(event.target===this) closeServicesModal()" class="glass-overlay" style="align-items:flex-end;padding:0;z-index:9999999;">
+  <div id="services-modal" class="glass-overlay" style="align-items:flex-end;padding:0;z-index:9999999;">
     <div style="background:var(--bg-modal);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:20px 16px max(36px,calc(env(safe-area-inset-bottom,0px) + 20px));max-height:80vh;overflow-y:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <span style="font-size:15px;font-weight:800;color:var(--ink);">Serviços e Materiais</span>
@@ -3818,7 +3864,7 @@ html.dark .dash-bar-row .barwrap{background:rgba(183,133,240,0.10);}
   </div>
 
   <!-- MODAL: SUGESTÕES DE NOME (modo detalhado) -->
-  <div id="detail-nome-pick-modal" onclick="if(event.target===this) closeDetailNamePick()" class="glass-overlay" style="align-items:flex-end;padding:0;z-index:9999999;">
+  <div id="detail-nome-pick-modal" class="glass-overlay" style="align-items:flex-end;padding:0;z-index:9999999;">
     <div style="background:var(--bg-modal);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:20px 16px max(36px,calc(env(safe-area-inset-bottom,0px) + 20px));max-height:75vh;overflow-y:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <span style="font-size:15px;font-weight:800;color:var(--ink);">Selecione o item</span>
