@@ -569,60 +569,60 @@ body:has(#pg-s4.active) .page > .topnav button[onclick="toggleSidebar()"] {
   display: none !important;
 }
 
-/* Posiciona a wizard-nav DENTRO da topnav-row, ocupando toda a linha do título */
-#pg-s1 .topnav .wizard-nav,
-#pg-s2 .topnav .wizard-nav,
-#pg-s3 .topnav .wizard-nav,
-#pg-s4 .topnav .wizard-nav {
-  position: absolute !important;
-  top: max(14px, env(safe-area-inset-top, 14px)) !important;
-  left: 14px !important;
-  right: 14px !important;
+/* Wizard nav agora fica FIXA na parte de baixo da tela (igual modo flash).
+   Voltar/Cancelar à esquerda, Avançar à direita. */
+#pg-s1 .wizard-nav,
+#pg-s2 .wizard-nav,
+#pg-s3 .wizard-nav,
+#pg-s4 .wizard-nav {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   margin: 0 !important;
-  height: 44px !important;
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  pointer-events: none;
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1.4fr !important;
+  gap: 10px !important;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--bg) 0%, transparent) 0%, var(--bg) 38%) !important;
+  z-index: 30 !important;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
 }
-#pg-s1 .topnav .wizard-nav > *,
-#pg-s2 .topnav .wizard-nav > *,
-#pg-s3 .topnav .wizard-nav > *,
-#pg-s4 .topnav .wizard-nav > * {
-  pointer-events: auto;
-}
+#pg-s4 .wizard-nav { grid-template-columns: 1fr !important; }
 
-/* Botão Cancelar — só ícone X, quadrado 44x44 igual ao menu hambúrguer */
+/* Botão Voltar/Cancelar — pill claro */
 #pg-s1 .wbtn-back, #pg-s2 .wbtn-back,
 #pg-s3 .wbtn-back, #pg-s4 .wbtn-back {
-  width: 44px !important;
-  height: 44px !important;
+  height: 54px !important;
   min-width: 0 !important;
-  padding: 0 !important;
-  font-size: 0 !important;
-  line-height: 0 !important;
-  color: transparent !important;
-  border-radius: 14px !important;
-  background: rgba(255,255,255,0.65) !important;
+  padding: 0 18px !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,0.78) !important;
   backdrop-filter: blur(18px) saturate(170%) !important;
   -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
-  border: 1px solid rgba(15,5,40,0.10) !important;
+  border: 1.5px solid rgba(15,5,40,0.10) !important;
+  color: var(--ink) !important;
   box-shadow: 0 6px 18px -6px rgba(15,5,40,0.18) !important;
-  display: grid !important;
-  place-items: center !important;
-  margin-right: auto;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
 }
 #pg-s1 .wbtn-back svg, #pg-s2 .wbtn-back svg,
 #pg-s3 .wbtn-back svg, #pg-s4 .wbtn-back svg {
-  width: 20px !important;
-  height: 20px !important;
+  width: 18px !important;
+  height: 18px !important;
   color: var(--ink) !important;
   stroke: var(--ink) !important;
 }
 html.dark #pg-s1 .wbtn-back, html.dark #pg-s2 .wbtn-back,
 html.dark #pg-s3 .wbtn-back, html.dark #pg-s4 .wbtn-back {
-  background: rgba(28,18,42,0.70) !important;
+  background: rgba(28,18,42,0.72) !important;
   border-color: rgba(255,255,255,0.12) !important;
+  color: #ededf0 !important;
 }
 html.dark #pg-s1 .wbtn-back svg, html.dark #pg-s2 .wbtn-back svg,
 html.dark #pg-s3 .wbtn-back svg, html.dark #pg-s4 .wbtn-back svg {
@@ -630,32 +630,33 @@ html.dark #pg-s3 .wbtn-back svg, html.dark #pg-s4 .wbtn-back svg {
   stroke: #ededf0 !important;
 }
 
-/* Botão Avançar — pill gradiente compacto à direita */
+/* Botão Avançar — pill gradiente */
 #pg-s1 .wbtn-next, #pg-s2 .wbtn-next,
 #pg-s3 .wbtn-next, #pg-s4 .wbtn-next {
-  height: 38px !important;
+  height: 54px !important;
   min-width: 0 !important;
-  padding: 0 16px !important;
-  font-size: 12px !important;
+  padding: 0 22px !important;
+  font-size: 15px !important;
   font-weight: 800 !important;
-  border-radius: 14px !important;
+  border-radius: 16px !important;
   background: linear-gradient(135deg, #ff6b35 0%, #ff6b35 45%, #7b5cff 100%) !important;
   color: #fff !important;
   border: none !important;
-  box-shadow: 0 6px 16px -4px rgba(255,107,53,0.50) !important;
-  margin-left: auto;
+  box-shadow: 0 10px 24px -6px rgba(255,107,53,0.55) !important;
 }
 
-/* Quando só houver Voltar (sem Avançar) — caso da etapa 4 */
-#pg-s4 .topnav .wizard-nav { justify-content: flex-start !important; }
+/* Reserva espaço no conteúdo para não esconder atrás do footer fixo */
+#pg-s1, #pg-s2, #pg-s3, #pg-s4 {
+  padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)) !important;
+}
 
-/* Título do wizard com folga lateral para os botões */
+/* Título do wizard ocupa a linha normalmente, já que os botões saíram do topo */
 #pg-s1 .topnav-row .title-big,
 #pg-s2 .topnav-row .title-big,
 #pg-s3 .topnav-row .title-big,
 #pg-s4 .topnav-row .title-big {
-  padding: 0 110px !important;
-  font-size: 14px !important;
+  padding: 0 56px !important;
+  font-size: 15px !important;
 }
 
 /* ==========================================================
