@@ -3043,6 +3043,10 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
     function toggleService(s){ var svcs=state.modalSelectedServices||[]; var i=svcs.indexOf(s); if(i>=0) svcs.splice(i,1); else svcs.push(s); state.modalSelectedServices=svcs; _renderObsChips(OBS_SERVICOS,'obsServGrid','srv'); _renderObsChips(OBS_MATERIAIS,'obsMatGrid','mat'); }
     function confirmObsPick(){ var allKnown=OBS_SERVICOS.concat(OBS_MATERIAIS); var current=els.modalObs.value; var customParts=current.split(',').map(function(s){return s.trim();}).filter(function(s){return s&&allKnown.indexOf(s)<0;}); var selected=state.modalSelectedServices||[]; els.modalObs.value=customParts.concat(selected).join(', '); closeObsPick(); }
     renderSteps(); renderItems(); updateSummary(); setupSwipe(); hideSplash();
+    /* Teclado virtual: oculta barras de ação (nav-row/step1-actions/footer-nav) e
+       o botão flutuante X quando um input/textarea recebe foco — em vez de empurrar
+       o conteúdo para cima. Avisa o documento pai para esconder o X global também. */
+    (function(){ function isTxt(el){ if(!el) return false; var t=(el.tagName||'').toLowerCase(); if(t==='textarea'||t==='select') return true; if(t!=='input') return false; var ty=(el.type||'text').toLowerCase(); return ['text','search','tel','url','email','number','password','decimal'].indexOf(ty)>=0; } function open(){ document.body.classList.add('kbd-open'); try{ parent.postMessage({type:'kbd-state',open:true},'*'); }catch(_){} } function close(){ document.body.classList.remove('kbd-open'); try{ parent.postMessage({type:'kbd-state',open:false},'*'); }catch(_){} } document.addEventListener('focusin', function(e){ if(isTxt(e.target)) open(); }); document.addEventListener('focusout', function(){ setTimeout(function(){ if(!isTxt(document.activeElement)) close(); },80); }); })();
   </script>
 
 
