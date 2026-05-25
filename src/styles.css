@@ -334,7 +334,7 @@
 
   /* CTA pill — gradient action button (sidebar + page headers) */
   .cta-pill {
-    background: linear-gradient(135deg, #ff6b35 0%, #ff6b35 35%, #ec4899 65%, #a78bfa 100%);
+    background: linear-gradient(135deg, #8b3fd6 0%, #7b5cff 55%, #a78bfa 100%);
     color: #ffffff;
     border: none;
     border-radius: 9999px;
@@ -348,16 +348,16 @@
     align-items: center;
     gap: 0.5rem;
     box-shadow:
-      0 6px 14px -4px rgba(255, 107, 53, 0.45),
-      0 16px 36px -10px rgba(123, 92, 255, 0.55);
+      0 6px 14px -4px rgba(139, 63, 214, 0.45),
+      0 16px 36px -10px rgba(91, 30, 150, 0.55);
     cursor: pointer;
     transition: transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease;
   }
   .cta-pill:hover {
     transform: translateY(-2px);
     box-shadow:
-      0 10px 20px -6px rgba(255, 107, 53, 0.55),
-      0 24px 50px -10px rgba(123, 92, 255, 0.65);
+      0 10px 20px -6px rgba(139, 63, 214, 0.55),
+      0 24px 50px -10px rgba(91, 30, 150, 0.65);
   }
   .cta-pill:active { transform: scale(0.97); }
 

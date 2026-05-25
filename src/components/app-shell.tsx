@@ -105,7 +105,7 @@ function NavRow({
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-lg text-[15px] transition-colors border",
         active
-          ? "border-transparent font-extrabold text-white shadow-[0_6px_14px_-4px_rgba(255,107,53,0.45),0_16px_36px_-10px_rgba(123,92,255,0.55)] bg-[linear-gradient(135deg,#ff6b35_0%,#ff6b35_35%,#ec4899_65%,#a78bfa_100%)]"
+          ? "border-transparent font-extrabold text-white shadow-[0_6px_14px_-4px_rgba(139,63,214,0.45),0_16px_36px_-10px_rgba(91,30,150,0.55)] bg-[linear-gradient(135deg,#8b3fd6_0%,#7b5cff_55%,#a78bfa_100%)]"
           : "border-transparent font-semibold hover:bg-secondary/60 text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white",
       )}
     >
