@@ -1857,3 +1857,47 @@ html.dark .page button[onclick*="homeTab('clientes')"] {
   color: #c7b8ff !important;
   border-color: rgba(167, 139, 250, 0.22) !important;
 }
+
+/* ============================================================
+   RESET FINAL — NADA DE DEGRADÊ FORA DA WHITELIST
+   Cantos arredondados sempre. Headers de cards de Configuração
+   ficam transparentes. Wbtn-back, headers e botões utilitários
+   nunca recebem gradiente, mesmo se algum estilo inline tentar.
+   ============================================================ */
+.cfg-card-hdr,
+.cfg-card-hdr:hover,
+.cfg-card-hdr.open {
+  background: transparent !important;
+  background-image: none !important;
+  color: var(--ink) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.page #pg-config .wbtn-back,
+#pg-config .wbtn-back {
+  background: rgba(255,255,255,0.72) !important;
+  background-image: none !important;
+  color: #0f172a !important;
+  border: 1.5px solid rgba(15,5,40,0.12) !important;
+  box-shadow: 0 4px 12px -6px rgba(15,5,40,0.18) !important;
+}
+html.dark #pg-config .wbtn-back {
+  background: rgba(28,18,42,0.72) !important;
+  color: #ededf0 !important;
+  border-color: rgba(255,255,255,0.14) !important;
+}
+/* Botões de Backup (Baixar / Importar) — secundários, sem degradê */
+#pg-config button[onclick*="exportBackup"],
+#pg-config button[onclick*="backup-file"] {
+  background: rgba(255,255,255,0.72) !important;
+  background-image: none !important;
+  color: var(--bld) !important;
+  border: 1.5px dashed rgba(123,92,255,0.45) !important;
+  box-shadow: none !important;
+}
+html.dark #pg-config button[onclick*="exportBackup"],
+html.dark #pg-config button[onclick*="backup-file"] {
+  background: rgba(28,18,42,0.55) !important;
+  color: #d8c6ff !important;
+  border-color: rgba(167,139,250,0.45) !important;
+}
