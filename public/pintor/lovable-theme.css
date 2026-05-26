@@ -371,7 +371,7 @@ html.dark .card-menu-drop {
 .act-save,
 .cfg-card-hdr.cta,
 button[class*="primary"] {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
   color: #ffffff !important;
   border: none !important;
   box-shadow:
@@ -390,7 +390,7 @@ button[class*="primary"] {
 #services-modal button[onclick="confirmItemObsPick()"],
 #obsPickModal button[onclick="confirmObsPick()"],
 #draft-confirm-modal button[onclick="saveAsDraftAndExit()"] {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
   color: #ffffff !important;
   border: none !important;
   box-shadow:
@@ -1540,7 +1540,7 @@ html.dark .glass-overlay button[onclick="closeCfgSaveModal(false)"] {
 .page button[onclick*="saveAsDraftAndExit"],
 .page button[onclick*="salvarEvento"],
 .page button[onclick*="salvarOrc"] {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 12px !important;
@@ -1553,7 +1553,7 @@ html.dark .glass-overlay button[onclick="closeCfgSaveModal(false)"] {
 /* 8) Garante que o degradê quadricolor (#ff8a3d → ... → #7b5cff) também
       esteja em .wbtn-next e .act-save mesmo em alto contraste. */
 .wbtn-next, .act-save, .act-btn.act-save {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
 }
 
 /* ============================================================
