@@ -371,7 +371,7 @@ html.dark .card-menu-drop {
 .act-save,
 .cfg-card-hdr.cta,
 button[class*="primary"] {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
   color: #ffffff !important;
   border: none !important;
   box-shadow:
@@ -390,7 +390,7 @@ button[class*="primary"] {
 #services-modal button[onclick="confirmItemObsPick()"],
 #obsPickModal button[onclick="confirmObsPick()"],
 #draft-confirm-modal button[onclick="saveAsDraftAndExit()"] {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
   color: #ffffff !important;
   border: none !important;
   box-shadow:
@@ -1109,35 +1109,48 @@ html.dark #info-modal > div {
   background-image: none !important;
 }
 
-/* TODOS os botões de ação com o mesmo degradê e tipografia.
-   Exclui apenas ícones utilitários, navegação global e chips de seleção. */
-.page button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(#pp-theme-global):not(.orbital-btn):not(.wiz-x-btn):not(.card-menu-btn):not(.item-del):not(.rcard-del):not(.camera-btn):not(.modal-close):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn),
-.glass-overlay button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(.modal-close):not(.camera-btn):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn),
-.modal-overlay button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(.modal-close):not(.camera-btn):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn),
-#pg-login button[onclick="ppLoginOffline()"] {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+/* ============================================================
+   PRIMÁRIOS — ALLOW-LIST EXPLÍCITA
+   Apenas botões nesta lista recebem o degradê de duas cores
+   (mesmo do "Novo Orçamento" da Home). Tudo mais herda o estilo
+   inline próprio (suave/glass) ou é tratado pelas regras de
+   canal específico (WA, PDF, share, destrutivo, cancelar).
+   ============================================================ */
+.wbtn-next,
+.act-save,
+.act-btn.act-save,
+#btnSalvarItem,
+#btn-salvar-item-modal,
+#pg-login button[onclick="ppLoginOffline()"],
+.page button[onclick*="saveCfg"],
+.page button[onclick="closeCfgSaveModal(true)"],
+.glass-overlay button[onclick="closeCfgSaveModal(true)"],
+.page button[onclick*="saveEditClient"],
+.page button[onclick*="saveEditFornecedor"],
+.page button[onclick*="saveAsDraftAndExit"],
+.page button[onclick*="salvarEvento"],
+.page button[onclick*="salvarOrc"],
+.page button[onclick*="showModeSelector"],
+#services-modal button[onclick="confirmItemObsPick()"],
+#obsPickModal button[onclick="confirmObsPick()"],
+#draft-confirm-modal button[onclick="saveAsDraftAndExit()"] {
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 16px !important;
   font-family: 'Sora', system-ui, sans-serif !important;
   font-weight: 800 !important;
-  box-shadow: 0 8px 18px -6px rgba(255,107,53,0.45), 0 22px 42px -12px rgba(123,92,255,0.45), inset 0 1px 0 rgba(255,255,255,0.28) !important;
+  box-shadow:
+    0 8px 18px -6px rgba(255,107,53,0.45),
+    0 22px 42px -12px rgba(123,92,255,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.28) !important;
   transition: transform .15s ease, filter .2s ease, box-shadow .2s ease !important;
 }
-
-.page button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(#pp-theme-global):not(.orbital-btn):not(.wiz-x-btn):not(.card-menu-btn):not(.item-del):not(.rcard-del):not(.camera-btn):not(.modal-close):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn):hover,
-.glass-overlay button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(.modal-close):not(.camera-btn):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn):hover,
-.modal-overlay button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(.modal-close):not(.camera-btn):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn):hover,
-#pg-login button[onclick="ppLoginOffline()"]:hover {
-  filter: brightness(1.05) !important;
-}
-
-.page button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(#pp-theme-global):not(.orbital-btn):not(.wiz-x-btn):not(.card-menu-btn):not(.item-del):not(.rcard-del):not(.camera-btn):not(.modal-close):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn):active,
-.glass-overlay button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(.modal-close):not(.camera-btn):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn):active,
-.modal-overlay button:not([onclick="toggleSidebar()"]):not(.btn-home-global):not(.modal-close):not(.camera-btn):not(.pa-tool-btn):not(.pa-topbtn):not(.pa-opt-color):not(.pa-opt-width):not(#sig-clear-btn):active,
-#pg-login button[onclick="ppLoginOffline()"]:active {
-  transform: translateY(1px) !important;
-}
+.wbtn-next:hover,
+.act-save:hover,
+#pg-login button[onclick="ppLoginOffline()"]:hover { filter: brightness(1.05) !important; }
+.wbtn-next:active,
+.act-save:active { transform: translateY(1px) !important; }
 
 /* Controles utilitários e chips continuam distintos para não perder semântica de seleção */
 #nomePickGrid button,
@@ -1527,7 +1540,7 @@ html.dark .glass-overlay button[onclick="closeCfgSaveModal(false)"] {
 .page button[onclick*="saveAsDraftAndExit"],
 .page button[onclick*="salvarEvento"],
 .page button[onclick*="salvarOrc"] {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 12px !important;
@@ -1540,7 +1553,7 @@ html.dark .glass-overlay button[onclick="closeCfgSaveModal(false)"] {
 /* 8) Garante que o degradê quadricolor (#ff8a3d → ... → #7b5cff) também
       esteja em .wbtn-next e .act-save mesmo em alto contraste. */
 .wbtn-next, .act-save, .act-btn.act-save {
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%) !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
 }
 
 /* ============================================================
