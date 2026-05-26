@@ -730,11 +730,12 @@ html.dark .page > .topnav button[onclick="toggleSidebar()"] {
   height: 20px !important;
 }
 
-/* Botão home global — fixo ao lado do menu */
+/* Botão home global — fixo ao lado do menu (offset à direita do hambúrguer) */
 .btn-home-global {
   position: fixed !important;
   top: calc(14px + env(safe-area-inset-top, 0px)) !important;
-  left: 14px !important;
+  left: 66px !important; /* 14 (menu left) + 44 (menu width) + 8 (gap) */
+  right: auto !important;
   z-index: 60 !important;
   width: 44px !important;
   height: 44px !important;
@@ -1726,4 +1727,170 @@ html.dark body.contraste-alto .item-card,
 html.dark body.contraste-alto .item-row {
   border-color: #f8fafc !important;
   background: #0b0d12 !important;
+}
+
+/* ============================================================
+   ESTADOS DE BOTÃO (loading / disabled / hover / pressed)
+   Garante que primário, WhatsApp e PDF preservam cor de marca
+   em modo normal E alto contraste.
+   ============================================================ */
+
+/* PRIMÁRIO — hover/active preservam degradê laranja→roxo */
+.wbtn-next:hover, .act-save:hover,
+.page button[onclick*="salvarOrc"]:hover,
+.page button[onclick*="saveCfg"]:hover,
+.page button[onclick*="saveEditClient"]:hover,
+.page button[onclick*="saveEditFornecedor"]:hover,
+.page button[onclick="closeCfgSaveModal(true)"]:hover {
+  background: linear-gradient(135deg, #ff7a45 0%, #8b6cff 100%) !important;
+  filter: brightness(1.04) !important;
+  transform: translateY(-1px);
+}
+.wbtn-next:active, .act-save:active,
+.page button[onclick*="salvarOrc"]:active,
+.page button[onclick*="saveCfg"]:active,
+.page button[onclick="closeCfgSaveModal(true)"]:active {
+  background: linear-gradient(135deg, #e85a2a 0%, #6a4cef 100%) !important;
+  transform: translateY(0) scale(.98);
+  filter: brightness(.96) !important;
+}
+.wbtn-next:disabled, .act-save:disabled,
+.page button[onclick*="salvarOrc"]:disabled,
+.page button[onclick*="saveCfg"]:disabled {
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
+  opacity: .55 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(.25) !important;
+  transform: none !important;
+}
+/* loading: classe .is-loading aplicada via JS quando houver */
+.wbtn-next.is-loading, .act-save.is-loading {
+  background: linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%) !important;
+  opacity: .8 !important;
+  pointer-events: none !important;
+  position: relative;
+}
+.wbtn-next.is-loading::after, .act-save.is-loading::after {
+  content: ""; position: absolute; right: 14px; top: 50%;
+  width: 14px; height: 14px; margin-top: -7px;
+  border: 2px solid rgba(255,255,255,.4); border-top-color: #fff;
+  border-radius: 50%; animation: ppspin .7s linear infinite;
+}
+@keyframes ppspin { to { transform: rotate(360deg); } }
+
+/* WHATSAPP — hover/active mantêm verde */
+.page button[onclick*="_doSendWA"]:hover,
+.page button[onclick*="sendWhats"]:hover,
+.glass-overlay button[onclick*="_doSendWA"]:hover {
+  background: rgba(37, 211, 102, 0.28) !important;
+  border-color: rgba(37, 211, 102, 0.75) !important;
+}
+.page button[onclick*="_doSendWA"]:active,
+.glass-overlay button[onclick*="_doSendWA"]:active {
+  background: rgba(37, 211, 102, 0.40) !important;
+  transform: scale(.98);
+}
+.page button[onclick*="_doSendWA"]:disabled {
+  background: rgba(37, 211, 102, 0.10) !important;
+  color: rgba(14, 122, 58, 0.5) !important;
+  opacity: .6 !important;
+  cursor: not-allowed !important;
+}
+
+/* PDF — hover/active mantêm roxo */
+.page button[onclick*="_doPDF"]:hover,
+.page button[onclick*="gerarPDF"]:hover,
+.glass-overlay button[onclick*="_doPDF"]:hover {
+  background: rgba(123, 92, 255, 0.26) !important;
+  border-color: rgba(123, 92, 255, 0.70) !important;
+}
+.page button[onclick*="_doPDF"]:active,
+.glass-overlay button[onclick*="_doPDF"]:active {
+  background: rgba(123, 92, 255, 0.38) !important;
+  transform: scale(.98);
+}
+.page button[onclick*="_doPDF"]:disabled {
+  background: rgba(123, 92, 255, 0.10) !important;
+  color: rgba(74, 28, 160, 0.5) !important;
+  opacity: .6 !important;
+  cursor: not-allowed !important;
+}
+
+/* Mesma família de estados PRESERVADA em alto contraste */
+body.contraste-alto .wbtn-next:hover,
+body.contraste-alto .act-save:hover {
+  background: linear-gradient(135deg, #ff7a45 0%, #8b6cff 100%) !important;
+  color: #ffffff !important;
+}
+body.contraste-alto .page button[onclick*="_doSendWA"]:hover {
+  background: rgba(37, 211, 102, 0.45) !important;
+  color: #042e15 !important;
+  border-color: #064c24 !important;
+}
+body.contraste-alto .page button[onclick*="_doPDF"]:hover {
+  background: rgba(123, 92, 255, 0.40) !important;
+  color: #1a0850 !important;
+  border-color: #2a0f6e !important;
+}
+body.contraste-alto .wbtn-next:disabled,
+body.contraste-alto .act-save:disabled,
+body.contraste-alto .page button[onclick*="_doSendWA"]:disabled,
+body.contraste-alto .page button[onclick*="_doPDF"]:disabled {
+  opacity: .5 !important;
+  filter: grayscale(.4) !important;
+}
+
+/* ============================================================
+   SECUNDÁRIOS MAIS SUAVES
+   Reduz contraste de "Voltar", "Cancelar", "Ver todos", "Ver agenda"
+   e similares para não competir com o primário.
+   ============================================================ */
+.wbtn-back,
+.page button[onclick*="closeModal"],
+.page button[onclick*=".style.display='none'"],
+.glass-overlay button[onclick*=".style.display='none'"],
+.modal-overlay button[onclick*=".style.display='none'"],
+.page button[onclick="discardAndExit()"],
+.page button[onclick="closeCfgSaveModal(false)"] {
+  background: rgba(255,255,255,0.50) !important;
+  color: #475569 !important;
+  border: 1px solid rgba(15,5,40,0.08) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+.wbtn-back:hover,
+.page button[onclick*="closeModal"]:hover {
+  background: rgba(255,255,255,0.78) !important;
+  color: #0f172a !important;
+  border-color: rgba(15,5,40,0.18) !important;
+}
+html.dark .wbtn-back,
+html.dark .page button[onclick*="closeModal"],
+html.dark .page button[onclick*=".style.display='none'"] {
+  background: rgba(255,255,255,0.06) !important;
+  color: #c7c9d1 !important;
+  border-color: rgba(255,255,255,0.10) !important;
+}
+html.dark .wbtn-back:hover,
+html.dark .page button[onclick*="closeModal"]:hover {
+  background: rgba(255,255,255,0.12) !important;
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.22) !important;
+}
+/* "Ver todos / Ver agenda / Ver revista" — chip suave */
+.page button[onclick*="homeTab('orcamentos')"],
+.page button[onclick*="homeTab('agenda')"],
+.page button[onclick*="homeTab('clientes')"] {
+  background: rgba(123, 92, 255, 0.07) !important;
+  color: #6b4cd8 !important;
+  border: 1px solid rgba(123, 92, 255, 0.18) !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+html.dark .page button[onclick*="homeTab('orcamentos')"],
+html.dark .page button[onclick*="homeTab('agenda')"],
+html.dark .page button[onclick*="homeTab('clientes')"] {
+  background: rgba(167, 139, 250, 0.10) !important;
+  color: #c7b8ff !important;
+  border-color: rgba(167, 139, 250, 0.22) !important;
 }
