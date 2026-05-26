@@ -1323,55 +1323,15 @@ body[class*="fs-"] .chk-lbl    { font-size: calc(15px * var(--a-scale)) !importa
 
 /* Reforço de contraste — bordas sólidas escuras, texto mais escuro,
    placeholders mais visíveis. Pode combinar com qualquer fs-*. */
-body.contraste-alto .flbl,
-body.contraste-alto label,
-body.contraste-alto .step-label { color: #0f172a !important; font-weight: 700 !important; }
-body.contraste-alto .finput,
-body.contraste-alto .fta,
-body.contraste-alto .fsel,
-body.contraste-alto .item-title-inp,
-body.contraste-alto input[type="text"],
-body.contraste-alto input[type="number"],
-body.contraste-alto input[type="tel"],
-body.contraste-alto input[type="email"],
-body.contraste-alto input[type="date"],
-body.contraste-alto textarea,
-body.contraste-alto select {
-  border: 2px solid #0f172a !important;
-  box-shadow: none !important;
-  color: #000 !important;
-}
-body.contraste-alto input::placeholder,
-body.contraste-alto textarea::placeholder { color: #64748b !important; }
-body.contraste-alto .sec,
-body.contraste-alto .rcard,
-body.contraste-alto .item-card,
-body.contraste-alto .cfg-card,
-body.contraste-alto .glass,
-body.contraste-alto .glass-strong {
-  border: 2px solid #0f172a !important;
-}
-html.dark body.contraste-alto .flbl,
-html.dark body.contraste-alto label,
-html.dark body.contraste-alto .step-label { color: #f8fafc !important; }
-html.dark body.contraste-alto .finput,
-html.dark body.contraste-alto .fta,
-html.dark body.contraste-alto .fsel,
-html.dark body.contraste-alto input,
-html.dark body.contraste-alto textarea,
-html.dark body.contraste-alto select { border-color: #f8fafc !important; }
-html.dark body.contraste-alto .sec,
-html.dark body.contraste-alto .rcard,
-html.dark body.contraste-alto .item-card,
-html.dark body.contraste-alto .cfg-card,
-html.dark body.contraste-alto .glass,
-html.dark body.contraste-alto .glass-strong { border-color: #f8fafc !important; }
+/* Reforçar contraste: agora apenas levemente aumenta peso do texto em botões.
+   Nada de mexer em bordas, fundos, cards, inputs ou modais. */
+body.contraste-alto button { font-weight: 800 !important; }
 
-/* Botões de seleção da escala de fonte */
+/* Botões de seleção da escala de fonte — chips neutros, sem degradê */
 .a-fs-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 6px 0 14px; }
 .a-fs-btn {
-  background: rgba(255,255,255,0.72) !important;
-  border: 1.5px solid rgba(15,5,40,0.10) !important;
+  background: rgba(255,255,255,0.80) !important;
+  border: 1.5px solid rgba(15,5,40,0.12) !important;
   border-radius: 14px !important;
   padding: 10px 8px !important;
   font-family: 'Manrope', system-ui, sans-serif !important;
@@ -1380,19 +1340,22 @@ html.dark body.contraste-alto .glass-strong { border-color: #f8fafc !important; 
   cursor: pointer;
   transition: all .15s ease;
   backdrop-filter: blur(12px);
+  box-shadow: none !important;
 }
 .a-fs-btn:hover { border-color: var(--bl) !important; }
 .a-fs-btn.on {
-  background: linear-gradient(135deg, var(--bl), var(--bl2)) !important;
-  color: #fff !important;
-  border-color: transparent !important;
+  background: rgba(255,255,255,0.95) !important;
+  color: #0a0a0a !important;
+  border: 2px solid #ff6b35 !important;
+  box-shadow: 0 0 0 3px rgba(255,107,53,.18) !important;
 }
 .a-fs-btn .a-fs-lbl { display:block; font-size: 10px; text-transform: uppercase; letter-spacing: .6px; opacity: .85; }
 .a-fs-btn.fs-p-sample  .a-fs-prev { font-size: 13px; }
 .a-fs-btn.fs-m-sample  .a-fs-prev { font-size: 15px; }
 .a-fs-btn.fs-g-sample  .a-fs-prev { font-size: 18px; }
 .a-fs-btn.fs-xg-sample .a-fs-prev { font-size: 22px; }
-html.dark .a-fs-btn { background: rgba(28,18,42,0.55) !important; border-color: rgba(255,255,255,0.10) !important; color: #ededf0 !important; }
+html.dark .a-fs-btn { background: rgba(28,18,42,0.65) !important; border-color: rgba(255,255,255,0.14) !important; color: #ededf0 !important; }
+html.dark .a-fs-btn.on { background: rgba(28,18,42,0.85) !important; color: #fff !important; border-color: #ff6b35 !important; }
 
 /* ============================================================
    ONDA 1 — RECLASSIFICAÇÃO 360° DOS BOTÕES
