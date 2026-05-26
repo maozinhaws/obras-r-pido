@@ -730,11 +730,12 @@ html.dark .page > .topnav button[onclick="toggleSidebar()"] {
   height: 20px !important;
 }
 
-/* Botão home global — fixo ao lado do menu */
+/* Botão home global — fixo ao lado do menu (offset à direita do hambúrguer) */
 .btn-home-global {
   position: fixed !important;
   top: calc(14px + env(safe-area-inset-top, 0px)) !important;
-  left: 14px !important;
+  left: 66px !important; /* 14 (menu left) + 44 (menu width) + 8 (gap) */
+  right: auto !important;
   z-index: 60 !important;
   width: 44px !important;
   height: 44px !important;
