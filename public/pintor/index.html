@@ -4563,7 +4563,11 @@ function toggleCfgCard(id) {
   const isOpen = body.classList.contains('open');
   document.querySelectorAll('.cfg-card-body').forEach(b => b.classList.remove('open'));
   document.querySelectorAll('.cfg-card-hdr').forEach(h => h.classList.remove('open'));
-  if (!isOpen) { body.classList.add('open'); hdr.classList.add('open'); }
+  if (!isOpen) {
+    body.classList.add('open');
+    hdr.classList.add('open');
+    if (id === 'cc-backup') { try { window.renderGdriveConfig?.(); } catch(e) {} }
+  }
 }
 
 function _cfgGuardedExit(callback) {
