@@ -6512,7 +6512,7 @@ function sendWAIdx(i){ const o=S.orcs[i];if(!o)return; const msg=buildWAMsg(o); 
 function editOrc(i){
   canNavigateAsync(() => {
     const o=S.orcs[i];if(!o)return; toast('<svg class="ico" aria-hidden="true"><use href="#ico-edit"/></svg> Carregando orçamento…');
-    S.isDirty=true; S.editId=o.id; S.rooms=JSON.parse(JSON.stringify(o.rooms||[])); S.pgto=new Set(o.pgto||[]); S.fmt=o.fmt||'completo'; S.pagador=o.pagador||false;
+    S.isDirty=false; S.editId=o.id; S.rooms=JSON.parse(JSON.stringify(o.rooms||[])); S.pgto=new Set(o.pgto||[]); S.fmt=o.fmt||'completo'; S.pagador=o.pagador||false;
     renderPgtoList(); go(1);
     setTimeout(()=>{
       const v=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val||'';};
