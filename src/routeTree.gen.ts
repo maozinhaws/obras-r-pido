@@ -23,6 +23,7 @@ import { Route as OrcamentosIndexRouteImport } from './routes/orcamentos.index'
 import { Route as OrcamentosNovoRouteImport } from './routes/orcamentos.novo'
 import { Route as OrcamentosIdRouteImport } from './routes/orcamentos.$id'
 import { Route as OrcamentosIdReciboRouteImport } from './routes/orcamentos.$id.recibo'
+import { Route as ApiPublicGoogleConfigRouteImport } from './routes/api/public/google-config'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -94,6 +95,11 @@ const OrcamentosIdReciboRoute = OrcamentosIdReciboRouteImport.update({
   path: '/recibo',
   getParentRoute: () => OrcamentosIdRoute,
 } as any)
+const ApiPublicGoogleConfigRoute = ApiPublicGoogleConfigRouteImport.update({
+  id: '/api/public/google-config',
+  path: '/api/public/google-config',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos/': typeof OrcamentosIndexRoute
+  '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRoutesByTo {
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos': typeof OrcamentosIndexRoute
+  '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRoutesById {
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos/': typeof OrcamentosIndexRoute
+  '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRouteTypes {
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/orcamentos/$id'
     | '/orcamentos/novo'
     | '/orcamentos/'
+    | '/api/public/google-config'
     | '/orcamentos/$id/recibo'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/orcamentos/$id'
     | '/orcamentos/novo'
     | '/orcamentos'
+    | '/api/public/google-config'
     | '/orcamentos/$id/recibo'
   id:
     | '__root__'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/orcamentos/$id'
     | '/orcamentos/novo'
     | '/orcamentos/'
+    | '/api/public/google-config'
     | '/orcamentos/$id/recibo'
   fileRoutesById: FileRoutesById
 }
@@ -204,6 +216,7 @@ export interface RootRouteChildren {
   MaisRoute: typeof MaisRoute
   OrcamentosRoute: typeof OrcamentosRouteWithChildren
   TermosRoute: typeof TermosRoute
+  ApiPublicGoogleConfigRoute: typeof ApiPublicGoogleConfigRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -306,6 +319,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrcamentosIdReciboRouteImport
       parentRoute: typeof OrcamentosIdRoute
     }
+    '/api/public/google-config': {
+      id: '/api/public/google-config'
+      path: '/api/public/google-config'
+      fullPath: '/api/public/google-config'
+      preLoaderRoute: typeof ApiPublicGoogleConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -348,6 +368,7 @@ const rootRouteChildren: RootRouteChildren = {
   MaisRoute: MaisRoute,
   OrcamentosRoute: OrcamentosRouteWithChildren,
   TermosRoute: TermosRoute,
+  ApiPublicGoogleConfigRoute: ApiPublicGoogleConfigRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
