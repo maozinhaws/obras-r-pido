@@ -2349,7 +2349,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
               <label style="cursor:pointer;display:inline-block;">
                 <div id="cfg-logo-preview-wrap" style="width:90px;height:90px;border-radius:50%;background:#fff;border:2px dashed var(--bdr);display:flex;align-items:center;justify-content:center;overflow:hidden;margin:0 auto;">
                   <span id="cfg-logo-placeholder" style="font-size:28px;color:var(--ink3);"><svg class="ico" aria-hidden="true"><use href="#ico-camera"/></svg></span>
-                  <img id="cfg-logo-preview" src="" style="width:100%;height:100%;object-fit:cover;display:none;">
+                  <img id="cfg-logo-preview" src="" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:none;padding:4px;box-sizing:border-box;">
                 </div>
                 <input type="file" id="cfg-logo-file" accept="image/*" style="display:none;" onchange="loadLogoCfg(this);_cfgDirty=true;">
                 <div style="font-size:12px;font-weight:700;color:var(--bl);margin-top:8px;">Alterar Logotipo</div>
