@@ -4491,10 +4491,17 @@ function _autoSaveRascunho() {
   const orc = collectOrc();
   const temConteudo = orc.nome.trim() || (orc.rooms||[]).some(r => (r.items||[]).length > 0);
   if (!temConteudo) { S.isDirty = false; return; }
-  orc.status = 'Rascunho';
+  // Não rebaixa um orçamento já finalizado (Aprovado, Concluído, Em andamento, etc.)
+  // Só marca como "Rascunho" se for realmente novo ou já era rascunho/pendente.
+  let existente = null;
+  if (S.editId) existente = S.orcs.find(o => o.id === S.editId);
+  const stExist = ((existente && existente.status) || '').toLowerCase().trim();
+  const podeRebaixar = !existente || !stExist || stExist === 'rascunho' || stExist === 'pendente' || stExist === 'draft';
+  if (podeRebaixar) orc.status = 'Rascunho';
+  else orc.status = existente.status;
   if (S.editId) { const i = S.orcs.findIndex(o => o.id === S.editId); if (i >= 0) S.orcs[i] = orc; else S.orcs.unshift(orc); } else { S.orcs.unshift(orc); S.editId = orc.id; }
   S.isDirty = false; _saveOrcs();
-  toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> Rascunho salvo — altere o status para enviar');
+  if (podeRebaixar) toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> Rascunho salvo — altere o status para enviar');
 }
 let _navCallback = null;
 function openDraftConfirmModal(cb) { _navCallback = cb; document.getElementById('draft-confirm-modal').style.display = 'flex'; syncBlockingUiState(); }
