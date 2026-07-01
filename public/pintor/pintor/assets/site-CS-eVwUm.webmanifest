@@ -4,9 +4,9 @@
   "description": "Gerencie orçamentos e clientes. O app profissional para pintores — funciona offline.",
   "lang": "pt-BR",
   "dir": "ltr",
-  "start_url": "/app.html?source=pwa",
+  "start_url": "/pintor/index.html?source=pwa",
   "scope": "/",
-  "id": "/app.html",
+  "id": "/pintor/index.html",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#7C3AED",
@@ -67,21 +67,21 @@
       "name": "Novo Orçamento",
       "short_name": "Orçamento",
       "description": "Criar um novo orçamento detalhado",
-      "url": "/app.html?action=new-orc&source=shortcut",
+      "url": "/pintor/index.html?action=new-orc&source=shortcut",
       "icons": [{ "src": "/public/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Orçamento Flash",
       "short_name": "Flash",
       "description": "Orçamento rápido para visitas técnicas",
-      "url": "/app.html?action=flash&source=shortcut",
+      "url": "/pintor/index.html?action=flash&source=shortcut",
       "icons": [{ "src": "/public/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Agenda",
       "short_name": "Agenda",
       "description": "Ver e gerenciar compromissos",
-      "url": "/app.html?action=agenda&source=shortcut",
+      "url": "/pintor/index.html?action=agenda&source=shortcut",
       "icons": [{ "src": "/public/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ],
@@ -116,7 +116,7 @@
     }
   ],
   "share_target": {
-    "action": "/app.html",
+    "action": "/pintor/index.html",
     "method": "GET",
     "params": {
       "title": "share_title",
@@ -127,7 +127,7 @@
   "protocol_handlers": [
     {
       "protocol": "web+pintorplus",
-      "url": "/app.html?proto=%s"
+      "url": "/pintor/index.html?proto=%s"
     }
   ],
   "prefer_related_applications": false
