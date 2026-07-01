@@ -5798,31 +5798,57 @@ function renderSyncStatus() {
 window.renderSyncStatus = renderSyncStatus;
 
 // CONFIG E IMAGENS
+function getCfgLogoSrc() {
+  return String((S.config && S.config.logo) || '').trim();
+}
+
+function persistCfgLogo(dataUrl) {
+  if (!S.config) S.config = { ...defCfg };
+  S.config.logo = dataUrl || '';
+  try {
+    const stored = _ppRead('pp-config', {}) || {};
+    localStorage.setItem('pp-config', JSON.stringify({ ...defCfg, ...stored, ...S.config, logo: S.config.logo }));
+  } catch (e) {
+    console.warn('[logo] não foi possível salvar imediatamente', e);
+  }
+}
+
+function _fitLogoImageToCanvas(img, callback) {
+  const SIZE = 512;
+  const PAD = 28;
+  const canvas = document.createElement('canvas');
+  canvas.width = SIZE; canvas.height = SIZE;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, SIZE, SIZE);
+  const max = SIZE - PAD * 2;
+  const scale = Math.min(max / img.naturalWidth, max / img.naturalHeight, 1);
+  const w = Math.max(1, Math.round(img.naturalWidth * scale));
+  const h = Math.max(1, Math.round(img.naturalHeight * scale));
+  const x = Math.round((SIZE - w) / 2);
+  const y = Math.round((SIZE - h) / 2);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img, x, y, w, h);
+  callback(canvas.toDataURL('image/png'));
+}
+
+function normalizeExistingLogoIfNeeded() {
+  const src = getCfgLogoSrc();
+  if (!src || src.startsWith('data:image/png;base64,')) return;
+  const img = new Image();
+  img.onload = () => _fitLogoImageToCanvas(img, dataUrl => { if (dataUrl) { persistCfgLogo(dataUrl); renderLogoPreview(); } });
+  img.onerror = () => {};
+  img.src = src;
+}
+
 // Normaliza qualquer logo (retangular ou quadrada) num canvas quadrado 512x512
-// com a imagem inteira contida (contain) sobre fundo branco. Assim o mesmo
-// arquivo é usado no preview circular, no cabeçalho do PDF e como marca d'água
-// (tile) sem cortes nem distorções.
+// com a imagem inteira contida (contain) e fundo transparente. O mesmo arquivo
+// é usado no preview, cabeçalho do PDF e marca d'água sem cortes/distorções.
 function normalizeLogoSquare(file, callback) {
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
-    img.onload = () => {
-      const SIZE = 512;
-      const canvas = document.createElement('canvas');
-      canvas.width = SIZE; canvas.height = SIZE;
-      const ctx = canvas.getContext('2d');
-      // fundo branco (evita fundo preto quando exportado como JPEG)
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, SIZE, SIZE);
-      // fit contain
-      const scale = Math.min(SIZE / img.width, SIZE / img.height);
-      const w = img.width * scale, h = img.height * scale;
-      const x = (SIZE - w) / 2, y = (SIZE - h) / 2;
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, x, y, w, h);
-      callback(canvas.toDataURL('image/png'));
-    };
+    img.onload = () => _fitLogoImageToCanvas(img, callback);
     img.onerror = () => callback('');
     img.src = ev.target.result;
   };
@@ -5834,15 +5860,16 @@ function loadLogoCfg(input) {
   if(!file) return;
   normalizeLogoSquare(file, dataUrl => {
     if(!dataUrl){ toast('<svg class="ico" aria-hidden="true"><use href="#ico-alert"/></svg> Não foi possível processar a imagem.'); return; }
-    S.config.logo = dataUrl;
+    persistCfgLogo(dataUrl);
     renderLogoPreview();
-    toast('<svg class="ico" aria-hidden="true"><use href="#ico-camera"/></svg> Logo carregado (não esqueça de Salvar)');
+    window.scheduleSync?.();
+    toast('<svg class="ico" aria-hidden="true"><use href="#ico-camera"/></svg> Logotipo salvo e ajustado');
   });
   input.value = '';
 }
 
 function clearLogoCfg() {
-  S.config.logo = '';
+  persistCfgLogo('');
   document.getElementById('cfg-logo-file').value = '';
   renderLogoPreview();
 }
