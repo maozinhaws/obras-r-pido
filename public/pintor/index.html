@@ -5957,7 +5957,7 @@ function sigCanvasSave() {
 function renderLogoPreview() { 
   // Variáveis Padrão Independentes
   const menuDefaultLogo = 'https://lh3.googleusercontent.com/d/1WJXU6NvZ12GeL3GA4NzzGeGeaZvHpkfn';
-  const userLogo = S.config.logo; 
+  const userLogo = getCfgLogoSrc(); 
 
   // Elementos HTML
   const img = document.getElementById('cfg-logo-preview'); 
@@ -5969,9 +5969,9 @@ function renderLogoPreview() {
 
   // Lógica Opcional: Ecrã Home e Menu de Configurações (Apenas exibem se o user fez upload de foto)
   if(userLogo) {
-    if(img){img.src = userLogo; img.style.display = 'block';} 
+    if(img){img.src = userLogo; img.style.display = 'block'; img.style.objectFit = 'contain';} 
     if(txt)txt.style.display = 'none'; 
-    if(homeImg){homeImg.src = userLogo; homeImg.style.display = 'block';} 
+    if(homeImg){homeImg.src = userLogo; homeImg.style.display = 'block'; homeImg.style.objectFit = 'contain';} 
   } else {
     if(img){img.src = ''; img.style.display = 'none';} 
     if(txt)txt.style.display = 'block'; 
