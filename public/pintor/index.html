@@ -5799,7 +5799,17 @@ window.renderSyncStatus = renderSyncStatus;
 
 // CONFIG E IMAGENS
 function getCfgLogoSrc() {
-  return String((S.config && S.config.logo) || '').trim();
+  const memoryLogo = String((S.config && S.config.logo) || '').trim();
+  if (memoryLogo) return memoryLogo;
+  try {
+    const storedLogo = String((_ppRead('pp-config', {}) || {}).logo || '').trim();
+    if (storedLogo) {
+      if (!S.config) S.config = { ...defCfg };
+      S.config.logo = storedLogo;
+      return storedLogo;
+    }
+  } catch(e) {}
+  return '';
 }
 
 function persistCfgLogo(dataUrl) {
@@ -5815,13 +5825,13 @@ function persistCfgLogo(dataUrl) {
 
 function _fitLogoImageToCanvas(img, callback) {
   const SIZE = 512;
-  const PAD = 28;
+  const PAD = 42;
   const canvas = document.createElement('canvas');
   canvas.width = SIZE; canvas.height = SIZE;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, SIZE, SIZE);
   const max = SIZE - PAD * 2;
-  const scale = Math.min(max / img.naturalWidth, max / img.naturalHeight, 1);
+  const scale = Math.min(max / img.naturalWidth, max / img.naturalHeight);
   const w = Math.max(1, Math.round(img.naturalWidth * scale));
   const h = Math.max(1, Math.round(img.naturalHeight * scale));
   const x = Math.round((SIZE - w) / 2);
@@ -5834,10 +5844,20 @@ function _fitLogoImageToCanvas(img, callback) {
 
 function normalizeExistingLogoIfNeeded() {
   const src = getCfgLogoSrc();
-  if (!src || src.startsWith('data:image/png;base64,')) return;
+  if (!src || normalizeExistingLogoIfNeeded._running) return;
+  const keyFor = v => String(v.length) + ':' + String(v).slice(0, 96);
+  try { if (localStorage.getItem('pp-logo-normalized-key') === keyFor(src)) return; } catch(e) {}
+  normalizeExistingLogoIfNeeded._running = true;
   const img = new Image();
-  img.onload = () => _fitLogoImageToCanvas(img, dataUrl => { if (dataUrl) { persistCfgLogo(dataUrl); renderLogoPreview(); } });
-  img.onerror = () => {};
+  img.onload = () => _fitLogoImageToCanvas(img, dataUrl => {
+    normalizeExistingLogoIfNeeded._running = false;
+    if (dataUrl) {
+      persistCfgLogo(dataUrl);
+      try { localStorage.setItem('pp-logo-normalized-key', keyFor(dataUrl)); } catch(e) {}
+      renderLogoPreview();
+    }
+  });
+  img.onerror = () => { normalizeExistingLogoIfNeeded._running = false; };
   img.src = src;
 }
 
