@@ -5975,6 +5975,7 @@ function sigCanvasSave() {
 }
 
 function renderLogoPreview() { 
+  normalizeExistingLogoIfNeeded();
   // Variáveis Padrão Independentes
   const menuDefaultLogo = 'https://lh3.googleusercontent.com/d/1WJXU6NvZ12GeL3GA4NzzGeGeaZvHpkfn';
   const userLogo = getCfgLogoSrc(); 
