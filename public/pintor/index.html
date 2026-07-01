@@ -4491,23 +4491,34 @@ function _autoSaveRascunho() {
   const orc = collectOrc();
   const temConteudo = orc.nome.trim() || (orc.rooms||[]).some(r => (r.items||[]).length > 0);
   if (!temConteudo) { S.isDirty = false; return; }
-  orc.status = 'Rascunho';
+  // Não rebaixa um orçamento já finalizado (Aprovado, Concluído, Em andamento, etc.)
+  // Só marca como "Rascunho" se for realmente novo ou já era rascunho/pendente.
+  let existente = null;
+  if (S.editId) existente = S.orcs.find(o => o.id === S.editId);
+  const stExist = ((existente && existente.status) || '').toLowerCase().trim();
+  const podeRebaixar = !existente || !stExist || stExist === 'rascunho' || stExist === 'pendente' || stExist === 'draft';
+  if (podeRebaixar) orc.status = 'Rascunho';
+  else orc.status = existente.status;
   if (S.editId) { const i = S.orcs.findIndex(o => o.id === S.editId); if (i >= 0) S.orcs[i] = orc; else S.orcs.unshift(orc); } else { S.orcs.unshift(orc); S.editId = orc.id; }
   S.isDirty = false; _saveOrcs();
-  toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> Rascunho salvo — altere o status para enviar');
+  if (podeRebaixar) toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> Rascunho salvo — altere o status para enviar');
 }
 let _navCallback = null;
 function openDraftConfirmModal(cb) { _navCallback = cb; document.getElementById('draft-confirm-modal').style.display = 'flex'; syncBlockingUiState(); }
 function closeDraftConfirmModal() { _navCallback = null; document.getElementById('draft-confirm-modal').style.display = 'none'; syncBlockingUiState(); }
 function saveAsDraftAndExit() {
   const orc = collectOrc();
-  orc.status = 'Rascunho';
+  let existente = null;
+  if (S.editId) existente = S.orcs.find(o => o.id === S.editId);
+  const stExist = ((existente && existente.status) || '').toLowerCase().trim();
+  const podeRebaixar = !existente || !stExist || stExist === 'rascunho' || stExist === 'pendente' || stExist === 'draft';
+  orc.status = podeRebaixar ? 'Rascunho' : existente.status;
   if (S.editId) { const i = S.orcs.findIndex(o => o.id === S.editId); if (i >= 0) S.orcs[i] = orc; else S.orcs.unshift(orc); } else { S.orcs.unshift(orc); S.editId = orc.id; }
   S.isDirty = false; _saveOrcs();
   const cb = _navCallback;
   closeDraftConfirmModal();
   if (cb) cb();
-  toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> Rascunho salvo');
+  toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> ' + (podeRebaixar ? 'Rascunho salvo' : 'Alterações salvas'));
 }
 function discardAndExit() {
   S.isDirty = false; S.editId = null;
@@ -6501,7 +6512,7 @@ function sendWAIdx(i){ const o=S.orcs[i];if(!o)return; const msg=buildWAMsg(o); 
 function editOrc(i){
   canNavigateAsync(() => {
     const o=S.orcs[i];if(!o)return; toast('<svg class="ico" aria-hidden="true"><use href="#ico-edit"/></svg> Carregando orçamento…');
-    S.isDirty=true; S.editId=o.id; S.rooms=JSON.parse(JSON.stringify(o.rooms||[])); S.pgto=new Set(o.pgto||[]); S.fmt=o.fmt||'completo'; S.pagador=o.pagador||false;
+    S.isDirty=false; S.editId=o.id; S.rooms=JSON.parse(JSON.stringify(o.rooms||[])); S.pgto=new Set(o.pgto||[]); S.fmt=o.fmt||'completo'; S.pagador=o.pagador||false;
     renderPgtoList(); go(1);
     setTimeout(()=>{
       const v=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val||'';};
