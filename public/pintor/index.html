@@ -4508,13 +4508,17 @@ function openDraftConfirmModal(cb) { _navCallback = cb; document.getElementById(
 function closeDraftConfirmModal() { _navCallback = null; document.getElementById('draft-confirm-modal').style.display = 'none'; syncBlockingUiState(); }
 function saveAsDraftAndExit() {
   const orc = collectOrc();
-  orc.status = 'Rascunho';
+  let existente = null;
+  if (S.editId) existente = S.orcs.find(o => o.id === S.editId);
+  const stExist = ((existente && existente.status) || '').toLowerCase().trim();
+  const podeRebaixar = !existente || !stExist || stExist === 'rascunho' || stExist === 'pendente' || stExist === 'draft';
+  orc.status = podeRebaixar ? 'Rascunho' : existente.status;
   if (S.editId) { const i = S.orcs.findIndex(o => o.id === S.editId); if (i >= 0) S.orcs[i] = orc; else S.orcs.unshift(orc); } else { S.orcs.unshift(orc); S.editId = orc.id; }
   S.isDirty = false; _saveOrcs();
   const cb = _navCallback;
   closeDraftConfirmModal();
   if (cb) cb();
-  toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> Rascunho salvo');
+  toast('<svg class="ico" aria-hidden="true"><use href="#ico-save"/></svg> ' + (podeRebaixar ? 'Rascunho salvo' : 'Alterações salvas'));
 }
 function discardAndExit() {
   S.isDirty = false; S.editId = null;
