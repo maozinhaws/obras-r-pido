@@ -6011,8 +6011,11 @@ window.renderGdriveConfig = function renderGdriveConfig() {
   const user = window.ppGetUser?.();
   const email = user?.email || localStorage.getItem('pp-gdrive-email') || '';
   const lastSync = localStorage.getItem('pp-gdrive-lastSync') || '';
+  const s = window.getSyncStatus?.() || 'offline';
+  const stLabel = { idle:'Aguardando', pending:'Sincronização pendente…', syncing:'Sincronizando…', ok:'Sincronizado', error:'Falha ao sincronizar', offline:'Desconectado' }[s] || '';
+  const stColor = { syncing:'#6366f1', ok:'#22c55e', error:'#ef4444', pending:'#f59e0b' }[s] || 'var(--ink3)';
   if (user && email) {
-    if (infoEl) infoEl.textContent = 'Sincronize backups automáticos com sua conta Google.';
+    if (infoEl) infoEl.textContent = 'Clientes, orçamentos, fotos e eventos são sincronizados automaticamente a cada alteração. Você também pode sincronizar manualmente a qualquer momento.';
     statusEl.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--bdr);border-radius:12px;background:var(--bg-input);margin-bottom:10px;">
         <div style="width:32px;height:32px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -6020,18 +6023,18 @@ window.renderGdriveConfig = function renderGdriveConfig() {
         </div>
         <div style="min-width:0;flex:1;">
           <div style="font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${email}</div>
-          <div style="font-size:11px;color:var(--ink3);">${lastSync ? 'Último backup: ' + new Date(lastSync).toLocaleString('pt-BR') : 'Conectado'}</div>
+          <div style="font-size:11px;color:${stColor};display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:${stColor};display:inline-block;"></span>${stLabel}${lastSync ? ' · ' + new Date(lastSync).toLocaleString('pt-BR') : ''}</div>
         </div>
       </div>`;
     btnsEl.innerHTML = `
-      <button onclick="window.gdriveBackupNow()" style="width:100%;height:48px;border-radius:12px;background:var(--bg-input);border:2px dashed var(--bdr-input);font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--bl);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
-        <svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Fazer backup agora
+      <button onclick="window.gdriveBackupNow()" ${s==='syncing'?'disabled':''} style="width:100%;height:48px;border-radius:12px;background:linear-gradient(135deg,#ff6b35,#7b5cff);border:none;font-family:'Sora',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;opacity:${s==='syncing'?'.6':'1'};">
+        <svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> ${s==='syncing'?'Sincronizando…':'Sincronizar agora'}
       </button>
       <button onclick="window.gdriveDisconnect()" style="width:100%;height:40px;border-radius:10px;background:transparent;border:1px solid var(--bdr);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;">
         Desconectar conta
       </button>`;
   } else {
-    if (infoEl) infoEl.textContent = 'Conecte sua conta Google para salvar backups na nuvem e acessar de qualquer dispositivo.';
+    if (infoEl) infoEl.textContent = 'Conecte sua conta Google para salvar clientes, orçamentos e fotos na nuvem e acessar de qualquer dispositivo.';
     statusEl.innerHTML = '';
     btnsEl.innerHTML = `
       <button onclick="window.gdriveConnect()" style="width:100%;height:48px;border-radius:12px;background:#fff;border:1.5px solid #dadce0;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;color:#3c4043;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;">
@@ -7671,7 +7674,7 @@ async function gDriveSyncClientes() {
 <!-- Photo Annotator module -->
 <script src="/photo-annotator.js"></script>
 <!-- Google Drive sync (appDataFolder) -->
-<script src="/pintor/drive-sync.js?v=1"></script>
+<script src="/pintor/drive-sync.js?v=2"></script>
 <script>
 // ── Photo Viewer + PhotoAnnotator + Flash Camera Bridge ──
 (function() {
