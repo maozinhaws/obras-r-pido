@@ -252,7 +252,7 @@
       map.set(k, x);
     }
     for (const r of remote) {
-      if (!r || r.id == null) continue;
+      if (!r) continue;
       const k = _recordKey(type, r) || 'remote:' + (++loose);
       const l = map.get(k);
       if (!l) { map.set(k, r); continue; }
