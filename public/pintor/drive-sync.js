@@ -30,6 +30,15 @@
   let _lastError = '';
   let _status = 'offline';
 
+  function _getDeviceId() {
+    let id = localStorage.getItem('pp-device-id') || '';
+    if (!id) {
+      id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('pp-device-id', id);
+    }
+    return id;
+  }
+
   function _setStatus(s) {
     _status = s;
     try { window.renderSyncStatus?.(); } catch (e) {}
@@ -195,15 +204,19 @@
   }
 
   // ── Drive REST ──
-  async function _findFile(token, forceFresh) {
-    if (_lastFileId && !forceFresh) return _lastFileId;
+  async function _listBackupFiles(token) {
     const q = encodeURIComponent(`name='${FILE_NAME}' and 'appDataFolder' in parents and trashed=false`);
-    const r = await fetch(`${DRIVE_API}/files?spaces=appDataFolder&q=${q}&fields=files(id,modifiedTime)`, {
+    const r = await fetch(`${DRIVE_API}/files?spaces=appDataFolder&q=${q}&fields=files(id,name,modifiedTime,createdTime,size)&orderBy=modifiedTime desc&pageSize=100`, {
       headers: { Authorization: 'Bearer ' + token },
     });
     if (!r.ok) { const b = await _readErrorBody(r); throw new Error(_classifyDriveError(r.status, b)); }
     const j = await r.json();
-    const f = (j.files || [])[0];
+    return Array.isArray(j.files) ? j.files : [];
+  }
+  async function _findFile(token, forceFresh) {
+    if (_lastFileId && !forceFresh) return _lastFileId;
+    const files = await _listBackupFiles(token);
+    const f = files[0];
     if (f) { _lastFileId = f.id; localStorage.setItem('pp-gdrive-fileId', f.id); }
     else { _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId'); }
     return _lastFileId;
@@ -215,6 +228,15 @@
     if (r.status === 404 || r.status === 403) { _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId'); return null; }
     if (!r.ok) { const b = await _readErrorBody(r); throw new Error(_classifyDriveError(r.status, b)); }
     try { return await r.json(); } catch (e) { return null; }
+  }
+  async function _trashFile(token, id) {
+    if (!id) return false;
+    const r = await fetch(`${DRIVE_API}/files/${id}`, {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({ trashed: true }),
+    });
+    return r.ok;
   }
   async function _resumableUploadFile(token, id, bodyText) {
     const meta = id ? {} : { name: FILE_NAME, parents: ['appDataFolder'] };
@@ -302,7 +324,7 @@
   }
 
   function _snapshot() {
-    const s = { versao: 2, ts: Date.now(), exportadoEm: new Date().toISOString() };
+    const s = { versao: 3, ts: Date.now(), exportadoEm: new Date().toISOString(), deviceId: _getDeviceId(), contaGoogle: localStorage.getItem('pp-gdrive-email') || '' };
     for (const k of KEYS) {
       const v = localStorage.getItem(k);
       try { s[k] = v ? JSON.parse(v) : null; } catch (e) { s[k] = v; }
@@ -370,7 +392,7 @@
     const l = _normalizeSnapshot(local) || _snapshot();
     const r = _normalizeSnapshot(remote);
     if (!r) return l;
-    const out = { versao: 2, ts: Date.now(), exportadoEm: new Date().toISOString() };
+    const out = { versao: 3, ts: Date.now(), exportadoEm: new Date().toISOString(), deviceId: _getDeviceId(), contaGoogle: localStorage.getItem('pp-gdrive-email') || '' };
     out['pp-orcs'] = _mergeArrayById('pp-orcs', l['pp-orcs'], r['pp-orcs']);
     out['pp-clientes'] = _mergeArrayById('pp-clientes', l['pp-clientes'], r['pp-clientes']);
     out['pp-fornecedores'] = _mergeArrayById('pp-fornecedores', l['pp-fornecedores'], r['pp-fornecedores']);
@@ -422,14 +444,39 @@
     try {
       const token = await gSignIn(interactive);
       if (!token) { _setStatus(ppGetUser() ? 'error' : 'offline'); return false; }
-      const local = _snapshot();
-      let fileId = '';
-      try { fileId = await _findFile(token); } catch (e) { fileId = ''; }
-      const remote = fileId ? await _downloadFile(token, fileId) : null;
-      const merged = _mergeSnapshot(local, remote);
+      let merged = _snapshot();
+      let files = [];
+      try { files = await _listBackupFiles(token); } catch (e) { files = []; }
+      const knownIds = new Set(files.map(f => f.id).filter(Boolean));
+      if (_lastFileId && !knownIds.has(_lastFileId)) {
+        try {
+          const cachedRemote = await _downloadFile(token, _lastFileId);
+          if (cachedRemote) files.push({ id: _lastFileId, modifiedTime: cachedRemote.exportadoEm || '' });
+        } catch (e) {
+          _lastFileId = '';
+          localStorage.removeItem('pp-gdrive-fileId');
+        }
+      }
+      for (const f of files) {
+        if (!f || !f.id) continue;
+        const remote = await _downloadFile(token, f.id);
+        if (remote) merged = _mergeSnapshot(merged, remote);
+      }
       _applySnapshot(merged);
-      await _uploadFile(token, fileId, merged);
+      const canonicalId = (files[0] && files[0].id) || _lastFileId || '';
+      const uploaded = await _uploadFile(token, canonicalId, merged);
+      const finalId = uploaded?.id || canonicalId;
+      if (finalId) {
+        _lastFileId = finalId;
+        localStorage.setItem('pp-gdrive-fileId', finalId);
+      }
+      // Se aparelhos antigos criaram backups separados, consolida tudo em um só arquivo.
+      const duplicates = files.map(f => f.id).filter(id => id && id !== finalId);
+      for (const id of duplicates) {
+        _trashFile(token, id).catch(() => {});
+      }
       localStorage.setItem('pp-gdrive-lastSync', new Date().toISOString());
+      localStorage.setItem('pp-gdrive-backupCount', String(Math.max(1, files.length || (finalId ? 1 : 0))));
       _setLastError('');
       _setStatus('ok');
       return true;
