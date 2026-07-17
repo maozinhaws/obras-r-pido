@@ -235,7 +235,7 @@
       _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId');
       return _resumableUploadFile(token, '', bodyText);
     }
-    if (!init.ok) throw new Error('drive upload init ' + init.status + ' ' + await _readErrorBody(init));
+    if (!init.ok) { const b = await _readErrorBody(init); throw new Error(_classifyDriveError(init.status, b)); }
     const uploadUrl = init.headers.get('Location') || init.headers.get('location');
     if (!uploadUrl) throw new Error('drive upload init sem URL de envio');
     const up = await fetch(uploadUrl, {
