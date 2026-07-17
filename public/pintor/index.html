@@ -6018,6 +6018,7 @@ window.renderGdriveConfig = function renderGdriveConfig() {
   const email = user?.email || localStorage.getItem('pp-gdrive-email') || '';
   const lastSync = localStorage.getItem('pp-gdrive-lastSync') || '';
   const s = window.getSyncStatus?.() || 'offline';
+  const lastError = window.getSyncLastError?.() || localStorage.getItem('pp-gdrive-lastError') || '';
   const stLabel = { idle:'Aguardando', pending:'Sincronização pendente…', syncing:'Sincronizando…', ok:'Sincronizado', error:'Falha ao sincronizar', offline:'Desconectado' }[s] || '';
   const stColor = { syncing:'#6366f1', ok:'#22c55e', error:'#ef4444', pending:'#f59e0b' }[s] || 'var(--ink3)';
   if (user && email) {
@@ -6030,6 +6031,7 @@ window.renderGdriveConfig = function renderGdriveConfig() {
         <div style="min-width:0;flex:1;">
           <div style="font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${email}</div>
           <div style="font-size:11px;color:${stColor};display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:${stColor};display:inline-block;"></span>${stLabel}${lastSync ? ' · ' + new Date(lastSync).toLocaleString('pt-BR') : ''}</div>
+          ${s === 'error' && lastError ? `<div style="font-size:11px;color:#ef4444;margin-top:4px;line-height:1.35;">${String(lastError).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}</div>` : ''}
         </div>
       </div>`;
     btnsEl.innerHTML = `
@@ -6083,9 +6085,9 @@ window.gdriveBackupNow = async function gdriveBackupNow() {
       window.renderGdriveConfig();
       toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
     } else {
-      toast('Falha ao sincronizar.');
+      toast('Falha ao sincronizar: ' + (window.getSyncLastError?.() || 'verifique a permissão do Google Drive.'));
     }
-  } catch (e) { console.warn(e); toast('Falha ao sincronizar.'); }
+  } catch (e) { console.warn(e); toast('Falha ao sincronizar: ' + (e?.message || 'erro inesperado.')); }
 };
 
 window.gdriveDisconnect = async function gdriveDisconnect() {
@@ -7686,7 +7688,7 @@ async function gDriveSyncClientes() {
 <!-- Photo Annotator module -->
 <script src="/photo-annotator.js"></script>
 <!-- Google Drive sync (appDataFolder) -->
-<script src="/pintor/drive-sync.js?v=3"></script>
+<script src="/pintor/drive-sync.js?v=4"></script>
 <script>
 // ── Photo Viewer + PhotoAnnotator + Flash Camera Bridge ──
 (function() {
