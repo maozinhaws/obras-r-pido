@@ -4426,6 +4426,7 @@ function checkAlarms() {
   });
   if(modified) {
     localStorage.setItem('pp-eventos', JSON.stringify(S.eventos));
+    window.scheduleSync?.();
     if(document.getElementById('pg-agenda').classList.contains('active')) renderAgenda();
   }
 }
@@ -5286,6 +5287,7 @@ async function pickPhoneContactToSave() {
         });
       });
       localStorage.setItem('pp-clientes', JSON.stringify(S.clientes));
+      window.scheduleSync?.();
       renderClientes();
       toast(`<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> ${contacts.length} contatos importados!`);
     }
@@ -5569,7 +5571,7 @@ function renderAgenda() {
       listWrap.innerHTML = dayData.map(item => {
           if(item.type === 'ev') {
               const e = item.data;
-              return `<div class="hoc" style="border-left: 4px solid var(--bl);"><div class="hon"><svg class="ico" aria-hidden="true"><use href="#ico-bell"/></svg> ${e.tit}</div><div class="hos">${e.hora||'O dia todo'} ${e.alarmado ? '<span style="color:var(--rd)">(Tocou)</span>':''}</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;"><button onclick="exportICS(${e.id})" style="flex:1;height:38px;border-radius:10px;background:var(--bll);color:var(--bl);border:none;font-family:'Sora',sans-serif;font-weight:700;font-size:11px;cursor:pointer;"><svg class="ico" aria-hidden="true"><use href="#ico-bell"/></svg> Add Lembrete OS</button><button onclick="S.eventos=S.eventos.filter(x=>x.id!=${e.id});localStorage.setItem('pp-eventos',JSON.stringify(S.eventos));renderAgenda();" style="width:40px;border-radius:10px;background:var(--rdl);color:var(--rd);border:none;cursor:pointer;"><svg class="ico" aria-hidden="true"><use href="#ico-x"/></svg></button></div></div>`;
+              return `<div class="hoc" style="border-left: 4px solid var(--bl);"><div class="hon"><svg class="ico" aria-hidden="true"><use href="#ico-bell"/></svg> ${e.tit}</div><div class="hos">${e.hora||'O dia todo'} ${e.alarmado ? '<span style="color:var(--rd)">(Tocou)</span>':''}</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;"><button onclick="exportICS(${e.id})" style="flex:1;height:38px;border-radius:10px;background:var(--bll);color:var(--bl);border:none;font-family:'Sora',sans-serif;font-weight:700;font-size:11px;cursor:pointer;"><svg class="ico" aria-hidden="true"><use href="#ico-bell"/></svg> Add Lembrete OS</button><button onclick="S.eventos=S.eventos.filter(x=>x.id!=${e.id});localStorage.setItem('pp-eventos',JSON.stringify(S.eventos));window.scheduleSync?.();renderAgenda();" style="width:40px;border-radius:10px;background:var(--rdl);color:var(--rd);border:none;cursor:pointer;"><svg class="ico" aria-hidden="true"><use href="#ico-x"/></svg></button></div></div>`;
           } else {
               const o = item.data;
               return `<div class="hoc" style="border-left: 4px solid var(--gn); cursor:pointer;" onclick="editOrcByObjId('${o.id}')">
@@ -5624,6 +5626,7 @@ async function salvarEvento() {
   S.eventos.push(newEv);
   S.eventos.sort((a,b)=>new Date(a.dat+'T'+a.hora) - new Date(b.dat+'T'+b.hora));
   localStorage.setItem('pp-eventos', JSON.stringify(S.eventos));
+  window.scheduleSync?.();
   document.getElementById('modal-evento').style.display='none';
   calSelDate = dat; [calYear, calMonth] = dat.split('-').map(Number); calMonth--;
   renderAgenda();
