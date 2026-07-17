@@ -6052,9 +6052,10 @@ window.renderGdriveConfig = function renderGdriveConfig() {
 
 window.gdriveConnect = async function gdriveConnect() {
   try {
-    if (typeof window.gSignIn === 'function') {
-      const token = await window.gSignIn(true);
-      if (token) {
+    if (typeof window.ppSignIn === 'function') {
+      const user = await window.ppSignIn();
+      if (user) {
+        try { window._ppShowApp?.(user); } catch(e) {}
         toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando dados do Google Drive…');
         if (typeof window.backupAutoSync === 'function') await window.backupAutoSync({ interactive: false });
         try { window.renderGoogleStatus?.(); } catch(e) {}
@@ -7577,8 +7578,9 @@ window.hideSpinner = hideSpinner;
 // ── Google Drive UI ── (renderGoogleStatus vive em src/ui.ts, exposto via window)
 
 async function gDriveConnect() {
-  const token = await window.gSignIn?.(true);
-  if (token) {
+  const user = await window.ppSignIn?.();
+  if (user) {
+    try { window._ppShowApp?.(user); } catch(e) {}
     await window.backupAutoSync?.({ interactive: false });
     window.renderGoogleStatus?.();
     window.renderGdriveConfig?.();
