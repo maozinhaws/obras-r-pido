@@ -15,7 +15,7 @@
   'use strict';
 
   const FILE_NAME = 'pintor-plus-backup.json';
-  const SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
+  const SCOPE = 'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
   const DRIVE_API = 'https://www.googleapis.com/drive/v3';
   const UPLOAD_API = 'https://www.googleapis.com/upload/drive/v3';
   const KEYS = ['pp-config', 'pp-orcs', 'pp-clientes', 'pp-fornecedores', 'pp-eventos'];
