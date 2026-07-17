@@ -4281,6 +4281,7 @@ function _saveOrcs() {
   try { sessionStorage.setItem('pp-orcs-mirror', json); } catch(_) {}
   // Persiste no IndexedDB/SQLite também (iOS: localStorage pode ser limpo pelo SO)
   if (window.Storage?.isReady) window.Storage.saveOrcs(S.orcs).catch(() => {});
+  window.scheduleSync?.();
 }
 
 // ENGENHARIA: GOOGLE MAPS PLACES AUTOCOMPLETE
@@ -6764,17 +6765,14 @@ async function ppLoginOffline() {
 async function _ppSyncAfterLogin(user) {
   try {
     if (!user || !user.email) return; // modo offline puro
-    // Pede o token do Drive (escopo drive.file) e dispara o backup
-    if (typeof window.gSignIn !== 'function') return;
-    const token = await window.gSignIn();
-    if (!token) return;
+    if (typeof window.backupAutoSync !== 'function') return;
+    toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando dados do Google Drive…');
     try { window.renderGoogleStatus?.(); } catch(e) {}
-    if (typeof window.backupAutoSync === 'function') {
-      const ok = await window.backupAutoSync();
-      if (ok) {
-        localStorage.removeItem('pp-pending-sync');
-        try { window.renderSyncStatus?.(); } catch(e) {}
-      }
+    const ok = await window.backupAutoSync({ interactive: true });
+    if (ok) {
+      localStorage.removeItem('pp-pending-sync');
+      try { window.renderSyncStatus?.(); } catch(e) {}
+      toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
     }
   } catch (e) { console.warn('[pp] sync após login falhou:', e); }
 }
