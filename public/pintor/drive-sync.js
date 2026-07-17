@@ -201,7 +201,7 @@
     const r = await fetch(`${DRIVE_API}/files?spaces=appDataFolder&q=${q}&fields=files(id,modifiedTime)`, {
       headers: { Authorization: 'Bearer ' + token },
     });
-    if (!r.ok) throw new Error('drive list ' + r.status + ' ' + await _readErrorBody(r));
+    if (!r.ok) { const b = await _readErrorBody(r); throw new Error(_classifyDriveError(r.status, b)); }
     const j = await r.json();
     const f = (j.files || [])[0];
     if (f) { _lastFileId = f.id; localStorage.setItem('pp-gdrive-fileId', f.id); }
