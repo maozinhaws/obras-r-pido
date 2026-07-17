@@ -6048,11 +6048,13 @@ window.renderGdriveConfig = function renderGdriveConfig() {
 window.gdriveConnect = async function gdriveConnect() {
   try {
     if (typeof window.gSignIn === 'function') {
-      const token = await window.gSignIn();
+      const token = await window.gSignIn(true);
       if (token) {
+        toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando dados do Google Drive…');
+        if (typeof window.backupAutoSync === 'function') await window.backupAutoSync({ interactive: false });
         try { window.renderGoogleStatus?.(); } catch(e) {}
         window.renderGdriveConfig();
-        toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Conta Google conectada!');
+        toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Conta Google conectada e sincronizada!');
         return;
       }
     }
@@ -6093,6 +6095,7 @@ window.gdriveDisconnect = async function gdriveDisconnect() {
 };
 function saveConfig() {
   S.config = { empresa: document.getElementById('cfg-empresa').value, tel: document.getElementById('cfg-tel').value, emailEmpresa: document.getElementById('cfg-email-empresa').value, endEmpresa: document.getElementById('cfg-end-empresa').value, doc: document.getElementById('cfg-doc').value, msg: document.getElementById('cfg-msg').value, servicos: document.getElementById('cfg-servicos').value, pgto: document.getElementById('cfg-pgto').value, statusList: document.getElementById('cfg-status').value, skipDelConfirm: S.config.skipDelConfirm || false, skipDirtyConfirm: S.config.skipDirtyConfirm || false, logo: S.config.logo || '', assinatura: S.config.assinatura || '', acessibilidade: S.config.acessibilidade || false, fsScale: S.config.fsScale || 'm', contrasteAlto: !!S.config.contrasteAlto, flashNomes: (document.getElementById('cfg-flash-nomes')||{}).value||defCfg.flashNomes, flashServicos: (document.getElementById('cfg-flash-servicos')||{}).value||defCfg.flashServicos, flashMateriais: (document.getElementById('cfg-flash-materiais')||{}).value||defCfg.flashMateriais };
+  S.config._ts = Date.now();
   ppApplyA11y();
   S.DEFAULT_SERVICES = S.config.servicos.split(',').map(s=>s.trim()).filter(Boolean); 
   if(!S.DEFAULT_SERVICES.length) S.DEFAULT_SERVICES = defCfg.servicos.split(',').map(s=>s.trim()); 
@@ -7569,8 +7572,12 @@ window.hideSpinner = hideSpinner;
 // ── Google Drive UI ── (renderGoogleStatus vive em src/ui.ts, exposto via window)
 
 async function gDriveConnect() {
-  const token = await window.gSignIn?.();
-  if (token) window.renderGoogleStatus?.();
+  const token = await window.gSignIn?.(true);
+  if (token) {
+    await window.backupAutoSync?.({ interactive: false });
+    window.renderGoogleStatus?.();
+    window.renderGdriveConfig?.();
+  }
 }
 
 async function gDriveBackup() {
@@ -7672,7 +7679,7 @@ async function gDriveSyncClientes() {
 <!-- Photo Annotator module -->
 <script src="/photo-annotator.js"></script>
 <!-- Google Drive sync (appDataFolder) -->
-<script src="/pintor/drive-sync.js?v=2"></script>
+<script src="/pintor/drive-sync.js?v=3"></script>
 <script>
 // ── Photo Viewer + PhotoAnnotator + Flash Camera Bridge ──
 (function() {
