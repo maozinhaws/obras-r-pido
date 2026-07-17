@@ -1973,7 +1973,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:6px;">
-            <button id="sync-status-btn" onclick="window.executeSync?.()" title="Sincronizar agora" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;color:var(--ink3);border-radius:8px;transition:color .2s;" aria-label="Status de sincronização">
+            <button id="sync-status-btn" onclick="window.executeSync?.({ interactive: true })" title="Sincronizar agora" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;color:var(--ink3);border-radius:8px;transition:color .2s;" aria-label="Status de sincronização">
               <svg id="sync-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
             </button>
             <button class="orbital-btn" onclick="toggleThemeAnim()" aria-label="Alternar tema">
@@ -6069,17 +6069,17 @@ window.gdriveConnect = async function gdriveConnect() {
 
 window.gdriveBackupNow = async function gdriveBackupNow() {
   if (typeof window.backupAutoSync !== 'function') { toast('Sincronização indisponível.'); return; }
-  toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Enviando backup…');
+  toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando…');
   try {
-    const ok = await window.backupAutoSync();
+    const ok = await window.backupAutoSync({ interactive: true });
     if (ok) {
       localStorage.setItem('pp-gdrive-lastSync', new Date().toISOString());
       window.renderGdriveConfig();
-      toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Backup enviado!');
+      toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
     } else {
-      toast('Falha ao enviar backup.');
+      toast('Falha ao sincronizar.');
     }
-  } catch (e) { console.warn(e); toast('Falha ao enviar backup.'); }
+  } catch (e) { console.warn(e); toast('Falha ao sincronizar.'); }
 };
 
 window.gdriveDisconnect = async function gdriveDisconnect() {
