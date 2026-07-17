@@ -6022,7 +6022,7 @@ window.renderGdriveConfig = function renderGdriveConfig() {
   const stLabel = { idle:'Aguardando', pending:'Sincronização pendente…', syncing:'Sincronizando…', ok:'Sincronizado', error:'Falha ao sincronizar', offline:'Desconectado' }[s] || '';
   const stColor = { syncing:'#6366f1', ok:'#22c55e', error:'#ef4444', pending:'#f59e0b' }[s] || 'var(--ink3)';
   if (user && email) {
-    if (infoEl) infoEl.textContent = 'Clientes, orçamentos, fotos e eventos são sincronizados automaticamente a cada alteração. Você também pode sincronizar manualmente a qualquer momento.';
+    if (infoEl) infoEl.textContent = 'Clientes, orçamentos, fotos e eventos ficam em um backup único da sua conta Google. Ao entrar em outro aparelho, o app baixa e mescla esse backup antes de enviar alterações.';
     statusEl.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--bdr);border-radius:12px;background:var(--bg-input);margin-bottom:10px;">
         <div style="width:32px;height:32px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -7688,7 +7688,7 @@ async function gDriveSyncClientes() {
 <!-- Photo Annotator module -->
 <script src="/photo-annotator.js"></script>
 <!-- Google Drive sync (appDataFolder) -->
-<script src="/pintor/drive-sync.js?v=5"></script>
+<script src="/pintor/drive-sync.js?v=6"></script>
 <script>
 // ── Photo Viewer + PhotoAnnotator + Flash Camera Bridge ──
 (function() {
