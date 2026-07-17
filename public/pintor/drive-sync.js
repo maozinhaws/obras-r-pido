@@ -247,7 +247,7 @@
       _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId');
       return _resumableUploadFile(token, '', bodyText);
     }
-    if (!up.ok) throw new Error('drive upload ' + up.status + ' ' + await _readErrorBody(up));
+    if (!up.ok) { const b = await _readErrorBody(up); throw new Error(_classifyDriveError(up.status, b)); }
     return await up.json();
   }
   async function _uploadFile(token, id, body) {
