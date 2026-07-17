@@ -27,6 +27,7 @@
   let _syncTimer = null;
   let _syncing = false;
   let _lastFileId = localStorage.getItem('pp-gdrive-fileId') || '';
+  let _lastError = '';
   let _status = 'offline';
 
   function _setStatus(s) {
@@ -35,6 +36,24 @@
     try { window.renderGdriveConfig?.(); } catch (e) {}
   }
   function getSyncStatus() { return _status; }
+  function _setLastError(message) {
+    _lastError = message || '';
+    if (_lastError) localStorage.setItem('pp-gdrive-lastError', _lastError);
+    else localStorage.removeItem('pp-gdrive-lastError');
+  }
+  function getSyncLastError() { return _lastError || localStorage.getItem('pp-gdrive-lastError') || ''; }
+  async function _readErrorBody(response) {
+    try {
+      const text = await response.text();
+      if (!text) return '';
+      try {
+        const json = JSON.parse(text);
+        return json?.error?.message || json?.error_description || text.slice(0, 300);
+      } catch (e) {
+        return text.slice(0, 300);
+      }
+    } catch (e) { return ''; }
+  }
 
   async function boot() {
     try {
@@ -113,6 +132,11 @@
         picture: p.picture || '',
         signedInAt: new Date().toISOString(),
       };
+      const prevEmail = localStorage.getItem('pp-gdrive-email') || '';
+      if (prevEmail && user.email && prevEmail !== user.email) {
+        _lastFileId = '';
+        localStorage.removeItem('pp-gdrive-fileId');
+      }
       localStorage.setItem('pp-auth-user', JSON.stringify(user));
       localStorage.setItem('pp-gdrive-email', user.email);
       _setStatus('pending');
@@ -133,17 +157,24 @@
     return new Promise((resolve) => {
       if (_accessToken && Date.now() < _accessTokenExp - 30_000) return resolve(_accessToken);
       const tc = _initTokenClient();
-      if (!tc) return resolve('');
+      if (!tc) {
+        _setLastError(!_clientId ? 'Client ID do Google não carregou.' : 'Google Identity Services ainda não carregou.');
+        return resolve('');
+      }
       tc.callback = (resp) => {
         if (resp && resp.access_token) {
+          _setLastError('');
           _accessToken = resp.access_token;
           _accessTokenExp = Date.now() + ((resp.expires_in || 3600) * 1000);
           localStorage.setItem('pp-gdrive-token', JSON.stringify({ t: _accessToken, e: _accessTokenExp }));
           resolve(_accessToken);
-        } else resolve('');
+        } else {
+          _setLastError(resp?.error_description || resp?.error || 'Permissão do Google não retornou token.');
+          resolve('');
+        }
       };
       try { tc.requestAccessToken({ prompt: interactive ? 'consent' : '' }); }
-      catch (e) { resolve(''); }
+      catch (e) { _setLastError(e?.message || 'Falha ao abrir permissão do Google.'); resolve(''); }
     });
   }
 
@@ -154,7 +185,7 @@
     const r = await fetch(`${DRIVE_API}/files?spaces=appDataFolder&q=${q}&fields=files(id,modifiedTime)`, {
       headers: { Authorization: 'Bearer ' + token },
     });
-    if (!r.ok) throw new Error('drive list ' + r.status);
+    if (!r.ok) throw new Error('drive list ' + r.status + ' ' + await _readErrorBody(r));
     const j = await r.json();
     const f = (j.files || [])[0];
     if (f) { _lastFileId = f.id; localStorage.setItem('pp-gdrive-fileId', f.id); }
@@ -165,11 +196,55 @@
     const r = await fetch(`${DRIVE_API}/files/${id}?alt=media`, {
       headers: { Authorization: 'Bearer ' + token },
     });
-    if (r.status === 404) { _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId'); return null; }
-    if (!r.ok) return null;
+    if (r.status === 404 || r.status === 403) { _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId'); return null; }
+    if (!r.ok) throw new Error('drive download ' + r.status + ' ' + await _readErrorBody(r));
     try { return await r.json(); } catch (e) { return null; }
   }
+  async function _resumableUploadFile(token, id, bodyText) {
+    const meta = id ? {} : { name: FILE_NAME, parents: ['appDataFolder'] };
+    const initUrl = id
+      ? `${UPLOAD_API}/files/${id}?uploadType=resumable`
+      : `${UPLOAD_API}/files?uploadType=resumable`;
+    const init = await fetch(initUrl, {
+      method: id ? 'PATCH' : 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-Upload-Content-Type': 'application/json; charset=UTF-8',
+        'X-Upload-Content-Length': String(new Blob([bodyText]).size),
+      },
+      body: JSON.stringify(meta),
+    });
+    if ((init.status === 404 || init.status === 403) && id) {
+      _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId');
+      return _resumableUploadFile(token, '', bodyText);
+    }
+    if (!init.ok) throw new Error('drive upload init ' + init.status + ' ' + await _readErrorBody(init));
+    const uploadUrl = init.headers.get('Location') || init.headers.get('location');
+    if (!uploadUrl) throw new Error('drive upload init sem URL de envio');
+    const up = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      body: bodyText,
+    });
+    if ((up.status === 404 || up.status === 403) && id) {
+      _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId');
+      return _resumableUploadFile(token, '', bodyText);
+    }
+    if (!up.ok) throw new Error('drive upload ' + up.status + ' ' + await _readErrorBody(up));
+    return await up.json();
+  }
   async function _uploadFile(token, id, body) {
+    const bodyText = JSON.stringify(body);
+    // Backups com fotos em base64 passam fácil do limite prático do upload multipart.
+    // Upload resumível aceita arquivos grandes e é mais estável no celular.
+    const resumable = await _resumableUploadFile(token, id, bodyText);
+    if (resumable && resumable.id) {
+      _lastFileId = resumable.id;
+      localStorage.setItem('pp-gdrive-fileId', resumable.id);
+    }
+    return resumable;
+
     const boundary = '-------pp' + Date.now();
     const meta = id ? {} : { name: FILE_NAME, parents: ['appDataFolder'] };
     const multipart =
@@ -191,7 +266,7 @@
       _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId');
       return _uploadFile(token, '', body);
     }
-    if (!r.ok) throw new Error('drive upload ' + r.status);
+    if (!r.ok) throw new Error('drive upload ' + r.status + ' ' + await _readErrorBody(r));
     const j = await r.json();
     if (j.id) { _lastFileId = j.id; localStorage.setItem('pp-gdrive-fileId', j.id); }
     return j;
@@ -339,10 +414,12 @@
       _applySnapshot(merged);
       await _uploadFile(token, fileId, merged);
       localStorage.setItem('pp-gdrive-lastSync', new Date().toISOString());
+      _setLastError('');
       _setStatus('ok');
       return true;
     } catch (e) {
       console.warn('[drive-sync] falhou', e);
+      _setLastError(e?.message || 'Falha desconhecida ao sincronizar.');
       _setStatus('error');
       return false;
     } finally {
@@ -370,6 +447,7 @@
   window.scheduleSync = scheduleSync;
   window.executeSync = executeSync;
   window.getSyncStatus = getSyncStatus;
+  window.getSyncLastError = getSyncLastError;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
