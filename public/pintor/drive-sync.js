@@ -298,14 +298,14 @@
     if (touched) {
       try {
         if (window.S) {
-          if (s['pp-config']) window.S.config = s['pp-config'];
+          if (s['pp-config']) window.S.config = { ...(window.defCfg || {}), ...s['pp-config'] };
           if (s['pp-orcs']) window.S.orcs = s['pp-orcs'];
           if (s['pp-clientes']) window.S.clientes = s['pp-clientes'];
           if (s['pp-fornecedores']) window.S.fornecedores = s['pp-fornecedores'];
           if (s['pp-eventos']) window.S.eventos = s['pp-eventos'];
           if (window.S.config) {
-            window.S.DEFAULT_SERVICES = (window.S.config.servicos || '').split(',').map(x => x.trim()).filter(Boolean);
-            window.S.statusArr = (window.S.config.statusList || '').split(',').map(x => x.trim()).filter(Boolean);
+            window.S.DEFAULT_SERVICES = (window.S.config.servicos || window.defCfg?.servicos || '').split(',').map(x => x.trim()).filter(Boolean);
+            window.S.statusArr = (window.S.config.statusList || window.defCfg?.statusList || '').split(',').map(x => x.trim()).filter(Boolean);
           }
         }
         if (window.Storage?.isReady && s['pp-orcs']) window.Storage.saveOrcs(s['pp-orcs']).catch(() => {});
