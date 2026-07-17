@@ -441,12 +441,16 @@
     const interactive = !!(options && options.interactive);
     if (_syncing) return false;
     _syncing = true; _setStatus('syncing');
-    try {
-      const token = await gSignIn(interactive);
+    let retriedAuth = false;
+    const run = async (forceInteractive) => {
+      const token = await gSignIn(forceInteractive || interactive);
       if (!token) { _setStatus(ppGetUser() ? 'error' : 'offline'); return false; }
       let merged = _snapshot();
       let files = [];
-      try { files = await _listBackupFiles(token); } catch (e) { files = []; }
+      try { files = await _listBackupFiles(token); } catch (e) {
+        if (/401|expirou/i.test(String(e?.message || ''))) throw e;
+        files = [];
+      }
       const knownIds = new Set(files.map(f => f.id).filter(Boolean));
       if (_lastFileId && !knownIds.has(_lastFileId)) {
         try {
@@ -470,7 +474,6 @@
         _lastFileId = finalId;
         localStorage.setItem('pp-gdrive-fileId', finalId);
       }
-      // Se aparelhos antigos criaram backups separados, consolida tudo em um só arquivo.
       const duplicates = files.map(f => f.id).filter(id => id && id !== finalId);
       for (const id of duplicates) {
         _trashFile(token, id).catch(() => {});
@@ -480,9 +483,27 @@
       _setLastError('');
       _setStatus('ok');
       return true;
+    };
+    try {
+      return await run(false);
     } catch (e) {
+      const msg = String(e?.message || '');
+      // Token expirou (401) — limpa cache e reabre consentimento uma vez.
+      if (!retriedAuth && /401|expirou|Sess[aã]o/i.test(msg)) {
+        retriedAuth = true;
+        _accessToken = ''; _accessTokenExp = 0;
+        try { localStorage.removeItem('pp-gdrive-token'); } catch (_) {}
+        try {
+          return await run(true);
+        } catch (e2) {
+          console.warn('[drive-sync] falhou após reauth', e2);
+          _setLastError(e2?.message || 'Falha desconhecida ao sincronizar.');
+          _setStatus('error');
+          return false;
+        }
+      }
       console.warn('[drive-sync] falhou', e);
-      _setLastError(e?.message || 'Falha desconhecida ao sincronizar.');
+      _setLastError(msg || 'Falha desconhecida ao sincronizar.');
       _setStatus('error');
       return false;
     } finally {
