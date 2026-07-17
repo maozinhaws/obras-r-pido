@@ -54,6 +54,22 @@
       }
     } catch (e) { return ''; }
   }
+  function _classifyDriveError(status, body) {
+    const b = String(body || '');
+    if (status === 401) return 'Sessão do Google expirou. Clique em "Sincronizar agora" para autorizar novamente.';
+    if (status === 403) {
+      if (/Drive API has not been used|accessNotConfigured|SERVICE_DISABLED/i.test(b))
+        return 'Ative a Google Drive API no Google Cloud Console (APIs e Serviços → Biblioteca → Google Drive API → Ativar) e tente de novo.';
+      if (/insufficientPermissions|insufficient authentication scopes|forbidden/i.test(b))
+        return 'Permissão do Drive negada. Clique em "Sincronizar agora" e aceite o acesso ao Drive na tela do Google.';
+      if (/storageQuotaExceeded|quotaExceeded/i.test(b))
+        return 'Armazenamento do Google Drive esgotado. Libere espaço na sua conta e tente de novo.';
+      return 'Google recusou o acesso (403). Verifique se a Google Drive API está ativada e se este domínio está autorizado no Client OAuth.';
+    }
+    if (status === 404) return 'Backup do Drive não encontrado — será recriado no próximo envio.';
+    return `Erro ${status} do Google Drive: ${b.slice(0, 200)}`;
+  }
+
 
   async function boot() {
     try {
