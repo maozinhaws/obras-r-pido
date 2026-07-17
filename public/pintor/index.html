@@ -4223,6 +4223,8 @@ const S = {
   rooms: [], pgto: new Set(), fmt: 'completo', pagador: false, editId: null, curStep: 1,
   config: _ppRead('pp-config', null) || defCfg, DEFAULT_SERVICES: [], statusArr: [], isDirty: false
 };
+window.defCfg = defCfg;
+window.S = S;
 
 // Limpeza automática se a configuração antiga ainda tiver a imagem da splash salva globalmente
 if (S.config.logo === 'https://lh3.googleusercontent.com/d/1mwtQDispSbBU3HBvLa0T46vOoHAmWNNN') {
