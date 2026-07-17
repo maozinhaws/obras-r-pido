@@ -213,7 +213,7 @@
       headers: { Authorization: 'Bearer ' + token },
     });
     if (r.status === 404 || r.status === 403) { _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId'); return null; }
-    if (!r.ok) throw new Error('drive download ' + r.status + ' ' + await _readErrorBody(r));
+    if (!r.ok) { const b = await _readErrorBody(r); throw new Error(_classifyDriveError(r.status, b)); }
     try { return await r.json(); } catch (e) { return null; }
   }
   async function _resumableUploadFile(token, id, bodyText) {
