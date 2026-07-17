@@ -15,7 +15,7 @@
   'use strict';
 
   const FILE_NAME = 'pintor-plus-backup.json';
-  const SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
+  const SCOPE = 'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
   const DRIVE_API = 'https://www.googleapis.com/drive/v3';
   const UPLOAD_API = 'https://www.googleapis.com/upload/drive/v3';
   const KEYS = ['pp-config', 'pp-orcs', 'pp-clientes', 'pp-fornecedores', 'pp-eventos'];
@@ -198,43 +198,98 @@
   }
 
   // ── snapshot + merge ──
+  function _normalizeSnapshot(raw) {
+    if (!raw || typeof raw !== 'object') return null;
+    const s = { ...raw };
+    // Compatibilidade com backups exportados manualmente antes do sync por Drive.
+    if (s.config && !s['pp-config']) s['pp-config'] = s.config;
+    if (s.orcs && !s['pp-orcs']) s['pp-orcs'] = s.orcs;
+    if (s.clientes && !s['pp-clientes']) s['pp-clientes'] = s.clientes;
+    if (s.fornecedores && !s['pp-fornecedores']) s['pp-fornecedores'] = s.fornecedores;
+    if (s.eventos && !s['pp-eventos']) s['pp-eventos'] = s.eventos;
+    return s;
+  }
+
   function _snapshot() {
-    const s = { versao: 1, ts: Date.now(), exportadoEm: new Date().toISOString() };
+    const s = { versao: 2, ts: Date.now(), exportadoEm: new Date().toISOString() };
     for (const k of KEYS) {
       const v = localStorage.getItem(k);
       try { s[k] = v ? JSON.parse(v) : null; } catch (e) { s[k] = v; }
     }
     return s;
   }
-  function _mergeArrayById(local, remote) {
+  function _normText(v) { return String(v || '').trim().toLowerCase(); }
+  function _digits(v) { return String(v || '').replace(/\D/g, ''); }
+  function _recordKey(type, x) {
+    if (!x || typeof x !== 'object') return '';
+    if (x.id != null && x.id !== '') return 'id:' + String(x.id);
+    if (type === 'pp-clientes') {
+      const tel = _digits(x.tel); if (tel) return 'tel:' + tel;
+      if (x.email) return 'email:' + _normText(x.email);
+      if (x.cpf) return 'doc:' + _digits(x.cpf);
+      if (x.nome) return 'nome:' + _normText(x.nome);
+    }
+    if (type === 'pp-fornecedores') {
+      const tel = _digits(x.tel); if (tel) return 'tel:' + tel;
+      return ['forn', _normText(x.nome), _normText(x.cat)].join(':');
+    }
+    if (type === 'pp-eventos') {
+      return ['ev', _normText(x.tit), x.dat || '', x.hora || ''].join(':');
+    }
+    return '';
+  }
+  function _touchTs(x) {
+    return (x && (Number(x.tsEdit) || Number(x.ts) || Number(x.criadoEm))) || 0;
+  }
+  function _mergeArrayById(type, local, remote) {
     if (!Array.isArray(local)) return Array.isArray(remote) ? remote : [];
     if (!Array.isArray(remote)) return local;
     const map = new Map();
-    for (const x of local) if (x && x.id != null) map.set(String(x.id), x);
+    let loose = 0;
+    for (const x of local) {
+      if (!x) continue;
+      const k = _recordKey(type, x) || 'local:' + (++loose);
+      map.set(k, x);
+    }
     for (const r of remote) {
-      if (!r || r.id == null) continue;
-      const k = String(r.id);
+      if (!r) continue;
+      const k = _recordKey(type, r) || 'remote:' + (++loose);
       const l = map.get(k);
       if (!l) { map.set(k, r); continue; }
-      const lt = l.tsEdit || l.ts || 0;
-      const rt = r.tsEdit || r.ts || 0;
-      if (rt > lt) map.set(k, r);
+      const lt = _touchTs(l);
+      const rt = _touchTs(r);
+      if (rt > lt || (!lt && !rt && JSON.stringify(r).length > JSON.stringify(l).length)) map.set(k, r);
     }
-    return Array.from(map.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    return Array.from(map.values()).sort((a, b) => _touchTs(b) - _touchTs(a));
+  }
+  function _configHasUsefulData(cfg) {
+    return !!(cfg && typeof cfg === 'object' && (cfg.empresa || cfg.tel || cfg.doc || cfg.emailEmpresa || cfg.endEmpresa || cfg.logo || cfg.assinatura));
+  }
+  function _mergeConfig(localCfg, remoteCfg) {
+    if (!localCfg) return remoteCfg || null;
+    if (!remoteCfg) return localCfg || null;
+    const lt = Number(localCfg._ts) || 0;
+    const rt = Number(remoteCfg._ts) || 0;
+    if (lt || rt) return rt > lt ? remoteCfg : localCfg;
+    if (!_configHasUsefulData(localCfg) && _configHasUsefulData(remoteCfg)) return remoteCfg;
+    if (_configHasUsefulData(localCfg) && !_configHasUsefulData(remoteCfg)) return localCfg;
+    return { ...remoteCfg, ...localCfg };
   }
   function _mergeSnapshot(local, remote) {
-    if (!remote) return local;
-    const out = { ..._snapshot() };
-    out['pp-orcs'] = _mergeArrayById(local['pp-orcs'], remote['pp-orcs']);
-    out['pp-clientes'] = _mergeArrayById(local['pp-clientes'], remote['pp-clientes']);
-    out['pp-fornecedores'] = _mergeArrayById(local['pp-fornecedores'], remote['pp-fornecedores']);
-    out['pp-eventos'] = _mergeArrayById(local['pp-eventos'], remote['pp-eventos']);
-    const localCfgTs = (local['pp-config'] && local['pp-config']._ts) || 0;
-    const remoteCfgTs = (remote['pp-config'] && remote['pp-config']._ts) || 0;
-    out['pp-config'] = remoteCfgTs > localCfgTs ? remote['pp-config'] : local['pp-config'];
+    const l = _normalizeSnapshot(local) || _snapshot();
+    const r = _normalizeSnapshot(remote);
+    if (!r) return l;
+    const out = { versao: 2, ts: Date.now(), exportadoEm: new Date().toISOString() };
+    out['pp-orcs'] = _mergeArrayById('pp-orcs', l['pp-orcs'], r['pp-orcs']);
+    out['pp-clientes'] = _mergeArrayById('pp-clientes', l['pp-clientes'], r['pp-clientes']);
+    out['pp-fornecedores'] = _mergeArrayById('pp-fornecedores', l['pp-fornecedores'], r['pp-fornecedores']);
+    out['pp-eventos'] = _mergeArrayById('pp-eventos', l['pp-eventos'], r['pp-eventos']);
+    out['pp-config'] = _mergeConfig(l['pp-config'], r['pp-config']);
     return out;
   }
   function _applySnapshot(s) {
+    s = _normalizeSnapshot(s);
+    if (!s) return;
     let touched = false;
     for (const k of KEYS) {
       if (s[k] == null) continue;
@@ -243,24 +298,38 @@
     if (touched) {
       try {
         if (window.S) {
-          if (s['pp-config']) window.S.config = s['pp-config'];
+          if (s['pp-config']) window.S.config = { ...(window.defCfg || {}), ...s['pp-config'] };
           if (s['pp-orcs']) window.S.orcs = s['pp-orcs'];
           if (s['pp-clientes']) window.S.clientes = s['pp-clientes'];
           if (s['pp-fornecedores']) window.S.fornecedores = s['pp-fornecedores'];
           if (s['pp-eventos']) window.S.eventos = s['pp-eventos'];
+          if (window.S.config) {
+            window.S.DEFAULT_SERVICES = (window.S.config.servicos || window.defCfg?.servicos || '').split(',').map(x => x.trim()).filter(Boolean);
+            window.S.statusArr = (window.S.config.statusList || window.defCfg?.statusList || '').split(',').map(x => x.trim()).filter(Boolean);
+          }
         }
+        if (window.Storage?.isReady && s['pp-orcs']) window.Storage.saveOrcs(s['pp-orcs']).catch(() => {});
+        window.ppApplyA11y?.();
+        window.populateStatusSelect?.();
         window.renderHomeMini?.();
         window.renderHomeEvents?.();
-        window.renderOrcs?.();
+        window.renderOrcamentosList?.();
+        window.renderClientes?.();
+        window.renderFornecedores?.();
+        window.renderAgenda?.();
+        window.renderDashboard?.();
+        window.renderGoogleStatus?.();
+        window.renderGdriveConfig?.();
       } catch (e) {}
     }
   }
 
-  async function backupAutoSync() {
+  async function backupAutoSync(options) {
+    const interactive = !!(options && options.interactive);
     if (_syncing) return false;
     _syncing = true; _setStatus('syncing');
     try {
-      const token = await gSignIn();
+      const token = await gSignIn(interactive);
       if (!token) { _setStatus(ppGetUser() ? 'error' : 'offline'); return false; }
       const local = _snapshot();
       let fileId = '';
@@ -285,7 +354,7 @@
     clearTimeout(_syncTimer);
     _syncTimer = setTimeout(() => { backupAutoSync(); }, typeof delay === 'number' ? delay : 4000);
   }
-  async function executeSync() { return await backupAutoSync(); }
+  async function executeSync(options) { return await backupAutoSync(options); }
 
   try {
     const t = JSON.parse(localStorage.getItem('pp-gdrive-token') || 'null');

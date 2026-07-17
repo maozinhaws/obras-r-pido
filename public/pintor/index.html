@@ -1973,7 +1973,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:6px;">
-            <button id="sync-status-btn" onclick="window.executeSync?.()" title="Sincronizar agora" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;color:var(--ink3);border-radius:8px;transition:color .2s;" aria-label="Status de sincronização">
+            <button id="sync-status-btn" onclick="window.executeSync?.({ interactive: true })" title="Sincronizar agora" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;color:var(--ink3);border-radius:8px;transition:color .2s;" aria-label="Status de sincronização">
               <svg id="sync-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
             </button>
             <button class="orbital-btn" onclick="toggleThemeAnim()" aria-label="Alternar tema">
@@ -4223,6 +4223,8 @@ const S = {
   rooms: [], pgto: new Set(), fmt: 'completo', pagador: false, editId: null, curStep: 1,
   config: _ppRead('pp-config', null) || defCfg, DEFAULT_SERVICES: [], statusArr: [], isDirty: false
 };
+window.defCfg = defCfg;
+window.S = S;
 
 // Limpeza automática se a configuração antiga ainda tiver a imagem da splash salva globalmente
 if (S.config.logo === 'https://lh3.googleusercontent.com/d/1mwtQDispSbBU3HBvLa0T46vOoHAmWNNN') {
@@ -4281,6 +4283,7 @@ function _saveOrcs() {
   try { sessionStorage.setItem('pp-orcs-mirror', json); } catch(_) {}
   // Persiste no IndexedDB/SQLite também (iOS: localStorage pode ser limpo pelo SO)
   if (window.Storage?.isReady) window.Storage.saveOrcs(S.orcs).catch(() => {});
+  window.scheduleSync?.();
 }
 
 // ENGENHARIA: GOOGLE MAPS PLACES AUTOCOMPLETE
@@ -4423,6 +4426,7 @@ function checkAlarms() {
   });
   if(modified) {
     localStorage.setItem('pp-eventos', JSON.stringify(S.eventos));
+    window.scheduleSync?.();
     if(document.getElementById('pg-agenda').classList.contains('active')) renderAgenda();
   }
 }
@@ -5283,6 +5287,7 @@ async function pickPhoneContactToSave() {
         });
       });
       localStorage.setItem('pp-clientes', JSON.stringify(S.clientes));
+      window.scheduleSync?.();
       renderClientes();
       toast(`<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> ${contacts.length} contatos importados!`);
     }
@@ -5566,7 +5571,7 @@ function renderAgenda() {
       listWrap.innerHTML = dayData.map(item => {
           if(item.type === 'ev') {
               const e = item.data;
-              return `<div class="hoc" style="border-left: 4px solid var(--bl);"><div class="hon"><svg class="ico" aria-hidden="true"><use href="#ico-bell"/></svg> ${e.tit}</div><div class="hos">${e.hora||'O dia todo'} ${e.alarmado ? '<span style="color:var(--rd)">(Tocou)</span>':''}</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;"><button onclick="exportICS(${e.id})" style="flex:1;height:38px;border-radius:10px;background:var(--bll);color:var(--bl);border:none;font-family:'Sora',sans-serif;font-weight:700;font-size:11px;cursor:pointer;"><svg class="ico" aria-hidden="true"><use href="#ico-bell"/></svg> Add Lembrete OS</button><button onclick="S.eventos=S.eventos.filter(x=>x.id!=${e.id});localStorage.setItem('pp-eventos',JSON.stringify(S.eventos));renderAgenda();" style="width:40px;border-radius:10px;background:var(--rdl);color:var(--rd);border:none;cursor:pointer;"><svg class="ico" aria-hidden="true"><use href="#ico-x"/></svg></button></div></div>`;
+              return `<div class="hoc" style="border-left: 4px solid var(--bl);"><div class="hon"><svg class="ico" aria-hidden="true"><use href="#ico-bell"/></svg> ${e.tit}</div><div class="hos">${e.hora||'O dia todo'} ${e.alarmado ? '<span style="color:var(--rd)">(Tocou)</span>':''}</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;"><button onclick="exportICS(${e.id})" style="flex:1;height:38px;border-radius:10px;background:var(--bll);color:var(--bl);border:none;font-family:'Sora',sans-serif;font-weight:700;font-size:11px;cursor:pointer;"><svg class="ico" aria-hidden="true"><use href="#ico-bell"/></svg> Add Lembrete OS</button><button onclick="S.eventos=S.eventos.filter(x=>x.id!=${e.id});localStorage.setItem('pp-eventos',JSON.stringify(S.eventos));window.scheduleSync?.();renderAgenda();" style="width:40px;border-radius:10px;background:var(--rdl);color:var(--rd);border:none;cursor:pointer;"><svg class="ico" aria-hidden="true"><use href="#ico-x"/></svg></button></div></div>`;
           } else {
               const o = item.data;
               return `<div class="hoc" style="border-left: 4px solid var(--gn); cursor:pointer;" onclick="editOrcByObjId('${o.id}')">
@@ -5621,6 +5626,7 @@ async function salvarEvento() {
   S.eventos.push(newEv);
   S.eventos.sort((a,b)=>new Date(a.dat+'T'+a.hora) - new Date(b.dat+'T'+b.hora));
   localStorage.setItem('pp-eventos', JSON.stringify(S.eventos));
+  window.scheduleSync?.();
   document.getElementById('modal-evento').style.display='none';
   calSelDate = dat; [calYear, calMonth] = dat.split('-').map(Number); calMonth--;
   renderAgenda();
@@ -6046,12 +6052,15 @@ window.renderGdriveConfig = function renderGdriveConfig() {
 
 window.gdriveConnect = async function gdriveConnect() {
   try {
-    if (typeof window.gSignIn === 'function') {
-      const token = await window.gSignIn();
-      if (token) {
+    if (typeof window.ppSignIn === 'function') {
+      const user = await window.ppSignIn();
+      if (user) {
+        try { window._ppShowApp?.(user); } catch(e) {}
+        toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando dados do Google Drive…');
+        if (typeof window.backupAutoSync === 'function') await window.backupAutoSync({ interactive: false });
         try { window.renderGoogleStatus?.(); } catch(e) {}
         window.renderGdriveConfig();
-        toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Conta Google conectada!');
+        toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Conta Google conectada e sincronizada!');
         return;
       }
     }
@@ -6066,17 +6075,17 @@ window.gdriveConnect = async function gdriveConnect() {
 
 window.gdriveBackupNow = async function gdriveBackupNow() {
   if (typeof window.backupAutoSync !== 'function') { toast('Sincronização indisponível.'); return; }
-  toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Enviando backup…');
+  toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando…');
   try {
-    const ok = await window.backupAutoSync();
+    const ok = await window.backupAutoSync({ interactive: true });
     if (ok) {
       localStorage.setItem('pp-gdrive-lastSync', new Date().toISOString());
       window.renderGdriveConfig();
-      toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Backup enviado!');
+      toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
     } else {
-      toast('Falha ao enviar backup.');
+      toast('Falha ao sincronizar.');
     }
-  } catch (e) { console.warn(e); toast('Falha ao enviar backup.'); }
+  } catch (e) { console.warn(e); toast('Falha ao sincronizar.'); }
 };
 
 window.gdriveDisconnect = async function gdriveDisconnect() {
@@ -6092,6 +6101,7 @@ window.gdriveDisconnect = async function gdriveDisconnect() {
 };
 function saveConfig() {
   S.config = { empresa: document.getElementById('cfg-empresa').value, tel: document.getElementById('cfg-tel').value, emailEmpresa: document.getElementById('cfg-email-empresa').value, endEmpresa: document.getElementById('cfg-end-empresa').value, doc: document.getElementById('cfg-doc').value, msg: document.getElementById('cfg-msg').value, servicos: document.getElementById('cfg-servicos').value, pgto: document.getElementById('cfg-pgto').value, statusList: document.getElementById('cfg-status').value, skipDelConfirm: S.config.skipDelConfirm || false, skipDirtyConfirm: S.config.skipDirtyConfirm || false, logo: S.config.logo || '', assinatura: S.config.assinatura || '', acessibilidade: S.config.acessibilidade || false, fsScale: S.config.fsScale || 'm', contrasteAlto: !!S.config.contrasteAlto, flashNomes: (document.getElementById('cfg-flash-nomes')||{}).value||defCfg.flashNomes, flashServicos: (document.getElementById('cfg-flash-servicos')||{}).value||defCfg.flashServicos, flashMateriais: (document.getElementById('cfg-flash-materiais')||{}).value||defCfg.flashMateriais };
+  S.config._ts = Date.now();
   ppApplyA11y();
   S.DEFAULT_SERVICES = S.config.servicos.split(',').map(s=>s.trim()).filter(Boolean); 
   if(!S.DEFAULT_SERVICES.length) S.DEFAULT_SERVICES = defCfg.servicos.split(',').map(s=>s.trim()); 
@@ -6764,17 +6774,14 @@ async function ppLoginOffline() {
 async function _ppSyncAfterLogin(user) {
   try {
     if (!user || !user.email) return; // modo offline puro
-    // Pede o token do Drive (escopo drive.file) e dispara o backup
-    if (typeof window.gSignIn !== 'function') return;
-    const token = await window.gSignIn();
-    if (!token) return;
+    if (typeof window.backupAutoSync !== 'function') return;
+    toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando dados do Google Drive…');
     try { window.renderGoogleStatus?.(); } catch(e) {}
-    if (typeof window.backupAutoSync === 'function') {
-      const ok = await window.backupAutoSync();
-      if (ok) {
-        localStorage.removeItem('pp-pending-sync');
-        try { window.renderSyncStatus?.(); } catch(e) {}
-      }
+    const ok = await window.backupAutoSync({ interactive: true });
+    if (ok) {
+      localStorage.removeItem('pp-pending-sync');
+      try { window.renderSyncStatus?.(); } catch(e) {}
+      toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
     }
   } catch (e) { console.warn('[pp] sync após login falhou:', e); }
 }
@@ -7571,8 +7578,13 @@ window.hideSpinner = hideSpinner;
 // ── Google Drive UI ── (renderGoogleStatus vive em src/ui.ts, exposto via window)
 
 async function gDriveConnect() {
-  const token = await window.gSignIn?.();
-  if (token) window.renderGoogleStatus?.();
+  const user = await window.ppSignIn?.();
+  if (user) {
+    try { window._ppShowApp?.(user); } catch(e) {}
+    await window.backupAutoSync?.({ interactive: false });
+    window.renderGoogleStatus?.();
+    window.renderGdriveConfig?.();
+  }
 }
 
 async function gDriveBackup() {
@@ -7674,7 +7686,7 @@ async function gDriveSyncClientes() {
 <!-- Photo Annotator module -->
 <script src="/photo-annotator.js"></script>
 <!-- Google Drive sync (appDataFolder) -->
-<script src="/pintor/drive-sync.js?v=2"></script>
+<script src="/pintor/drive-sync.js?v=3"></script>
 <script>
 // ── Photo Viewer + PhotoAnnotator + Flash Camera Bridge ──
 (function() {
