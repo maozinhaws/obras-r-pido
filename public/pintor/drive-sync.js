@@ -54,6 +54,22 @@
       }
     } catch (e) { return ''; }
   }
+  function _classifyDriveError(status, body) {
+    const b = String(body || '');
+    if (status === 401) return 'Sessão do Google expirou. Clique em "Sincronizar agora" para autorizar novamente.';
+    if (status === 403) {
+      if (/Drive API has not been used|accessNotConfigured|SERVICE_DISABLED/i.test(b))
+        return 'Ative a Google Drive API no Google Cloud Console (APIs e Serviços → Biblioteca → Google Drive API → Ativar) e tente de novo.';
+      if (/insufficientPermissions|insufficient authentication scopes|forbidden/i.test(b))
+        return 'Permissão do Drive negada. Clique em "Sincronizar agora" e aceite o acesso ao Drive na tela do Google.';
+      if (/storageQuotaExceeded|quotaExceeded/i.test(b))
+        return 'Armazenamento do Google Drive esgotado. Libere espaço na sua conta e tente de novo.';
+      return 'Google recusou o acesso (403). Verifique se a Google Drive API está ativada e se este domínio está autorizado no Client OAuth.';
+    }
+    if (status === 404) return 'Backup do Drive não encontrado — será recriado no próximo envio.';
+    return `Erro ${status} do Google Drive: ${b.slice(0, 200)}`;
+  }
+
 
   async function boot() {
     try {
@@ -185,7 +201,7 @@
     const r = await fetch(`${DRIVE_API}/files?spaces=appDataFolder&q=${q}&fields=files(id,modifiedTime)`, {
       headers: { Authorization: 'Bearer ' + token },
     });
-    if (!r.ok) throw new Error('drive list ' + r.status + ' ' + await _readErrorBody(r));
+    if (!r.ok) { const b = await _readErrorBody(r); throw new Error(_classifyDriveError(r.status, b)); }
     const j = await r.json();
     const f = (j.files || [])[0];
     if (f) { _lastFileId = f.id; localStorage.setItem('pp-gdrive-fileId', f.id); }
@@ -197,7 +213,7 @@
       headers: { Authorization: 'Bearer ' + token },
     });
     if (r.status === 404 || r.status === 403) { _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId'); return null; }
-    if (!r.ok) throw new Error('drive download ' + r.status + ' ' + await _readErrorBody(r));
+    if (!r.ok) { const b = await _readErrorBody(r); throw new Error(_classifyDriveError(r.status, b)); }
     try { return await r.json(); } catch (e) { return null; }
   }
   async function _resumableUploadFile(token, id, bodyText) {
@@ -219,7 +235,7 @@
       _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId');
       return _resumableUploadFile(token, '', bodyText);
     }
-    if (!init.ok) throw new Error('drive upload init ' + init.status + ' ' + await _readErrorBody(init));
+    if (!init.ok) { const b = await _readErrorBody(init); throw new Error(_classifyDriveError(init.status, b)); }
     const uploadUrl = init.headers.get('Location') || init.headers.get('location');
     if (!uploadUrl) throw new Error('drive upload init sem URL de envio');
     const up = await fetch(uploadUrl, {
@@ -231,7 +247,7 @@
       _lastFileId = ''; localStorage.removeItem('pp-gdrive-fileId');
       return _resumableUploadFile(token, '', bodyText);
     }
-    if (!up.ok) throw new Error('drive upload ' + up.status + ' ' + await _readErrorBody(up));
+    if (!up.ok) { const b = await _readErrorBody(up); throw new Error(_classifyDriveError(up.status, b)); }
     return await up.json();
   }
   async function _uploadFile(token, id, body) {
