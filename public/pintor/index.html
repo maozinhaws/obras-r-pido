@@ -6848,38 +6848,9 @@ window.addEventListener('load', () => {
     _ppShowApp(storedUser);
   } else {
     _ppShowLogin();
-    // Carrega GIS e renderiza o botão Google
-    const s = document.createElement('script');
-    s.src = 'https://accounts.google.com/gsi/client';
-    s.async = true;
-    s.onload = async () => {
-      let CLIENT_ID = window.__VITE_GOOGLE_CLIENT_ID__;
-      if (!CLIENT_ID) {
-        try {
-          const r = await fetch('/api/public/google-config', { cache: 'no-store' });
-          if (r.ok) { const j = await r.json(); CLIENT_ID = j.clientId || ''; window.__VITE_GOOGLE_CLIENT_ID__ = CLIENT_ID; }
-        } catch (e) {}
-      }
-      if (!CLIENT_ID) { console.warn('[pp] Google Client ID indisponível'); return; }
-      window.google.accounts.id.initialize({
-        client_id: CLIENT_ID,
-         callback: (response) => {
-          // Decodifica o credential JWT e armazena a sessão diretamente
-          const user = window.ppHandleCredential?.(response.credential);
-          if (user) { _ppShowApp(user); _ppSyncAfterLogin(user); }
-        },
-        auto_select: false,
-        cancel_on_tap_outside: false,
-      });
-      const btnEl = document.getElementById('google-signin-btn');
-      if (btnEl) {
-        window.google.accounts.id.renderButton(btnEl, {
-          type: 'standard', shape: 'pill', theme: 'outline',
-          size: 'large', text: 'signin_with', locale: 'pt-BR', width: 280,
-        });
-      }
-    };
-    document.head.appendChild(s);
+    // O botão "Entrar com Google" chama _ppTriggerLogin() diretamente,
+    // que usa ppSignIn() (OAuth token client) e já pede o escopo drive.appdata
+    // no primeiro consentimento — sem segundo popup.
   }
 });
 
