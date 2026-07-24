@@ -6767,9 +6767,18 @@ function _ppShowLogin() {
 }
 
 async function _ppTriggerLogin() {
+  // Fluxo OAuth único que já concede drive.appdata na primeira consentida.
+  // Evita o passo duplo do GIS ID Token → OAuth token, cujo segundo popup
+  // era bloqueado no mobile e deixava a conta "conectada" sem token de Drive.
   const user = await window.ppSignIn?.();
-  if (user) _ppShowApp(user);
+  if (user) {
+    _ppShowApp(user);
+    _ppSyncAfterLogin(user);
+  } else {
+    toast(window.getSyncLastError?.() || 'Não foi possível conectar ao Google.');
+  }
 }
+window._ppTriggerLogin = _ppTriggerLogin;
 
 async function ppLoginOffline() {
   // Cria sessão local sem Google
