@@ -6838,6 +6838,90 @@ async function _ppSyncAfterLogin(user) {
 }
 window._ppSyncAfterLogin = _ppSyncAfterLogin;
 
+// ── Login/Cadastro por e-mail (Lovable Cloud) ──
+function ppSwitchAuthTab(name) {
+  document.querySelectorAll('.pp-auth-tab').forEach(b => {
+    const on = b.getAttribute('data-tab') === name;
+    b.classList.toggle('on', on);
+    b.style.background = on ? 'linear-gradient(135deg,#ff6b35 0%,#7b5cff 100%)' : 'transparent';
+    b.style.color = on ? '#fff' : 'var(--ink2)';
+  });
+  document.getElementById('pp-auth-signin').style.display = name === 'signin' ? 'block' : 'none';
+  document.getElementById('pp-auth-signup').style.display = name === 'signup' ? 'block' : 'none';
+  document.getElementById('pp-auth-reset').style.display = name === 'reset' ? 'block' : 'none';
+  const msg = document.getElementById('pp-auth-msg'); if (msg) { msg.textContent = ''; msg.style.color = 'var(--ink2)'; }
+}
+function _ppAuthMsg(text, kind) {
+  const el = document.getElementById('pp-auth-msg'); if (!el) return;
+  el.textContent = text || '';
+  el.style.color = kind === 'err' ? '#dc2626' : (kind === 'ok' ? '#166534' : 'var(--ink2)');
+}
+async function _ppApplyCloudLogin(user) {
+  const appUser = {
+    uid: user.id,
+    email: user.email || '',
+    name: user.user_metadata?.nome || user.email || 'Usuário',
+    picture: '',
+    signedInAt: new Date().toISOString(),
+  };
+  localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
+  _ppShowApp(appUser);
+  try {
+    toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando dados da nuvem…');
+    const ok = await window.cloudSync?.();
+    if (ok) toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
+    else toast(window.getCloudLastError?.() || 'Falha ao sincronizar. Tente novamente em Configurações → Backup.');
+  } catch (e) { console.warn('[pp] cloud sync após login falhou', e); }
+}
+async function ppDoEmailSignIn() {
+  const email = (document.getElementById('pp-in-email')?.value || '').trim();
+  const senha = document.getElementById('pp-in-senha')?.value || '';
+  if (!email || !senha) return _ppAuthMsg('Preencha e-mail e senha.', 'err');
+  _ppAuthMsg('Entrando…');
+  const res = await window.cloudSignIn?.({ email, senha });
+  if (res?.error) return _ppAuthMsg(res.error, 'err');
+  if (res?.user) { _ppAuthMsg('Bem-vindo!', 'ok'); _ppApplyCloudLogin(res.user); }
+}
+async function ppDoEmailSignUp() {
+  const nome = (document.getElementById('pp-up-nome')?.value || '').trim();
+  const email = (document.getElementById('pp-up-email')?.value || '').trim();
+  const telefone = (document.getElementById('pp-up-telefone')?.value || '').trim();
+  const senha = document.getElementById('pp-up-senha')?.value || '';
+  if (!email || !senha) return _ppAuthMsg('Preencha e-mail e senha.', 'err');
+  if (senha.length < 8) return _ppAuthMsg('Senha muito curta (mínimo 8 caracteres).', 'err');
+  _ppAuthMsg('Criando conta…');
+  const res = await window.cloudSignUp?.({ email, senha, nome, telefone });
+  if (res?.error) return _ppAuthMsg(res.error, 'err');
+  if (res?.user) { _ppAuthMsg('Conta criada!', 'ok'); _ppApplyCloudLogin(res.user); }
+}
+async function ppDoEmailReset() {
+  const email = (document.getElementById('pp-rs-email')?.value || '').trim();
+  if (!email) return _ppAuthMsg('Informe o e-mail da conta.', 'err');
+  _ppAuthMsg('Enviando…');
+  const res = await window.cloudRecoverPassword?.(email);
+  if (res?.error) return _ppAuthMsg(res.error, 'err');
+  _ppAuthMsg('Enviamos um e-mail com o link para redefinir a senha. Verifique sua caixa de entrada.', 'ok');
+}
+window.ppSwitchAuthTab = ppSwitchAuthTab;
+window.ppDoEmailSignIn = ppDoEmailSignIn;
+window.ppDoEmailSignUp = ppDoEmailSignUp;
+window.ppDoEmailReset = ppDoEmailReset;
+
+// Sessão Lovable Cloud restaurada no boot → entra direto
+(async function _ppRestoreCloudSession() {
+  try {
+    await window.cloudReady;
+    const sess = window.cloudGetSession?.();
+    if (!sess || !sess.email) return;
+    const stored = window.ppGetUser?.();
+    if (stored && stored.email === sess.email) return; // já mostrando app
+    const appUser = { uid: sess.userId, email: sess.email, name: sess.email, picture: '', signedInAt: new Date().toISOString() };
+    localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
+    _ppShowApp(appUser);
+  } catch (e) {}
+})();
+
+
 function ppConfirm(message, { title = 'Confirmar', okLabel = 'OK', cancelLabel = 'Cancelar', danger = false } = {}) {
   return new Promise((resolve) => {
     const wrap = document.createElement('div');
