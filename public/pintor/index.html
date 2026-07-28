@@ -1948,15 +1948,46 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
       <!-- Divider -->
       <div style="width:100%;display:flex;align-items:center;gap:12px;margin:20px 0;">
         <div style="flex:1;height:1px;background:var(--bdr);"></div>
-        <span style="font-size:11px;color:var(--ink3);font-weight:600;">OU</span>
+        <span style="font-size:11px;color:var(--ink3);font-weight:600;">OU E-MAIL E SENHA</span>
         <div style="flex:1;height:1px;background:var(--bdr);"></div>
       </div>
 
-      <!-- Acesso offline (sem Google) -->
+      <!-- Login/Cadastro/Reset por e-mail (Lovable Cloud) -->
+      <div id="pp-email-auth" style="width:100%;display:flex;flex-direction:column;gap:10px;">
+        <div id="pp-auth-tabs" style="display:flex;gap:6px;background:rgba(255,255,255,.5);padding:4px;border-radius:100px;border:1px solid var(--bdr);">
+          <button type="button" data-tab="signin" class="pp-auth-tab on" onclick="ppSwitchAuthTab('signin')" style="flex:1;height:36px;border-radius:100px;border:none;background:transparent;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;">Entrar</button>
+          <button type="button" data-tab="signup" class="pp-auth-tab" onclick="ppSwitchAuthTab('signup')" style="flex:1;height:36px;border-radius:100px;border:none;background:transparent;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;">Criar conta</button>
+          <button type="button" data-tab="reset" class="pp-auth-tab" onclick="ppSwitchAuthTab('reset')" style="flex:1;height:36px;border-radius:100px;border:none;background:transparent;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;">Esqueci</button>
+        </div>
+
+        <div id="pp-auth-signin" class="pp-auth-panel">
+          <input id="pp-in-email" type="email" autocomplete="email" placeholder="seu e-mail" style="width:100%;height:44px;padding:0 14px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <input id="pp-in-senha" type="password" autocomplete="current-password" placeholder="sua senha" style="width:100%;height:44px;padding:0 14px;margin-top:8px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <button type="button" onclick="ppDoEmailSignIn()" style="width:100%;height:44px;margin-top:10px;border-radius:100px;border:none;background:linear-gradient(135deg,#ff6b35 0%,#7b5cff 100%);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;letter-spacing:.4px;cursor:pointer;">Entrar</button>
+        </div>
+
+        <div id="pp-auth-signup" class="pp-auth-panel" style="display:none;">
+          <input id="pp-up-nome" type="text" autocomplete="name" placeholder="seu nome" style="width:100%;height:44px;padding:0 14px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <input id="pp-up-email" type="email" autocomplete="email" placeholder="e-mail" style="width:100%;height:44px;padding:0 14px;margin-top:8px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <input id="pp-up-telefone" type="tel" autocomplete="tel" placeholder="telefone com DDD" style="width:100%;height:44px;padding:0 14px;margin-top:8px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <input id="pp-up-senha" type="password" autocomplete="new-password" placeholder="senha (mín. 8 caracteres)" style="width:100%;height:44px;padding:0 14px;margin-top:8px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <button type="button" onclick="ppDoEmailSignUp()" style="width:100%;height:44px;margin-top:10px;border-radius:100px;border:none;background:linear-gradient(135deg,#ff6b35 0%,#7b5cff 100%);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;letter-spacing:.4px;cursor:pointer;">Criar conta</button>
+        </div>
+
+        <div id="pp-auth-reset" class="pp-auth-panel" style="display:none;">
+          <div style="font-size:12px;color:var(--ink3);line-height:1.5;margin-bottom:6px;">Enviaremos um e-mail com o link para redefinir sua senha.</div>
+          <input id="pp-rs-email" type="email" autocomplete="email" placeholder="e-mail da conta" style="width:100%;height:44px;padding:0 14px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <button type="button" onclick="ppDoEmailReset()" style="width:100%;height:44px;margin-top:10px;border-radius:100px;border:none;background:linear-gradient(135deg,#ff6b35 0%,#7b5cff 100%);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;letter-spacing:.4px;cursor:pointer;">Enviar link de redefinição</button>
+        </div>
+
+        <div id="pp-auth-msg" style="font-size:12px;padding:0 4px;min-height:16px;color:var(--ink2);"></div>
+      </div>
+
+      <!-- Acesso offline (sem cadastro) -->
       <button onclick="ppLoginOffline()" style="
-        width:100%;height:48px;border-radius:100px;
+        width:100%;height:44px;margin-top:14px;border-radius:100px;
         background:transparent;border:1.5px solid var(--bdr);
-        font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--ink2);
+        font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink3);
         cursor:pointer;
       ">Usar sem conta (modo offline)</button>
 
