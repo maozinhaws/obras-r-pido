@@ -1948,15 +1948,46 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
       <!-- Divider -->
       <div style="width:100%;display:flex;align-items:center;gap:12px;margin:20px 0;">
         <div style="flex:1;height:1px;background:var(--bdr);"></div>
-        <span style="font-size:11px;color:var(--ink3);font-weight:600;">OU</span>
+        <span style="font-size:11px;color:var(--ink3);font-weight:600;">OU E-MAIL E SENHA</span>
         <div style="flex:1;height:1px;background:var(--bdr);"></div>
       </div>
 
-      <!-- Acesso offline (sem Google) -->
+      <!-- Login/Cadastro/Reset por e-mail (Lovable Cloud) -->
+      <div id="pp-email-auth" style="width:100%;display:flex;flex-direction:column;gap:10px;">
+        <div id="pp-auth-tabs" style="display:flex;gap:6px;background:rgba(255,255,255,.5);padding:4px;border-radius:100px;border:1px solid var(--bdr);">
+          <button type="button" data-tab="signin" class="pp-auth-tab on" onclick="ppSwitchAuthTab('signin')" style="flex:1;height:36px;border-radius:100px;border:none;background:transparent;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;">Entrar</button>
+          <button type="button" data-tab="signup" class="pp-auth-tab" onclick="ppSwitchAuthTab('signup')" style="flex:1;height:36px;border-radius:100px;border:none;background:transparent;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;">Criar conta</button>
+          <button type="button" data-tab="reset" class="pp-auth-tab" onclick="ppSwitchAuthTab('reset')" style="flex:1;height:36px;border-radius:100px;border:none;background:transparent;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;">Esqueci</button>
+        </div>
+
+        <div id="pp-auth-signin" class="pp-auth-panel">
+          <input id="pp-in-email" type="email" autocomplete="email" placeholder="seu e-mail" style="width:100%;height:44px;padding:0 14px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <input id="pp-in-senha" type="password" autocomplete="current-password" placeholder="sua senha" style="width:100%;height:44px;padding:0 14px;margin-top:8px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <button type="button" onclick="ppDoEmailSignIn()" style="width:100%;height:44px;margin-top:10px;border-radius:100px;border:none;background:linear-gradient(135deg,#ff6b35 0%,#7b5cff 100%);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;letter-spacing:.4px;cursor:pointer;">Entrar</button>
+        </div>
+
+        <div id="pp-auth-signup" class="pp-auth-panel" style="display:none;">
+          <input id="pp-up-nome" type="text" autocomplete="name" placeholder="seu nome" style="width:100%;height:44px;padding:0 14px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <input id="pp-up-email" type="email" autocomplete="email" placeholder="e-mail" style="width:100%;height:44px;padding:0 14px;margin-top:8px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <input id="pp-up-telefone" type="tel" autocomplete="tel" placeholder="telefone com DDD" style="width:100%;height:44px;padding:0 14px;margin-top:8px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <input id="pp-up-senha" type="password" autocomplete="new-password" placeholder="senha (mín. 8 caracteres)" style="width:100%;height:44px;padding:0 14px;margin-top:8px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <button type="button" onclick="ppDoEmailSignUp()" style="width:100%;height:44px;margin-top:10px;border-radius:100px;border:none;background:linear-gradient(135deg,#ff6b35 0%,#7b5cff 100%);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;letter-spacing:.4px;cursor:pointer;">Criar conta</button>
+        </div>
+
+        <div id="pp-auth-reset" class="pp-auth-panel" style="display:none;">
+          <div style="font-size:12px;color:var(--ink3);line-height:1.5;margin-bottom:6px;">Enviaremos um e-mail com o link para redefinir sua senha.</div>
+          <input id="pp-rs-email" type="email" autocomplete="email" placeholder="e-mail da conta" style="width:100%;height:44px;padding:0 14px;border-radius:12px;border:2px solid #64748b;background:#fff;color:#0a0a0a;font-size:16px;font-weight:700;">
+          <button type="button" onclick="ppDoEmailReset()" style="width:100%;height:44px;margin-top:10px;border-radius:100px;border:none;background:linear-gradient(135deg,#ff6b35 0%,#7b5cff 100%);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;letter-spacing:.4px;cursor:pointer;">Enviar link de redefinição</button>
+        </div>
+
+        <div id="pp-auth-msg" style="font-size:12px;padding:0 4px;min-height:16px;color:var(--ink2);"></div>
+      </div>
+
+      <!-- Acesso offline (sem cadastro) -->
       <button onclick="ppLoginOffline()" style="
-        width:100%;height:48px;border-radius:100px;
+        width:100%;height:44px;margin-top:14px;border-radius:100px;
         background:transparent;border:1.5px solid var(--bdr);
-        font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--ink2);
+        font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink3);
         cursor:pointer;
       ">Usar sem conta (modo offline)</button>
 
@@ -6807,6 +6838,90 @@ async function _ppSyncAfterLogin(user) {
 }
 window._ppSyncAfterLogin = _ppSyncAfterLogin;
 
+// ── Login/Cadastro por e-mail (Lovable Cloud) ──
+function ppSwitchAuthTab(name) {
+  document.querySelectorAll('.pp-auth-tab').forEach(b => {
+    const on = b.getAttribute('data-tab') === name;
+    b.classList.toggle('on', on);
+    b.style.background = on ? 'linear-gradient(135deg,#ff6b35 0%,#7b5cff 100%)' : 'transparent';
+    b.style.color = on ? '#fff' : 'var(--ink2)';
+  });
+  document.getElementById('pp-auth-signin').style.display = name === 'signin' ? 'block' : 'none';
+  document.getElementById('pp-auth-signup').style.display = name === 'signup' ? 'block' : 'none';
+  document.getElementById('pp-auth-reset').style.display = name === 'reset' ? 'block' : 'none';
+  const msg = document.getElementById('pp-auth-msg'); if (msg) { msg.textContent = ''; msg.style.color = 'var(--ink2)'; }
+}
+function _ppAuthMsg(text, kind) {
+  const el = document.getElementById('pp-auth-msg'); if (!el) return;
+  el.textContent = text || '';
+  el.style.color = kind === 'err' ? '#dc2626' : (kind === 'ok' ? '#166534' : 'var(--ink2)');
+}
+async function _ppApplyCloudLogin(user) {
+  const appUser = {
+    uid: user.id,
+    email: user.email || '',
+    name: user.user_metadata?.nome || user.email || 'Usuário',
+    picture: '',
+    signedInAt: new Date().toISOString(),
+  };
+  localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
+  _ppShowApp(appUser);
+  try {
+    toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando dados da nuvem…');
+    const ok = await window.cloudSync?.();
+    if (ok) toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
+    else toast(window.getCloudLastError?.() || 'Falha ao sincronizar. Tente novamente em Configurações → Backup.');
+  } catch (e) { console.warn('[pp] cloud sync após login falhou', e); }
+}
+async function ppDoEmailSignIn() {
+  const email = (document.getElementById('pp-in-email')?.value || '').trim();
+  const senha = document.getElementById('pp-in-senha')?.value || '';
+  if (!email || !senha) return _ppAuthMsg('Preencha e-mail e senha.', 'err');
+  _ppAuthMsg('Entrando…');
+  const res = await window.cloudSignIn?.({ email, senha });
+  if (res?.error) return _ppAuthMsg(res.error, 'err');
+  if (res?.user) { _ppAuthMsg('Bem-vindo!', 'ok'); _ppApplyCloudLogin(res.user); }
+}
+async function ppDoEmailSignUp() {
+  const nome = (document.getElementById('pp-up-nome')?.value || '').trim();
+  const email = (document.getElementById('pp-up-email')?.value || '').trim();
+  const telefone = (document.getElementById('pp-up-telefone')?.value || '').trim();
+  const senha = document.getElementById('pp-up-senha')?.value || '';
+  if (!email || !senha) return _ppAuthMsg('Preencha e-mail e senha.', 'err');
+  if (senha.length < 8) return _ppAuthMsg('Senha muito curta (mínimo 8 caracteres).', 'err');
+  _ppAuthMsg('Criando conta…');
+  const res = await window.cloudSignUp?.({ email, senha, nome, telefone });
+  if (res?.error) return _ppAuthMsg(res.error, 'err');
+  if (res?.user) { _ppAuthMsg('Conta criada!', 'ok'); _ppApplyCloudLogin(res.user); }
+}
+async function ppDoEmailReset() {
+  const email = (document.getElementById('pp-rs-email')?.value || '').trim();
+  if (!email) return _ppAuthMsg('Informe o e-mail da conta.', 'err');
+  _ppAuthMsg('Enviando…');
+  const res = await window.cloudRecoverPassword?.(email);
+  if (res?.error) return _ppAuthMsg(res.error, 'err');
+  _ppAuthMsg('Enviamos um e-mail com o link para redefinir a senha. Verifique sua caixa de entrada.', 'ok');
+}
+window.ppSwitchAuthTab = ppSwitchAuthTab;
+window.ppDoEmailSignIn = ppDoEmailSignIn;
+window.ppDoEmailSignUp = ppDoEmailSignUp;
+window.ppDoEmailReset = ppDoEmailReset;
+
+// Sessão Lovable Cloud restaurada no boot → entra direto
+(async function _ppRestoreCloudSession() {
+  try {
+    await window.cloudReady;
+    const sess = window.cloudGetSession?.();
+    if (!sess || !sess.email) return;
+    const stored = window.ppGetUser?.();
+    if (stored && stored.email === sess.email) return; // já mostrando app
+    const appUser = { uid: sess.userId, email: sess.email, name: sess.email, picture: '', signedInAt: new Date().toISOString() };
+    localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
+    _ppShowApp(appUser);
+  } catch (e) {}
+})();
+
+
 function ppConfirm(message, { title = 'Confirmar', okLabel = 'OK', cancelLabel = 'Cancelar', danger = false } = {}) {
   return new Promise((resolve) => {
     const wrap = document.createElement('div');
@@ -7677,6 +7792,7 @@ async function gDriveSyncClientes() {
 <!-- Photo Annotator module -->
 <script src="/photo-annotator.js"></script>
 <!-- Google Drive sync (appDataFolder) -->
+<script src="/pintor/cloud-sync.js?v=1"></script>
 <script src="/pintor/drive-sync.js?v=7"></script>
 <script>
 // ── Photo Viewer + PhotoAnnotator + Flash Camera Bridge ──

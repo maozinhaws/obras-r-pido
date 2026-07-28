@@ -23,6 +23,7 @@ import { Route as OrcamentosIndexRouteImport } from './routes/orcamentos.index'
 import { Route as OrcamentosNovoRouteImport } from './routes/orcamentos.novo'
 import { Route as OrcamentosIdRouteImport } from './routes/orcamentos.$id'
 import { Route as OrcamentosIdReciboRouteImport } from './routes/orcamentos.$id.recibo'
+import { Route as ApiPublicSupabaseConfigRouteImport } from './routes/api/public/supabase-config'
 import { Route as ApiPublicGoogleConfigRouteImport } from './routes/api/public/google-config'
 
 const TermosRoute = TermosRouteImport.update({
@@ -95,6 +96,11 @@ const OrcamentosIdReciboRoute = OrcamentosIdReciboRouteImport.update({
   path: '/recibo',
   getParentRoute: () => OrcamentosIdRoute,
 } as any)
+const ApiPublicSupabaseConfigRoute = ApiPublicSupabaseConfigRouteImport.update({
+  id: '/api/public/supabase-config',
+  path: '/api/public/supabase-config',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicGoogleConfigRoute = ApiPublicGoogleConfigRouteImport.update({
   id: '/api/public/google-config',
   path: '/api/public/google-config',
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos/': typeof OrcamentosIndexRoute
   '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
+  '/api/public/supabase-config': typeof ApiPublicSupabaseConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRoutesByTo {
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos': typeof OrcamentosIndexRoute
   '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
+  '/api/public/supabase-config': typeof ApiPublicSupabaseConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRoutesById {
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos/': typeof OrcamentosIndexRoute
   '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
+  '/api/public/supabase-config': typeof ApiPublicSupabaseConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
 }
 export interface FileRouteTypes {
@@ -169,6 +178,7 @@ export interface FileRouteTypes {
     | '/orcamentos/novo'
     | '/orcamentos/'
     | '/api/public/google-config'
+    | '/api/public/supabase-config'
     | '/orcamentos/$id/recibo'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/orcamentos/novo'
     | '/orcamentos'
     | '/api/public/google-config'
+    | '/api/public/supabase-config'
     | '/orcamentos/$id/recibo'
   id:
     | '__root__'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/orcamentos/novo'
     | '/orcamentos/'
     | '/api/public/google-config'
+    | '/api/public/supabase-config'
     | '/orcamentos/$id/recibo'
   fileRoutesById: FileRoutesById
 }
@@ -217,6 +229,7 @@ export interface RootRouteChildren {
   OrcamentosRoute: typeof OrcamentosRouteWithChildren
   TermosRoute: typeof TermosRoute
   ApiPublicGoogleConfigRoute: typeof ApiPublicGoogleConfigRoute
+  ApiPublicSupabaseConfigRoute: typeof ApiPublicSupabaseConfigRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -319,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrcamentosIdReciboRouteImport
       parentRoute: typeof OrcamentosIdRoute
     }
+    '/api/public/supabase-config': {
+      id: '/api/public/supabase-config'
+      path: '/api/public/supabase-config'
+      fullPath: '/api/public/supabase-config'
+      preLoaderRoute: typeof ApiPublicSupabaseConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/google-config': {
       id: '/api/public/google-config'
       path: '/api/public/google-config'
@@ -369,17 +389,8 @@ const rootRouteChildren: RootRouteChildren = {
   OrcamentosRoute: OrcamentosRouteWithChildren,
   TermosRoute: TermosRoute,
   ApiPublicGoogleConfigRoute: ApiPublicGoogleConfigRoute,
+  ApiPublicSupabaseConfigRoute: ApiPublicSupabaseConfigRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
