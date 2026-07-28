@@ -5121,7 +5121,7 @@ function genPDFHtml(orc, withPhotos) {
     const meds = getRoomMeds(r); totalM2 += meds.m2;
     const items = (r.items||[]).map(it => {
       const a = parseFloat(it.alt)||0; const c = parseFloat(it.comp)||0;
-      const measure = (a && c) ? (a*c).toFixed(2)+' m²' : (a || c ? (a||c)+' ml' : '');
+      const measure = (a && c) ? (a*c).toFixed(2)+' m²' : '';
       let photosHtml = '';
       if (withPhotos && it.photos && it.photos.length > 0) {
         photosHtml = '<div style="display:flex; gap:12px; margin-top:8px; flex-wrap:wrap;">' + it.photos.map(p => `<div style="text-align:center;"><img src="${p.url}" style="height:100px; width:auto; border-radius:6px; border:1px solid #cbd5e1; object-fit:cover;"></div>`).join('') + '</div>';
