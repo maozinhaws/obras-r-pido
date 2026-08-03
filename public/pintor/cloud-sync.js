@@ -267,12 +267,42 @@
     }
   }
 
+  // ── Agendamento automático ──
+  let _schedTimer = null;
+  function cloudScheduleSync(delay) {
+    if (!cloudGetSession()) return;
+    _setStatus('pending');
+    clearTimeout(_schedTimer);
+    _schedTimer = setTimeout(() => { cloudSync().catch(() => {}); }, typeof delay === 'number' ? delay : 3000);
+  }
+
+  // Encadeia no scheduleSync do Drive (definido depois deste script)
+  function _hookScheduleSync() {
+    const prev = typeof window.scheduleSync === 'function' ? window.scheduleSync : null;
+    if (window.__ppCloudHooked) return;
+    window.__ppCloudHooked = true;
+    window.scheduleSync = function (delay) {
+      try { prev?.(delay); } catch (e) {}
+      cloudScheduleSync(delay);
+    };
+  }
+  if (document.readyState === 'complete') _hookScheduleSync();
+  else window.addEventListener('load', _hookScheduleSync);
+
+  // Puxa dados da nuvem ao voltar para o app / reconectar / a cada 5 min
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') cloudScheduleSync(600);
+  });
+  window.addEventListener('online', () => cloudScheduleSync(600));
+  setInterval(() => { if (navigator.onLine) cloudScheduleSync(0); }, 5 * 60 * 1000);
+
   window.cloudGetSession = cloudGetSession;
   window.cloudSignUp = cloudSignUp;
   window.cloudSignIn = cloudSignIn;
   window.cloudSignOut = cloudSignOut;
   window.cloudRecoverPassword = cloudRecoverPassword;
   window.cloudSync = cloudSync;
+  window.cloudScheduleSync = cloudScheduleSync;
   window.getCloudStatus = getCloudStatus;
   window.getCloudLastError = getCloudLastError;
 })();
