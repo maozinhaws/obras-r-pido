@@ -82,8 +82,8 @@
       const raw = localStorage.getItem('pp-cloud-auth');
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      const user = parsed?.user;
-      if (!user) return null;
+      const user = parsed?.user || parsed?.currentSession?.user || parsed?.session?.user;
+      if (!user || !user.email) return null;
       return { email: _normalize(user.email), userId: user.id };
     } catch (e) { return null; }
   }
