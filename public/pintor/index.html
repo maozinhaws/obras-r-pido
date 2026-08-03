@@ -6914,10 +6914,14 @@ window.ppDoEmailReset = ppDoEmailReset;
     const sess = window.cloudGetSession?.();
     if (!sess || !sess.email) return;
     const stored = window.ppGetUser?.();
-    if (stored && stored.email === sess.email) return; // já mostrando app
-    const appUser = { uid: sess.userId, email: sess.email, name: sess.email, picture: '', signedInAt: new Date().toISOString() };
-    localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
-    _ppShowApp(appUser);
+    if (!stored || stored.email !== sess.email) {
+      const appUser = { uid: sess.userId, email: sess.email, name: sess.email, picture: '', signedInAt: new Date().toISOString() };
+      localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
+      _ppShowApp(appUser);
+    }
+    // Sempre puxa a versão da nuvem no boot (não confia apenas no cache local)
+    const ok = await window.cloudSync?.();
+    if (ok) { try { window.renderSyncStatus?.(); } catch (e) {} }
   } catch (e) {}
 })();
 
