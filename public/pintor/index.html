@@ -6116,18 +6116,19 @@ window.gdriveConnect = async function gdriveConnect() {
 };
 
 window.gdriveBackupNow = async function gdriveBackupNow() {
-  if (typeof window.backupAutoSync !== 'function') { toast('Sincronização indisponível.'); return; }
   toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando…');
+  let cloudOk = false, driveOk = false;
+  try { cloudOk = !!(await window.cloudSync?.()); } catch (e) { console.warn(e); }
   try {
-    const ok = await window.backupAutoSync({ interactive: true });
-    if (ok) {
-      localStorage.setItem('pp-gdrive-lastSync', new Date().toISOString());
-      window.renderGdriveConfig();
-      toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
-    } else {
-      toast('Falha ao sincronizar: ' + (window.getSyncLastError?.() || 'verifique a permissão do Google Drive.'));
-    }
-  } catch (e) { console.warn(e); toast('Falha ao sincronizar: ' + (e?.message || 'erro inesperado.')); }
+    if (typeof window.backupAutoSync === 'function') driveOk = !!(await window.backupAutoSync({ interactive: true }));
+  } catch (e) { console.warn(e); }
+  if (cloudOk || driveOk) {
+    localStorage.setItem('pp-gdrive-lastSync', new Date().toISOString());
+    try { window.renderGdriveConfig(); window.renderCloudConfig?.(); window.renderSyncStatus?.(); } catch (e) {}
+    toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Dados sincronizados!');
+  } else {
+    toast('Falha ao sincronizar: ' + (window.getCloudLastError?.() || window.getSyncLastError?.() || 'verifique sua conexão.'));
+  }
 };
 
 window.gdriveDisconnect = async function gdriveDisconnect() {
