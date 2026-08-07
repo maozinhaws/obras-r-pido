@@ -105,11 +105,15 @@
       },
     });
     if (error) return { error: error.message || 'Falha ao criar conta.' };
+    // Se o cache local pertence a outra conta, não leva os dados para a nova.
+    const donoAtual = _normalize(localStorage.getItem('pp-cloud-owner') || '');
+    if (donoAtual && donoAtual !== email) { try { window.cloudWipeLocal?.(); } catch (e) {} }
     // Confirmação de e-mail está desligada (auto_confirm) → já entra logado.
     if (data.session) {
       _setStatus('pending');
       setTimeout(() => cloudSync().catch(() => {}), 400);
     }
+
     return { user: data.user };
   }
 
