@@ -4755,7 +4755,9 @@ function renderRooms(){
   S.rooms.forEach((r,ri)=>{
     if(r.collapsed === undefined) r.collapsed = false; if(!r.items) r.items=[]; if(!r.services) r.services=S.DEFAULT_SERVICES.slice();
     const meds = getRoomMeds(r); const medTxt = [];
-    if(meds.m2>0) medTxt.push(`${f1(meds.m2)} m²`); if(meds.ml>0) medTxt.push(`${f1(meds.ml)} ml`);
+    const medTotal = (meds.m2 || 0) + (meds.ml || 0);
+    if(medTotal>0) medTxt.push(`${f1(medTotal)} m²`);
+
     const medLabel = medTxt.length ? medTxt.join(' + ') : '—';
 
     const itemsHtml=r.items.map((it,ii)=>{
