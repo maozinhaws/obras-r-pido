@@ -105,22 +105,30 @@
       },
     });
     if (error) return { error: error.message || 'Falha ao criar conta.' };
+    // Se o cache local pertence a outra conta, não leva os dados para a nova.
+    const donoAtual = _normalize(localStorage.getItem('pp-cloud-owner') || '');
+    if (donoAtual && donoAtual !== email) { try { window.cloudWipeLocal?.(); } catch (e) {} }
     // Confirmação de e-mail está desligada (auto_confirm) → já entra logado.
     if (data.session) {
       _setStatus('pending');
       setTimeout(() => cloudSync().catch(() => {}), 400);
     }
+
     return { user: data.user };
   }
 
   async function cloudSignIn({ email, senha }) {
     await window.cloudReady;
     if (!_sb) return { error: 'Backend indisponível.' };
+    const alvo = _normalize(email);
     const { data, error } = await _sb.auth.signInWithPassword({
-      email: _normalize(email),
+      email: alvo,
       password: senha,
     });
     if (error) return { error: error.message || 'E-mail ou senha inválidos.' };
+    // Conta diferente da dona do cache: limpa os dados locais antes de puxar.
+    const dono = _normalize(localStorage.getItem('pp-cloud-owner') || '');
+    if (dono && dono !== alvo) { try { window.cloudWipeLocal?.(); } catch (e) {} }
     _setStatus('pending');
     setTimeout(() => cloudSync().catch(() => {}), 400);
     return { user: data.user };
@@ -130,8 +138,18 @@
     await window.cloudReady;
     if (!_sb) return;
     await _sb.auth.signOut();
+    // O cache local pertence à conta que saiu — limpa para não vazar de conta.
+    try { window.cloudWipeLocal?.(); } catch (e) {}
+    try { localStorage.removeItem('pp-cloud-owner'); } catch (e) {}
+    try {
+      window.renderHomeMini?.(); window.renderHomeEvents?.();
+      window.renderOrcamentosList?.(); window.renderClientes?.();
+      window.renderFornecedores?.(); window.renderAgenda?.();
+      window.renderDashboard?.();
+    } catch (e) {}
     _setStatus('offline');
   }
+
 
   async function cloudRecoverPassword(email) {
     await window.cloudReady;
@@ -228,6 +246,30 @@
     }
   }
 
+  // ── Isolamento por conta ──
+  // O cache local pertence a UMA conta. Se outra conta entrar no mesmo
+  // navegador, os dados locais NÃO podem ser enviados para ela.
+  const OWNER_KEY = 'pp-cloud-owner';
+  function _owner() { return _normalize(localStorage.getItem(OWNER_KEY) || ''); }
+  function _setOwner(email) { localStorage.setItem(OWNER_KEY, _normalize(email)); }
+  function _wipeLocal() {
+    for (const k of KEYS) { try { localStorage.removeItem(k); } catch (e) {} }
+    try {
+      if (window.S) {
+        window.S.config = { ...(window.defCfg || {}) };
+        window.S.orcs = []; window.S.clientes = [];
+        window.S.fornecedores = []; window.S.eventos = [];
+      }
+      localStorage.removeItem('pp-cloud-lastSync');
+    } catch (e) {}
+  }
+  function _emptySnapshot() {
+    const s = { versao: 3, ts: Date.now(), exportadoEm: new Date().toISOString() };
+    for (const k of KEYS) s[k] = null;
+    return s;
+  }
+  window.cloudWipeLocal = _wipeLocal;
+
   async function cloudSync() {
     await window.cloudReady;
     if (!_sb) return false;
@@ -238,11 +280,16 @@
     if (!email) { _setStatus('error'); _setErr('Conta sem e-mail.'); return false; }
     _syncing = true; _setStatus('syncing');
     try {
-      const local = _snapshot();
+      const owner = _owner();
+      const foreign = !!owner && owner !== email;
+      if (foreign) _wipeLocal();
+      const local = foreign ? _emptySnapshot() : _snapshot();
       const { data: rows, error: selErr } = await _sb
         .from('backups').select('data, updated_at').eq('email', email).maybeSingle();
       if (selErr && selErr.code !== 'PGRST116') throw selErr;
       const remote = rows?.data || null;
+      _setOwner(email);
+
       const merged = _merge(local, remote);
       _apply(merged);
       const deviceId = localStorage.getItem('pp-device-id') || 'dev_' + Date.now();
