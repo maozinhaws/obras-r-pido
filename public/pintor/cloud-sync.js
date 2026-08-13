@@ -327,8 +327,10 @@
     const email = _normalize(sess.user.email);
     if (!email) { _setStatus('error'); _setErr('Conta sem e-mail.'); return false; }
     _cacheSession(sess);
-
+    _syncing = true; _setStatus('syncing');
+    try {
       const owner = _owner();
+
       const foreign = !!owner && owner !== email;
       if (foreign) _wipeLocal();
       const local = foreign ? _emptySnapshot() : _snapshot();
