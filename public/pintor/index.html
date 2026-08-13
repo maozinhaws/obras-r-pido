@@ -7334,13 +7334,42 @@ function showFaq() { document.getElementById('info-modal-title').textContent = '
 function toggleCardMenu(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  const isOpen = el.style.display !== 'none';
+  const isOpen = el.style.display === 'block';
   closeCardMenus();
-  if (!isOpen) { el.style.display = 'block'; }
+  if (isOpen) return;
+  el.style.display = 'block';
+  const wrap = el.closest('.card-menu-wrap');
+  if (wrap) wrap.classList.add('cm-open');
+  // Sobe a pilha: cards/containers com overflow escondido cortam o menu,
+  // e irmãos posteriores ficariam por cima. Eleva e libera até 8 níveis.
+  let p = wrap ? wrap.parentElement : null;
+  let lvl = 0;
+  while (p && p !== document.body && lvl < 8) {
+    const ov = getComputedStyle(p);
+    if (ov.overflowY === 'hidden' || ov.overflowX === 'hidden' || ov.overflow === 'hidden') {
+      p.classList.add('cm-open-anc');
+    } else {
+      p.classList.add('cm-open-z');
+    }
+    p = p.parentElement; lvl++;
+  }
+  // Se não couber para baixo, abre para cima.
+  el.style.top = ''; el.style.bottom = '';
+  const r = el.getBoundingClientRect();
+  if (r.bottom > window.innerHeight - 8 && r.height < window.innerHeight - 80) {
+    el.style.top = 'auto';
+    el.style.bottom = 'calc(100% + 4px)';
+  }
 }
 function closeCardMenus() {
-  document.querySelectorAll('.card-menu-drop').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.card-menu-drop').forEach(el => {
+    el.style.display = 'none'; el.style.top = ''; el.style.bottom = '';
+  });
+  document.querySelectorAll('.cm-open, .cm-open-anc, .cm-open-z').forEach(el => {
+    el.classList.remove('cm-open'); el.classList.remove('cm-open-anc'); el.classList.remove('cm-open-z');
+  });
 }
+
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.card-menu-wrap')) closeCardMenus();
 });
