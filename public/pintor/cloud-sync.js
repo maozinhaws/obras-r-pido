@@ -326,8 +326,8 @@
     if (!sess) { _setStatus('offline'); return false; }
     const email = _normalize(sess.user.email);
     if (!email) { _setStatus('error'); _setErr('Conta sem e-mail.'); return false; }
-    _syncing = true; _setStatus('syncing');
-    try {
+    _cacheSession(sess);
+
       const owner = _owner();
       const foreign = !!owner && owner !== email;
       if (foreign) _wipeLocal();
