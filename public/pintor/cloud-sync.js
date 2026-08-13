@@ -59,12 +59,14 @@
       });
       const { data } = await _sb.auth.getSession();
       if (data?.session) {
+        _cacheSession(data.session);
         _setStatus('pending');
         // Sincroniza automaticamente após boot
         setTimeout(() => cloudSync().catch(() => {}), 1200);
       }
-      _sb.auth.onAuthStateChange((evt) => {
-        if (evt === 'SIGNED_OUT') _setStatus('offline');
+      _sb.auth.onAuthStateChange((evt, session) => {
+        if (evt === 'SIGNED_OUT') { _setStatus('offline'); _cachedSession = null; }
+        else if (session) _cacheSession(session);
         try { window.renderCloudConfig?.(); } catch (e) {}
       });
       return true;
@@ -77,16 +79,48 @@
 
   function _normalize(email) { return String(email || '').trim().toLowerCase(); }
 
-  function cloudGetSession() {
+  // Cache da sessão (o formato do storage do SDK muda entre versões — pode vir
+  // como JSON puro ou prefixado com "base64-"; nunca dependemos só dele).
+  let _cachedSession = null;
+  const SESSION_CACHE_KEY = 'pp-cloud-user';
+  function _cacheSession(session) {
+    const user = session?.user;
+    if (!user?.email) return;
+    _cachedSession = { email: _normalize(user.email), userId: user.id };
+    try { localStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(_cachedSession)); } catch (e) {}
+  }
+  function _readRawStorageSession() {
     try {
-      const raw = localStorage.getItem('pp-cloud-auth');
+      let raw = localStorage.getItem('pp-cloud-auth');
       if (!raw) return null;
+      if (raw.startsWith('base64-')) {
+        raw = decodeURIComponent(escape(atob(raw.slice(7))));
+      }
       const parsed = JSON.parse(raw);
       const user = parsed?.user || parsed?.currentSession?.user || parsed?.session?.user;
       if (!user || !user.email) return null;
       return { email: _normalize(user.email), userId: user.id };
     } catch (e) { return null; }
   }
+  function cloudGetSession() {
+    if (_cachedSession) return _cachedSession;
+    const fromStorage = _readRawStorageSession();
+    if (fromStorage) { _cachedSession = fromStorage; return fromStorage; }
+    try {
+      const cached = JSON.parse(localStorage.getItem(SESSION_CACHE_KEY) || 'null');
+      if (cached?.email) { _cachedSession = cached; return cached; }
+    } catch (e) {}
+    return null;
+  }
+  async function cloudGetSessionAsync() {
+    await window.cloudReady;
+    try {
+      const { data } = await _sb.auth.getSession();
+      if (data?.session) { _cacheSession(data.session); return _cachedSession; }
+    } catch (e) {}
+    return cloudGetSession();
+  }
+
 
   async function cloudSignUp({ email, senha, nome, telefone }) {
     await window.cloudReady;
