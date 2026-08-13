@@ -361,7 +361,9 @@ html.dark .rcard-head { border-bottom-color: rgba(255,255,255,0.08) !important; 
   border-radius: 16px !important;
   backdrop-filter: blur(20px) saturate(170%) !important;
   box-shadow: 0 12px 36px -6px rgba(15,5,40,0.25) !important;
+  z-index: 9000 !important;
 }
+
 html.dark .card-menu-drop {
   background: rgba(20,14,30,0.95) !important;
   border-color: rgba(255,255,255,0.12) !important;
