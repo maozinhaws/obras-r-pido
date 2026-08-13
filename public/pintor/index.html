@@ -6970,15 +6970,27 @@ window.addEventListener('load', () => {
   navigator.serviceWorker?.ready.then(() => _syncAlarmsToSW()).catch(()=>{});
 
   // ── Auth gate ──
+  // Só pede login se, DEPOIS de consultar a sessão da nuvem, realmente não
+  // houver conta ativa. Assim uma sessão válida nunca cai na tela de login
+  // (o que antes fazia o usuário "perder" o orçamento salvo).
   const storedUser = window.ppGetUser?.();
   if (storedUser) {
     _ppShowApp(storedUser);
   } else {
-    _ppShowLogin();
-    // O botão "Entrar com Google" chama _ppTriggerLogin() diretamente,
-    // que usa ppSignIn() (OAuth token client) e já pede o escopo drive.appdata
-    // no primeiro consentimento — sem segundo popup.
+    (async () => {
+      let sess = null;
+      try { sess = (await window.cloudGetSessionAsync?.()) || window.cloudGetSession?.(); } catch (e) {}
+      if (sess?.email) {
+        const appUser = { uid: sess.userId, email: sess.email, name: sess.email, picture: '', signedInAt: new Date().toISOString() };
+        localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
+        _ppShowApp(appUser);
+        try { await window.cloudSync?.(); } catch (e) {}
+      } else {
+        _ppShowLogin();
+      }
+    })();
   }
+
 });
 
 function showTutorial() { document.getElementById('info-modal-title').textContent = '<svg class="ico" aria-hidden="true"><use href="#ico-book"/></svg> Tutorial'; document.getElementById('info-modal-body').innerHTML = `<div style="margin-bottom: 16px;"><b>Bem-vindo ao Pintor Plus!</b></div><ul style="margin-left: 18px; display: flex; flex-direction: column; gap: 12px;"><li><b>1. Criação de Orçamento:</b> Na página inicial, toque em "Criar Novo Orçamento". Preencha os dados e avance.</li><li><b>2. Inserindo Medidas:</b> Clique no grande botão laranja "+ Adicionar Novo Item" para abrir o formulário.</li><li><b>3. CRM e Lembretes:</b> Seus clientes são salvos automaticamente. Utilize a aba "Agenda" para gerenciar retornos.</li></ul>`; document.getElementById('info-modal').style.display = 'flex'; }
