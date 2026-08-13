@@ -6918,7 +6918,7 @@ window.ppDoEmailReset = ppDoEmailReset;
 (async function _ppRestoreCloudSession() {
   try {
     await window.cloudReady;
-    const sess = window.cloudGetSession?.();
+    const sess = (await window.cloudGetSessionAsync?.()) || window.cloudGetSession?.();
     if (!sess || !sess.email) return;
     const stored = window.ppGetUser?.();
     if (!stored || stored.email !== sess.email) {
@@ -6931,6 +6931,7 @@ window.ppDoEmailReset = ppDoEmailReset;
     if (ok) { try { window.renderSyncStatus?.(); } catch (e) {} }
   } catch (e) {}
 })();
+
 
 
 function ppConfirm(message, { title = 'Confirmar', okLabel = 'OK', cancelLabel = 'Cancelar', danger = false } = {}) {
