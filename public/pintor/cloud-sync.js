@@ -394,6 +394,8 @@
   setInterval(() => { if (navigator.onLine) cloudScheduleSync(0); }, 5 * 60 * 1000);
 
   window.cloudGetSession = cloudGetSession;
+  window.cloudGetSessionAsync = cloudGetSessionAsync;
+
   window.cloudSignUp = cloudSignUp;
   window.cloudSignIn = cloudSignIn;
   window.cloudSignOut = cloudSignOut;
