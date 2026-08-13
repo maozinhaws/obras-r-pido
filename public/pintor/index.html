@@ -478,7 +478,11 @@ html.dark .tagline-a, html.dark .tagline-b { color: rgba(255,255,255,0.45); }
 
 .card-menu-btn:active{opacity:.7;}
 
-.card-menu-drop{position:absolute;right:0;top:calc(100% + 4px);z-index:200;background:var(--bg-modal);border:1px solid var(--bdr);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.18);min-width:170px;overflow:hidden;display:none;}
+.card-menu-drop{position:absolute;right:0;top:calc(100% + 4px);z-index:9000;background:var(--bg-modal);border:1px solid var(--bdr);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.18);min-width:170px;overflow:hidden;display:none;}
+.card-menu-wrap.cm-open{z-index:9000!important;}
+.cm-open-anc{overflow:visible!important;position:relative;z-index:8000!important;}
+.cm-open-z{position:relative;z-index:8000!important;}
+
 
 .cmd-item{padding:11px 16px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:8px;}
 
@@ -6914,7 +6918,7 @@ window.ppDoEmailReset = ppDoEmailReset;
 (async function _ppRestoreCloudSession() {
   try {
     await window.cloudReady;
-    const sess = window.cloudGetSession?.();
+    const sess = (await window.cloudGetSessionAsync?.()) || window.cloudGetSession?.();
     if (!sess || !sess.email) return;
     const stored = window.ppGetUser?.();
     if (!stored || stored.email !== sess.email) {
@@ -6927,6 +6931,7 @@ window.ppDoEmailReset = ppDoEmailReset;
     if (ok) { try { window.renderSyncStatus?.(); } catch (e) {} }
   } catch (e) {}
 })();
+
 
 
 function ppConfirm(message, { title = 'Confirmar', okLabel = 'OK', cancelLabel = 'Cancelar', danger = false } = {}) {
@@ -6965,15 +6970,27 @@ window.addEventListener('load', () => {
   navigator.serviceWorker?.ready.then(() => _syncAlarmsToSW()).catch(()=>{});
 
   // ── Auth gate ──
+  // Só pede login se, DEPOIS de consultar a sessão da nuvem, realmente não
+  // houver conta ativa. Assim uma sessão válida nunca cai na tela de login
+  // (o que antes fazia o usuário "perder" o orçamento salvo).
   const storedUser = window.ppGetUser?.();
   if (storedUser) {
     _ppShowApp(storedUser);
   } else {
-    _ppShowLogin();
-    // O botão "Entrar com Google" chama _ppTriggerLogin() diretamente,
-    // que usa ppSignIn() (OAuth token client) e já pede o escopo drive.appdata
-    // no primeiro consentimento — sem segundo popup.
+    (async () => {
+      let sess = null;
+      try { sess = (await window.cloudGetSessionAsync?.()) || window.cloudGetSession?.(); } catch (e) {}
+      if (sess?.email) {
+        const appUser = { uid: sess.userId, email: sess.email, name: sess.email, picture: '', signedInAt: new Date().toISOString() };
+        localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
+        _ppShowApp(appUser);
+        try { await window.cloudSync?.(); } catch (e) {}
+      } else {
+        _ppShowLogin();
+      }
+    })();
   }
+
 });
 
 function showTutorial() { document.getElementById('info-modal-title').textContent = '<svg class="ico" aria-hidden="true"><use href="#ico-book"/></svg> Tutorial'; document.getElementById('info-modal-body').innerHTML = `<div style="margin-bottom: 16px;"><b>Bem-vindo ao Pintor Plus!</b></div><ul style="margin-left: 18px; display: flex; flex-direction: column; gap: 12px;"><li><b>1. Criação de Orçamento:</b> Na página inicial, toque em "Criar Novo Orçamento". Preencha os dados e avance.</li><li><b>2. Inserindo Medidas:</b> Clique no grande botão laranja "+ Adicionar Novo Item" para abrir o formulário.</li><li><b>3. CRM e Lembretes:</b> Seus clientes são salvos automaticamente. Utilize a aba "Agenda" para gerenciar retornos.</li></ul>`; document.getElementById('info-modal').style.display = 'flex'; }
@@ -7334,13 +7351,42 @@ function showFaq() { document.getElementById('info-modal-title').textContent = '
 function toggleCardMenu(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  const isOpen = el.style.display !== 'none';
+  const isOpen = el.style.display === 'block';
   closeCardMenus();
-  if (!isOpen) { el.style.display = 'block'; }
+  if (isOpen) return;
+  el.style.display = 'block';
+  const wrap = el.closest('.card-menu-wrap');
+  if (wrap) wrap.classList.add('cm-open');
+  // Sobe a pilha: cards/containers com overflow escondido cortam o menu,
+  // e irmãos posteriores ficariam por cima. Eleva e libera até 8 níveis.
+  let p = wrap ? wrap.parentElement : null;
+  let lvl = 0;
+  while (p && p !== document.body && lvl < 8) {
+    const ov = getComputedStyle(p);
+    if (ov.overflowY === 'hidden' || ov.overflowX === 'hidden' || ov.overflow === 'hidden') {
+      p.classList.add('cm-open-anc');
+    } else {
+      p.classList.add('cm-open-z');
+    }
+    p = p.parentElement; lvl++;
+  }
+  // Se não couber para baixo, abre para cima.
+  el.style.top = ''; el.style.bottom = '';
+  const r = el.getBoundingClientRect();
+  if (r.bottom > window.innerHeight - 8 && r.height < window.innerHeight - 80) {
+    el.style.top = 'auto';
+    el.style.bottom = 'calc(100% + 4px)';
+  }
 }
 function closeCardMenus() {
-  document.querySelectorAll('.card-menu-drop').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.card-menu-drop').forEach(el => {
+    el.style.display = 'none'; el.style.top = ''; el.style.bottom = '';
+  });
+  document.querySelectorAll('.cm-open, .cm-open-anc, .cm-open-z').forEach(el => {
+    el.classList.remove('cm-open'); el.classList.remove('cm-open-anc'); el.classList.remove('cm-open-z');
+  });
 }
+
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.card-menu-wrap')) closeCardMenus();
 });

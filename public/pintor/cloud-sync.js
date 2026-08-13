@@ -59,12 +59,14 @@
       });
       const { data } = await _sb.auth.getSession();
       if (data?.session) {
+        _cacheSession(data.session);
         _setStatus('pending');
         // Sincroniza automaticamente após boot
         setTimeout(() => cloudSync().catch(() => {}), 1200);
       }
-      _sb.auth.onAuthStateChange((evt) => {
-        if (evt === 'SIGNED_OUT') _setStatus('offline');
+      _sb.auth.onAuthStateChange((evt, session) => {
+        if (evt === 'SIGNED_OUT') { _setStatus('offline'); _cachedSession = null; }
+        else if (session) _cacheSession(session);
         try { window.renderCloudConfig?.(); } catch (e) {}
       });
       return true;
@@ -77,16 +79,48 @@
 
   function _normalize(email) { return String(email || '').trim().toLowerCase(); }
 
-  function cloudGetSession() {
+  // Cache da sessão (o formato do storage do SDK muda entre versões — pode vir
+  // como JSON puro ou prefixado com "base64-"; nunca dependemos só dele).
+  let _cachedSession = null;
+  const SESSION_CACHE_KEY = 'pp-cloud-user';
+  function _cacheSession(session) {
+    const user = session?.user;
+    if (!user?.email) return;
+    _cachedSession = { email: _normalize(user.email), userId: user.id };
+    try { localStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(_cachedSession)); } catch (e) {}
+  }
+  function _readRawStorageSession() {
     try {
-      const raw = localStorage.getItem('pp-cloud-auth');
+      let raw = localStorage.getItem('pp-cloud-auth');
       if (!raw) return null;
+      if (raw.startsWith('base64-')) {
+        raw = decodeURIComponent(escape(atob(raw.slice(7))));
+      }
       const parsed = JSON.parse(raw);
       const user = parsed?.user || parsed?.currentSession?.user || parsed?.session?.user;
       if (!user || !user.email) return null;
       return { email: _normalize(user.email), userId: user.id };
     } catch (e) { return null; }
   }
+  function cloudGetSession() {
+    if (_cachedSession) return _cachedSession;
+    const fromStorage = _readRawStorageSession();
+    if (fromStorage) { _cachedSession = fromStorage; return fromStorage; }
+    try {
+      const cached = JSON.parse(localStorage.getItem(SESSION_CACHE_KEY) || 'null');
+      if (cached?.email) { _cachedSession = cached; return cached; }
+    } catch (e) {}
+    return null;
+  }
+  async function cloudGetSessionAsync() {
+    await window.cloudReady;
+    try {
+      const { data } = await _sb.auth.getSession();
+      if (data?.session) { _cacheSession(data.session); return _cachedSession; }
+    } catch (e) {}
+    return cloudGetSession();
+  }
+
 
   async function cloudSignUp({ email, senha, nome, telefone }) {
     await window.cloudReady;
@@ -137,10 +171,15 @@
   async function cloudSignOut() {
     await window.cloudReady;
     if (!_sb) return;
+    // Garante que o que está no dispositivo já foi para a nuvem antes de sair.
+    try { await cloudSync(); } catch (e) {}
     await _sb.auth.signOut();
+    _cachedSession = null;
+    try { localStorage.removeItem(SESSION_CACHE_KEY); } catch (e) {}
     // O cache local pertence à conta que saiu — limpa para não vazar de conta.
     try { window.cloudWipeLocal?.(); } catch (e) {}
     try { localStorage.removeItem('pp-cloud-owner'); } catch (e) {}
+
     try {
       window.renderHomeMini?.(); window.renderHomeEvents?.();
       window.renderOrcamentosList?.(); window.renderClientes?.();
@@ -253,6 +292,14 @@
   function _owner() { return _normalize(localStorage.getItem(OWNER_KEY) || ''); }
   function _setOwner(email) { localStorage.setItem(OWNER_KEY, _normalize(email)); }
   function _wipeLocal() {
+    // Rede de segurança: nunca descarta dados sem guardar uma cópia local
+    // (recuperável pelo suporte via localStorage 'pp-local-archive').
+    try {
+      const arch = { ts: Date.now(), owner: _owner() };
+      for (const k of KEYS) arch[k] = localStorage.getItem(k);
+      const hasData = KEYS.some((k) => arch[k] && arch[k] !== 'null' && arch[k] !== '[]');
+      if (hasData) localStorage.setItem('pp-local-archive', JSON.stringify(arch));
+    } catch (e) {}
     for (const k of KEYS) { try { localStorage.removeItem(k); } catch (e) {} }
     try {
       if (window.S) {
@@ -263,6 +310,7 @@
       localStorage.removeItem('pp-cloud-lastSync');
     } catch (e) {}
   }
+
   function _emptySnapshot() {
     const s = { versao: 3, ts: Date.now(), exportadoEm: new Date().toISOString() };
     for (const k of KEYS) s[k] = null;
@@ -278,9 +326,11 @@
     if (!sess) { _setStatus('offline'); return false; }
     const email = _normalize(sess.user.email);
     if (!email) { _setStatus('error'); _setErr('Conta sem e-mail.'); return false; }
+    _cacheSession(sess);
     _syncing = true; _setStatus('syncing');
     try {
       const owner = _owner();
+
       const foreign = !!owner && owner !== email;
       if (foreign) _wipeLocal();
       const local = foreign ? _emptySnapshot() : _snapshot();
@@ -344,6 +394,8 @@
   setInterval(() => { if (navigator.onLine) cloudScheduleSync(0); }, 5 * 60 * 1000);
 
   window.cloudGetSession = cloudGetSession;
+  window.cloudGetSessionAsync = cloudGetSessionAsync;
+
   window.cloudSignUp = cloudSignUp;
   window.cloudSignIn = cloudSignIn;
   window.cloudSignOut = cloudSignOut;
