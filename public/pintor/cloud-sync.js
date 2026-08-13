@@ -292,6 +292,14 @@
   function _owner() { return _normalize(localStorage.getItem(OWNER_KEY) || ''); }
   function _setOwner(email) { localStorage.setItem(OWNER_KEY, _normalize(email)); }
   function _wipeLocal() {
+    // Rede de segurança: nunca descarta dados sem guardar uma cópia local
+    // (recuperável pelo suporte via localStorage 'pp-local-archive').
+    try {
+      const arch = { ts: Date.now(), owner: _owner() };
+      for (const k of KEYS) arch[k] = localStorage.getItem(k);
+      const hasData = KEYS.some((k) => arch[k] && arch[k] !== 'null' && arch[k] !== '[]');
+      if (hasData) localStorage.setItem('pp-local-archive', JSON.stringify(arch));
+    } catch (e) {}
     for (const k of KEYS) { try { localStorage.removeItem(k); } catch (e) {} }
     try {
       if (window.S) {
@@ -302,6 +310,7 @@
       localStorage.removeItem('pp-cloud-lastSync');
     } catch (e) {}
   }
+
   function _emptySnapshot() {
     const s = { versao: 3, ts: Date.now(), exportadoEm: new Date().toISOString() };
     for (const k of KEYS) s[k] = null;
