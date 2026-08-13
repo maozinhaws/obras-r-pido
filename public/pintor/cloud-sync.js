@@ -171,10 +171,15 @@
   async function cloudSignOut() {
     await window.cloudReady;
     if (!_sb) return;
+    // Garante que o que está no dispositivo já foi para a nuvem antes de sair.
+    try { await cloudSync(); } catch (e) {}
     await _sb.auth.signOut();
+    _cachedSession = null;
+    try { localStorage.removeItem(SESSION_CACHE_KEY); } catch (e) {}
     // O cache local pertence à conta que saiu — limpa para não vazar de conta.
     try { window.cloudWipeLocal?.(); } catch (e) {}
     try { localStorage.removeItem('pp-cloud-owner'); } catch (e) {}
+
     try {
       window.renderHomeMini?.(); window.renderHomeEvents?.();
       window.renderOrcamentosList?.(); window.renderClientes?.();
