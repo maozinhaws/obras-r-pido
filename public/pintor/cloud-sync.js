@@ -457,6 +457,7 @@
 
   window.cloudSignUp = cloudSignUp;
   window.cloudSignIn = cloudSignIn;
+  window.cloudSignInGoogle = cloudSignInGoogle;
   window.cloudSignOut = cloudSignOut;
   window.cloudRecoverPassword = cloudRecoverPassword;
   window.cloudSync = cloudSync;
