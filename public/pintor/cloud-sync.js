@@ -202,6 +202,25 @@
     return { ok: true };
   }
 
+  // Login com Google (OAuth do backend). Redireciona a página inteira —
+  // sem popup, que era bloqueado no mobile.
+  async function cloudSignInGoogle() {
+    await window.cloudReady;
+    if (!_sb) return { error: 'Backend indisponível.' };
+    const { data, error } = await _sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/pintor/index.html',
+        queryParams: { prompt: 'select_account' },
+      },
+    });
+    if (error) { _setErr(error.message || 'Falha no login com Google.'); return { error: error.message || 'Falha no login com Google.' }; }
+    if (data?.url) { window.location.assign(data.url); return { redirecting: true }; }
+    return { error: 'Não foi possível abrir o login do Google.' };
+  }
+
+
+
   // ── snapshot + merge (portados do drive-sync) ──
   function _snapshot() {
     const s = { versao: 3, ts: Date.now(), exportadoEm: new Date().toISOString() };
@@ -438,6 +457,7 @@
 
   window.cloudSignUp = cloudSignUp;
   window.cloudSignIn = cloudSignIn;
+  window.cloudSignInGoogle = cloudSignInGoogle;
   window.cloudSignOut = cloudSignOut;
   window.cloudRecoverPassword = cloudRecoverPassword;
   window.cloudSync = cloudSync;
