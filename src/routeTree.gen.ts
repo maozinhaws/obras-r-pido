@@ -25,6 +25,7 @@ import { Route as OrcamentosIdRouteImport } from './routes/orcamentos.$id'
 import { Route as OrcamentosIdReciboRouteImport } from './routes/orcamentos.$id.recibo'
 import { Route as ApiPublicSupabaseConfigRouteImport } from './routes/api/public/supabase-config'
 import { Route as ApiPublicGoogleConfigRouteImport } from './routes/api/public/google-config'
+import { Route as ApiPublicExcluirContaRouteImport } from './routes/api/public/excluir-conta'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -106,6 +107,11 @@ const ApiPublicGoogleConfigRoute = ApiPublicGoogleConfigRouteImport.update({
   path: '/api/public/google-config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicExcluirContaRoute = ApiPublicExcluirContaRouteImport.update({
+  id: '/api/public/excluir-conta',
+  path: '/api/public/excluir-conta',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos/': typeof OrcamentosIndexRoute
+  '/api/public/excluir-conta': typeof ApiPublicExcluirContaRoute
   '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
   '/api/public/supabase-config': typeof ApiPublicSupabaseConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos': typeof OrcamentosIndexRoute
+  '/api/public/excluir-conta': typeof ApiPublicExcluirContaRoute
   '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
   '/api/public/supabase-config': typeof ApiPublicSupabaseConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/orcamentos/$id': typeof OrcamentosIdRouteWithChildren
   '/orcamentos/novo': typeof OrcamentosNovoRoute
   '/orcamentos/': typeof OrcamentosIndexRoute
+  '/api/public/excluir-conta': typeof ApiPublicExcluirContaRoute
   '/api/public/google-config': typeof ApiPublicGoogleConfigRoute
   '/api/public/supabase-config': typeof ApiPublicSupabaseConfigRoute
   '/orcamentos/$id/recibo': typeof OrcamentosIdReciboRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/orcamentos/$id'
     | '/orcamentos/novo'
     | '/orcamentos/'
+    | '/api/public/excluir-conta'
     | '/api/public/google-config'
     | '/api/public/supabase-config'
     | '/orcamentos/$id/recibo'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/orcamentos/$id'
     | '/orcamentos/novo'
     | '/orcamentos'
+    | '/api/public/excluir-conta'
     | '/api/public/google-config'
     | '/api/public/supabase-config'
     | '/orcamentos/$id/recibo'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/orcamentos/$id'
     | '/orcamentos/novo'
     | '/orcamentos/'
+    | '/api/public/excluir-conta'
     | '/api/public/google-config'
     | '/api/public/supabase-config'
     | '/orcamentos/$id/recibo'
@@ -228,6 +240,7 @@ export interface RootRouteChildren {
   MaisRoute: typeof MaisRoute
   OrcamentosRoute: typeof OrcamentosRouteWithChildren
   TermosRoute: typeof TermosRoute
+  ApiPublicExcluirContaRoute: typeof ApiPublicExcluirContaRoute
   ApiPublicGoogleConfigRoute: typeof ApiPublicGoogleConfigRoute
   ApiPublicSupabaseConfigRoute: typeof ApiPublicSupabaseConfigRoute
 }
@@ -346,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicGoogleConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/excluir-conta': {
+      id: '/api/public/excluir-conta'
+      path: '/api/public/excluir-conta'
+      fullPath: '/api/public/excluir-conta'
+      preLoaderRoute: typeof ApiPublicExcluirContaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -388,6 +408,7 @@ const rootRouteChildren: RootRouteChildren = {
   MaisRoute: MaisRoute,
   OrcamentosRoute: OrcamentosRouteWithChildren,
   TermosRoute: TermosRoute,
+  ApiPublicExcluirContaRoute: ApiPublicExcluirContaRoute,
   ApiPublicGoogleConfigRoute: ApiPublicGoogleConfigRoute,
   ApiPublicSupabaseConfigRoute: ApiPublicSupabaseConfigRoute,
 }
