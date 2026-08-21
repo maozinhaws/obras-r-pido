@@ -2515,7 +2515,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
             <div style="margin-bottom:18px;">
               <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--ink3);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="#4285F4"><path d="M4.56 17.38 6.17 20.12a1.73 1.73 0 0 0 1.5.88h8.66a1.73 1.73 0 0 0 1.5-.88l1.61-2.74zM12 3a1.73 1.73 0 0 0-1.5.87L3.57 15.5a1.73 1.73 0 0 0 0 1.75l1.5 2.6 3.42-5.93L12 7.48l3.5 6.44 3.43 5.93 1.5-2.6a1.73 1.73 0 0 0 0-1.75L13.5 3.87A1.73 1.73 0 0 0 12 3zm3.5 10.92L12 7.48l-3.5 6.44z"/></svg>
-                Google Drive
+                Conta na Nuvem
               </div>
               <div id="gdrive-backup-info" style="font-size:13px;color:var(--ink3);margin-bottom:10px;line-height:1.5;">Salve backups na nuvem e acesse de qualquer dispositivo.</div>
               <div id="gdrive-cfg-status"></div>
@@ -5822,14 +5822,14 @@ function renderSyncStatus() {
   const btn  = document.getElementById('sync-status-btn');
   const icon = document.getElementById('sync-icon');
   if (!btn || !icon) return;
-  const s = window.getSyncStatus?.() || 'idle';
+  const s = window.getCloudStatus?.() || window.getSyncStatus?.() || 'idle';
   const configs = {
     idle:     { color: 'var(--ink3)',  spin: false, title: 'Dados sincronizados', d: 'M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z' },
     pending:  { color: '#f59e0b',      spin: false, title: 'Sincronização pendente...', d: 'M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z' },
     syncing:  { color: '#6366f1',      spin: true,  title: 'Sincronizando...', d: 'M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15' },
-    ok:       { color: '#22c55e',      spin: false, title: 'Sincronizado com Google Drive', d: 'M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z' },
+    ok:       { color: '#22c55e',      spin: false, title: 'Sincronizado com a nuvem', d: 'M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z' },
     error:    { color: '#ef4444',      spin: false, title: 'Erro ao sincronizar — toque para tentar de novo', d: 'M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z' },
-    offline:  { color: 'var(--ink3)',  spin: false, title: 'Google Drive não conectado', d: 'M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01' },
+    offline:  { color: 'var(--ink3)',  spin: false, title: 'Conta na nuvem não conectada', d: 'M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01' },
   };
   const cfg = configs[s] || configs.idle;
   btn.title = cfg.title;
@@ -6054,21 +6054,22 @@ function renderLogoPreview() {
 
 function openConfig() { canNavigateAsync(() => { S.isDirty = false; document.getElementById('cfg-empresa').value = S.config.empresa || ''; document.getElementById('cfg-tel').value = S.config.tel || ''; document.getElementById('cfg-email-empresa').value = S.config.emailEmpresa || ''; document.getElementById('cfg-end-empresa').value = S.config.endEmpresa || ''; document.getElementById('cfg-doc').value = S.config.doc || ''; document.getElementById('cfg-msg').value = S.config.msg || defCfg.msg; document.getElementById('cfg-servicos').value = S.config.servicos || defCfg.servicos; document.getElementById('cfg-pgto').value = S.config.pgto || defCfg.pgto; document.getElementById('cfg-status').value = S.config.statusList || defCfg.statusList; const fn=document.getElementById('cfg-flash-nomes'); if(fn) fn.value=S.config.flashNomes||defCfg.flashNomes; const fs=document.getElementById('cfg-flash-servicos'); if(fs) fs.value=S.config.flashServicos||defCfg.flashServicos; const fm=document.getElementById('cfg-flash-materiais'); if(fm) fm.value=S.config.flashMateriais||defCfg.flashMateriais; renderLogoPreview(); renderSigPreview(); const _fs=(S.config.fsScale)||(S.config.acessibilidade?'g':'m'); document.querySelectorAll('#cfg-fs-row .a-fs-btn').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-fs')===_fs); }); const ctSw=document.getElementById('cfg-contraste-sw'); if(ctSw) ctSw.classList.toggle('on', !!S.config.contrasteAlto); _cfgDirty = false; const cu = window.ppGetUser?.(); if(cu){ const av=document.getElementById('cfg-user-avatar'); const nm=document.getElementById('cfg-user-name'); const em=document.getElementById('cfg-user-email'); if(av&&cu.picture){av.src=cu.picture;av.style.display='block';} if(nm)nm.textContent=cu.name||'Usuário'; if(em)em.textContent=cu.email||'Modo offline'; } window.renderGoogleStatus?.(); window.renderGdriveConfig?.(); showPage('pg-config'); }); }
 
-// ── Google Drive inline UI nas Configurações > Backup ────────────────
-window.renderGdriveConfig = function renderGdriveConfig() {
+// ── Conta na Nuvem (Lovable Cloud) — UI nas Configurações > Backup ───
+window.renderCloudConfig = function renderCloudConfig() {
   const statusEl = document.getElementById('gdrive-cfg-status');
   const btnsEl = document.getElementById('gdrive-backup-btns');
   const infoEl = document.getElementById('gdrive-backup-info');
   if (!statusEl || !btnsEl) return;
-  const user = window.ppGetUser?.();
-  const email = user?.email || localStorage.getItem('pp-gdrive-email') || '';
-  const lastSync = localStorage.getItem('pp-gdrive-lastSync') || '';
-  const s = window.getSyncStatus?.() || 'offline';
-  const lastError = window.getSyncLastError?.() || localStorage.getItem('pp-gdrive-lastError') || '';
+  const sess = window.cloudGetSession?.();
+  const user = window.ppGetUser?.() || (sess ? { email: sess.email } : null);
+  const email = sess?.email || user?.email || '';
+  const s = window.getCloudStatus?.() || 'offline';
+  const lastError = window.getCloudLastError?.() || localStorage.getItem('pp-cloud-lastError') || '';
+  const lastSync = localStorage.getItem('pp-cloud-lastSync') || '';
   const stLabel = { idle:'Aguardando', pending:'Sincronização pendente…', syncing:'Sincronizando…', ok:'Sincronizado', error:'Falha ao sincronizar', offline:'Desconectado' }[s] || '';
   const stColor = { syncing:'#6366f1', ok:'#22c55e', error:'#ef4444', pending:'#f59e0b' }[s] || 'var(--ink3)';
   if (user && email) {
-    if (infoEl) infoEl.textContent = 'Clientes, orçamentos, fotos e eventos ficam em um backup único da sua conta Google. Ao entrar em outro aparelho, o app baixa e mescla esse backup antes de enviar alterações.';
+    if (infoEl) infoEl.textContent = 'Clientes, orçamentos, fotos e eventos ficam em um backup único da sua conta na nuvem. Ao entrar em outro aparelho com a mesma conta, o app baixa e mescla esses dados automaticamente.';
     statusEl.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--bdr);border-radius:12px;background:var(--bg-input);margin-bottom:10px;">
         <div style="width:32px;height:32px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -6084,11 +6085,14 @@ window.renderGdriveConfig = function renderGdriveConfig() {
       <button onclick="window.gdriveBackupNow()" ${s==='syncing'?'disabled':''} style="width:100%;height:48px;border-radius:12px;background:linear-gradient(135deg,#ff6b35,#7b5cff);border:none;font-family:'Sora',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;opacity:${s==='syncing'?'.6':'1'};">
         <svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> ${s==='syncing'?'Sincronizando…':'Sincronizar agora'}
       </button>
-      <button onclick="window.gdriveDisconnect()" style="width:100%;height:40px;border-radius:10px;background:transparent;border:1px solid var(--bdr);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;">
-        Desconectar conta
+      <button onclick="window.cloudSignOut?.()" style="width:100%;height:40px;border-radius:10px;background:transparent;border:1px solid var(--bdr);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;">
+        Sair da conta
+      </button>
+      <button onclick="window.ppDeleteAccount()" style="width:100%;height:40px;border-radius:10px;background:transparent;border:1px solid #fecaca;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:#dc2626;cursor:pointer;margin-top:8px;">
+        Excluir conta e dados definitivamente
       </button>`;
   } else {
-    if (infoEl) infoEl.textContent = 'Conecte sua conta Google para salvar clientes, orçamentos e fotos na nuvem e acessar de qualquer dispositivo.';
+    if (infoEl) infoEl.textContent = 'Entre com sua conta (e-mail, senha e telefone) ou pelo Google para salvar clientes, orçamentos e fotos na nuvem e acessar de qualquer aparelho.';
     statusEl.innerHTML = '';
     btnsEl.innerHTML = `
       <button onclick="window.gdriveConnect()" style="width:100%;height:48px;border-radius:12px;background:#fff;border:1.5px solid #dadce0;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;color:#3c4043;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;">
@@ -6145,8 +6149,30 @@ window.gdriveDisconnect = async function gdriveDisconnect() {
     localStorage.removeItem('pp-gdrive-lastSync');
     if (typeof window.ppSignOut === 'function') await window.ppSignOut();
   } catch(e) {}
-  window.renderGdriveConfig();
+  window.renderCloudConfig?.();
   toast('Conta desconectada.');
+};
+
+// Alias de compatibilidade (a UI de backup agora é da conta na nuvem)
+window.renderGdriveConfig = function () { return window.renderCloudConfig?.(); };
+
+// ── LGPD: exclusão definitiva da conta e dos dados ──
+window.ppDeleteAccount = async function ppDeleteAccount() {
+  const ok = await (window.ppConfirm?.(
+    'Isso apaga <b>para sempre</b> sua conta, o backup na nuvem e os dados deste aparelho (orçamentos, clientes, fornecedores, agenda e configurações). Não há como recuperar depois. Exporte um arquivo de backup antes, se quiser guardar uma cópia.',
+    { title: 'Excluir conta e dados?', okLabel: 'Excluir tudo', cancelLabel: 'Cancelar', danger: true },
+  ) ?? Promise.resolve(confirm('Excluir conta e todos os dados definitivamente?')));
+  if (!ok) return;
+  toast('Excluindo conta e dados…');
+  const res = await window.cloudDeleteAccount?.();
+  if (res?.error) { toast('Não foi possível excluir: ' + res.error); return; }
+  try {
+    localStorage.removeItem('pp-auth-user');
+    localStorage.removeItem('pp-local-archive');
+    localStorage.removeItem('pp-pending-sync');
+  } catch (e) {}
+  toast('Conta e dados excluídos.');
+  setTimeout(() => { try { location.reload(); } catch (e) {} }, 900);
 };
 function saveConfig() {
   S.config = { empresa: document.getElementById('cfg-empresa').value, tel: document.getElementById('cfg-tel').value, emailEmpresa: document.getElementById('cfg-email-empresa').value, endEmpresa: document.getElementById('cfg-end-empresa').value, doc: document.getElementById('cfg-doc').value, msg: document.getElementById('cfg-msg').value, servicos: document.getElementById('cfg-servicos').value, pgto: document.getElementById('cfg-pgto').value, statusList: document.getElementById('cfg-status').value, skipDelConfirm: S.config.skipDelConfirm || false, skipDirtyConfirm: S.config.skipDirtyConfirm || false, logo: S.config.logo || '', assinatura: S.config.assinatura || '', acessibilidade: S.config.acessibilidade || false, fsScale: S.config.fsScale || 'm', contrasteAlto: !!S.config.contrasteAlto, flashNomes: (document.getElementById('cfg-flash-nomes')||{}).value||defCfg.flashNomes, flashServicos: (document.getElementById('cfg-flash-servicos')||{}).value||defCfg.flashServicos, flashMateriais: (document.getElementById('cfg-flash-materiais')||{}).value||defCfg.flashMateriais };
@@ -7845,7 +7871,7 @@ async function gDriveSyncClientes() {
 <!-- Photo Annotator module -->
 <script src="/photo-annotator.js"></script>
 <!-- Google Drive sync (appDataFolder) -->
-<script src="/pintor/cloud-sync.js?v=2"></script>
+<script src="/pintor/cloud-sync.js?v=3"></script>
 <script src="/pintor/drive-sync.js?v=7"></script>
 <script>
 // ── Photo Viewer + PhotoAnnotator + Flash Camera Bridge ──

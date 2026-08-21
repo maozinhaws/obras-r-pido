@@ -373,6 +373,46 @@
     _schedTimer = setTimeout(() => { cloudSync().catch(() => {}); }, typeof delay === 'number' ? delay : 3000);
   }
 
+  // ── Exclusão definitiva (LGPD — art. 18, VI) ──
+  async function cloudDeleteAccount() {
+    await window.cloudReady;
+    if (!_sb) return { error: 'Backend indisponível.' };
+    const { data } = await _sb.auth.getSession();
+    const sess = data?.session;
+    if (!sess?.access_token) return { error: 'Sessão não encontrada. Entre novamente.' };
+    try {
+      const r = await fetch('/api/public/excluir-conta', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + sess.access_token },
+      });
+      if (!r.ok) {
+        let msg = 'Falha ao excluir a conta.';
+        try { const b = await r.json(); if (b?.error) msg = b.error; } catch (e) {}
+        return { error: msg };
+      }
+      // Limpa tudo que pertence a esta conta neste dispositivo.
+      _cachedSession = null;
+      try { localStorage.removeItem(SESSION_CACHE_KEY); } catch (e) {}
+      try { localStorage.removeItem('pp-cloud-owner'); } catch (e) {}
+      try { localStorage.removeItem('pp-cloud-auth'); } catch (e) {}
+      try { localStorage.removeItem('pp-cloud-lastSync'); } catch (e) {}
+      try { localStorage.removeItem('pp-cloud-lastError'); } catch (e) {}
+      for (const k of KEYS) { try { localStorage.removeItem(k); } catch (e) {} }
+      try {
+        if (window.S) {
+          window.S.config = { ...(window.defCfg || {}) };
+          window.S.orcs = []; window.S.clientes = [];
+          window.S.fornecedores = []; window.S.eventos = [];
+        }
+      } catch (e) {}
+      _setStatus('offline');
+      return { ok: true };
+    } catch (e) {
+      console.warn('[cloud-sync] excluir conta falhou', e);
+      return { error: e?.message || 'Falha ao excluir a conta. Verifique sua conexão.' };
+    }
+  }
+
   // Encadeia no scheduleSync do Drive (definido depois deste script)
   function _hookScheduleSync() {
     const prev = typeof window.scheduleSync === 'function' ? window.scheduleSync : null;
@@ -402,6 +442,7 @@
   window.cloudRecoverPassword = cloudRecoverPassword;
   window.cloudSync = cloudSync;
   window.cloudScheduleSync = cloudScheduleSync;
+  window.cloudDeleteAccount = cloudDeleteAccount;
   window.getCloudStatus = getCloudStatus;
   window.getCloudLastError = getCloudLastError;
 })();
