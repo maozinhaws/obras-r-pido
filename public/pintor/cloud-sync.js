@@ -379,8 +379,13 @@
     await window.cloudReady;
     if (!_sb) return false;
     if (_syncing) return false;
-    const sess = (await _sb.auth.getSession()).data.session;
-    if (!sess) { _setStatus('offline'); return false; }
+    const sess = await _requireSession();
+    if (!sess) {
+      _setErr('Conta desconectada. Entre novamente para sincronizar.');
+      _setStatus('offline');
+      return false;
+    }
+
     const email = _normalize(sess.user.email);
     if (!email) { _setStatus('error'); _setErr('Conta sem e-mail.'); return false; }
     _cacheSession(sess);
