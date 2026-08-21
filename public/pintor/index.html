@@ -6823,9 +6823,14 @@ window.ppGetUser = function ppGetUser() {
     const s = window.cloudGetSession?.();
     if (s?.email) return { uid: s.userId, email: s.email, name: s.email, picture: '' };
     const u = JSON.parse(localStorage.getItem('pp-auth-user') || 'null');
-    return u && (u.email || u.uid) ? u : null;
+    if (!u) return null;
+    // Usuário com e-mail só é válido se existir sessão real na nuvem
+    // (evita o app dizer "conectado" sem estar de fato).
+    if (u.email) return null;
+    return u.uid ? u : null;
   } catch (e) { return null; }
 };
+
 window.ppSignIn = async function ppSignIn() {
   const res = await window.cloudSignInGoogle?.();
   if (res?.error) { toast(res.error); return null; }
