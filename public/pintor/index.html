@@ -6823,9 +6823,14 @@ window.ppGetUser = function ppGetUser() {
     const s = window.cloudGetSession?.();
     if (s?.email) return { uid: s.userId, email: s.email, name: s.email, picture: '' };
     const u = JSON.parse(localStorage.getItem('pp-auth-user') || 'null');
-    return u && (u.email || u.uid) ? u : null;
+    if (!u) return null;
+    // Usuário com e-mail só é válido se existir sessão real na nuvem
+    // (evita o app dizer "conectado" sem estar de fato).
+    if (u.email) return null;
+    return u.uid ? u : null;
   } catch (e) { return null; }
 };
+
 window.ppSignIn = async function ppSignIn() {
   const res = await window.cloudSignInGoogle?.();
   if (res?.error) { toast(res.error); return null; }
@@ -6948,7 +6953,7 @@ window.ppDoEmailReset = ppDoEmailReset;
 (async function _ppRestoreCloudSession() {
   try {
     await window.cloudReady;
-    const sess = (await window.cloudGetSessionAsync?.()) || window.cloudGetSession?.();
+    const sess = await window.cloudGetSessionAsync?.();
     if (!sess || !sess.email) return;
     const stored = window.ppGetUser?.();
     if (!stored || stored.email !== sess.email) {
@@ -7005,22 +7010,24 @@ window.addEventListener('load', () => {
   // houver conta ativa. Assim uma sessão válida nunca cai na tela de login
   // (o que antes fazia o usuário "perder" o orçamento salvo).
   const storedUser = window.ppGetUser?.();
-  if (storedUser) {
-    _ppShowApp(storedUser);
+  if (storedUser && !storedUser.email) {
+    _ppShowApp(storedUser); // modo offline explícito
   } else {
     (async () => {
       let sess = null;
-      try { sess = (await window.cloudGetSessionAsync?.()) || window.cloudGetSession?.(); } catch (e) {}
+      try { sess = await window.cloudGetSessionAsync?.(); } catch (e) {}
       if (sess?.email) {
         const appUser = { uid: sess.userId, email: sess.email, name: sess.email, picture: '', signedInAt: new Date().toISOString() };
         localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
         _ppShowApp(appUser);
         try { await window.cloudSync?.(); } catch (e) {}
       } else {
+        try { localStorage.removeItem('pp-auth-user'); } catch (e) {}
         _ppShowLogin();
       }
     })();
   }
+
 
 });
 

@@ -57,18 +57,27 @@
           storageKey: 'pp-cloud-auth',
         },
       });
-      const { data } = await _sb.auth.getSession();
-      if (data?.session) {
-        _cacheSession(data.session);
+      let sess = (await _sb.auth.getSession()).data?.session || null;
+      if (!sess) {
+        // Pode ser só token expirado: tenta renovar antes de considerar deslogado.
+        try { sess = (await _sb.auth.refreshSession()).data?.session || null; } catch (e) {}
+      }
+      if (sess) {
+        _cacheSession(sess);
         _setStatus('pending');
         // Sincroniza automaticamente após boot
         setTimeout(() => cloudSync().catch(() => {}), 1200);
+      } else {
+        // Não existe sessão real → nunca mostrar "conectado".
+        _forgetSession();
+        _setStatus('offline');
       }
       _sb.auth.onAuthStateChange((evt, session) => {
-        if (evt === 'SIGNED_OUT') { _setStatus('offline'); _cachedSession = null; }
+        if (evt === 'SIGNED_OUT') { _setStatus('offline'); _forgetSession(); }
         else if (session) _cacheSession(session);
         try { window.renderCloudConfig?.(); } catch (e) {}
       });
+
       return true;
     } catch (e) {
       console.warn('[cloud-sync] boot falhou', e);
@@ -102,7 +111,26 @@
       return { email: _normalize(user.email), userId: user.id };
     } catch (e) { return null; }
   }
+  // Apaga qualquer vestígio de "conta conectada" quando não há sessão real.
+  function _forgetSession() {
+    _cachedSession = null;
+    try { localStorage.removeItem(SESSION_CACHE_KEY); } catch (e) {}
+    try {
+      const u = JSON.parse(localStorage.getItem('pp-auth-user') || 'null');
+      // Mantém apenas o modo offline (sem e-mail); remove conta "fantasma".
+      if (u && u.email) localStorage.removeItem('pp-auth-user');
+    } catch (e) {}
+    try { window.renderCloudConfig?.(); } catch (e) {}
+    try { window.renderSyncStatus?.(); } catch (e) {}
+  }
   function cloudGetSession() {
+    // Só existe sessão se o SDK tiver credenciais no storage. Sem isso o cache
+    // é lixo antigo e faria o app dizer "conectado" sem estar de fato.
+    const hasSdkSession = !!localStorage.getItem('pp-cloud-auth');
+    if (!hasSdkSession) {
+      if (_cachedSession) _forgetSession();
+      return null;
+    }
     if (_cachedSession) return _cachedSession;
     const fromStorage = _readRawStorageSession();
     if (fromStorage) { _cachedSession = fromStorage; return fromStorage; }
@@ -112,14 +140,24 @@
     } catch (e) {}
     return null;
   }
-  async function cloudGetSessionAsync() {
+  // Garante uma sessão válida (renova o token se necessário).
+  async function _requireSession() {
     await window.cloudReady;
-    try {
-      const { data } = await _sb.auth.getSession();
-      if (data?.session) { _cacheSession(data.session); return _cachedSession; }
-    } catch (e) {}
-    return cloudGetSession();
+    if (!_sb) return null;
+    let sess = null;
+    try { sess = (await _sb.auth.getSession()).data?.session || null; } catch (e) {}
+    if (!sess) {
+      try { sess = (await _sb.auth.refreshSession()).data?.session || null; } catch (e) {}
+    }
+    if (!sess) { _forgetSession(); return null; }
+    _cacheSession(sess);
+    return sess;
   }
+  async function cloudGetSessionAsync() {
+    const sess = await _requireSession();
+    return sess ? _cachedSession : null;
+  }
+
 
 
   async function cloudSignUp({ email, senha, nome, telefone }) {
@@ -341,8 +379,13 @@
     await window.cloudReady;
     if (!_sb) return false;
     if (_syncing) return false;
-    const sess = (await _sb.auth.getSession()).data.session;
-    if (!sess) { _setStatus('offline'); return false; }
+    const sess = await _requireSession();
+    if (!sess) {
+      _setErr('Conta desconectada. Entre novamente para sincronizar.');
+      _setStatus('offline');
+      return false;
+    }
+
     const email = _normalize(sess.user.email);
     if (!email) { _setStatus('error'); _setErr('Conta sem e-mail.'); return false; }
     _cacheSession(sess);
@@ -396,19 +439,23 @@
   async function cloudDeleteAccount() {
     await window.cloudReady;
     if (!_sb) return { error: 'Backend indisponível.' };
-    const { data } = await _sb.auth.getSession();
-    const sess = data?.session;
-    if (!sess?.access_token) return { error: 'Sessão não encontrada. Entre novamente.' };
+    const sess = await _requireSession();
+    if (!sess?.access_token) return { error: 'Conta desconectada. Entre novamente para excluir seus dados.' };
     try {
       const r = await fetch('/api/public/excluir-conta', {
         method: 'POST',
-        headers: { Authorization: 'Bearer ' + sess.access_token },
+        headers: { Authorization: 'Bearer ' + sess.access_token, 'content-type': 'application/json' },
+        body: '{}',
       });
       if (!r.ok) {
         let msg = 'Falha ao excluir a conta.';
         try { const b = await r.json(); if (b?.error) msg = b.error; } catch (e) {}
+        if (r.status === 401) msg = 'Sessão expirada. Entre novamente e repita a exclusão.';
+        if (r.status === 404) msg = 'Serviço de exclusão indisponível nesta versão do app. Atualize a página e tente novamente.';
         return { error: msg };
       }
+      try { await _sb.auth.signOut(); } catch (e) {}
+
       // Limpa tudo que pertence a esta conta neste dispositivo.
       _cachedSession = null;
       try { localStorage.removeItem(SESSION_CACHE_KEY); } catch (e) {}
@@ -416,7 +463,10 @@
       try { localStorage.removeItem('pp-cloud-auth'); } catch (e) {}
       try { localStorage.removeItem('pp-cloud-lastSync'); } catch (e) {}
       try { localStorage.removeItem('pp-cloud-lastError'); } catch (e) {}
+      try { localStorage.removeItem('pp-auth-user'); } catch (e) {}
+      try { localStorage.removeItem('pp-local-archive'); } catch (e) {}
       for (const k of KEYS) { try { localStorage.removeItem(k); } catch (e) {} }
+
       try {
         if (window.S) {
           window.S.config = { ...(window.defCfg || {}) };

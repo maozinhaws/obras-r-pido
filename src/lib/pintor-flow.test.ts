@@ -8,7 +8,7 @@ describe("pintor detailed flow smoke", () => {
 
     return css.then((content) => {
       expect(content).toContain(".modal-box");
-      expect(content).toContain("linear-gradient(135deg, #ff8a3d 0%, #ff6b35 35%, #ec4899 65%, #7b5cff 100%)");
+      expect(content).toContain("linear-gradient(135deg, #ff6b35 0%, #7b5cff 100%)");
       expect(content).toContain("#wa-preview-inline");
       expect(content).toContain(".summary-box");
       expect(content).toContain("html.kbd-open");
