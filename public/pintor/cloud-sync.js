@@ -463,7 +463,10 @@
       try { localStorage.removeItem('pp-cloud-auth'); } catch (e) {}
       try { localStorage.removeItem('pp-cloud-lastSync'); } catch (e) {}
       try { localStorage.removeItem('pp-cloud-lastError'); } catch (e) {}
+      try { localStorage.removeItem('pp-auth-user'); } catch (e) {}
+      try { localStorage.removeItem('pp-local-archive'); } catch (e) {}
       for (const k of KEYS) { try { localStorage.removeItem(k); } catch (e) {} }
+
       try {
         if (window.S) {
           window.S.config = { ...(window.defCfg || {}) };
