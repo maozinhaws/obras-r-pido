@@ -439,19 +439,23 @@
   async function cloudDeleteAccount() {
     await window.cloudReady;
     if (!_sb) return { error: 'Backend indisponível.' };
-    const { data } = await _sb.auth.getSession();
-    const sess = data?.session;
-    if (!sess?.access_token) return { error: 'Sessão não encontrada. Entre novamente.' };
+    const sess = await _requireSession();
+    if (!sess?.access_token) return { error: 'Conta desconectada. Entre novamente para excluir seus dados.' };
     try {
       const r = await fetch('/api/public/excluir-conta', {
         method: 'POST',
-        headers: { Authorization: 'Bearer ' + sess.access_token },
+        headers: { Authorization: 'Bearer ' + sess.access_token, 'content-type': 'application/json' },
+        body: '{}',
       });
       if (!r.ok) {
         let msg = 'Falha ao excluir a conta.';
         try { const b = await r.json(); if (b?.error) msg = b.error; } catch (e) {}
+        if (r.status === 401) msg = 'Sessão expirada. Entre novamente e repita a exclusão.';
+        if (r.status === 404) msg = 'Serviço de exclusão indisponível nesta versão do app. Atualize a página e tente novamente.';
         return { error: msg };
       }
+      try { await _sb.auth.signOut(); } catch (e) {}
+
       // Limpa tudo que pertence a esta conta neste dispositivo.
       _cachedSession = null;
       try { localStorage.removeItem(SESSION_CACHE_KEY); } catch (e) {}
