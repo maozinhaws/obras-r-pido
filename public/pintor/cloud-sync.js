@@ -57,18 +57,27 @@
           storageKey: 'pp-cloud-auth',
         },
       });
-      const { data } = await _sb.auth.getSession();
-      if (data?.session) {
-        _cacheSession(data.session);
+      let sess = (await _sb.auth.getSession()).data?.session || null;
+      if (!sess) {
+        // Pode ser só token expirado: tenta renovar antes de considerar deslogado.
+        try { sess = (await _sb.auth.refreshSession()).data?.session || null; } catch (e) {}
+      }
+      if (sess) {
+        _cacheSession(sess);
         _setStatus('pending');
         // Sincroniza automaticamente após boot
         setTimeout(() => cloudSync().catch(() => {}), 1200);
+      } else {
+        // Não existe sessão real → nunca mostrar "conectado".
+        _forgetSession();
+        _setStatus('offline');
       }
       _sb.auth.onAuthStateChange((evt, session) => {
-        if (evt === 'SIGNED_OUT') { _setStatus('offline'); _cachedSession = null; }
+        if (evt === 'SIGNED_OUT') { _setStatus('offline'); _forgetSession(); }
         else if (session) _cacheSession(session);
         try { window.renderCloudConfig?.(); } catch (e) {}
       });
+
       return true;
     } catch (e) {
       console.warn('[cloud-sync] boot falhou', e);
