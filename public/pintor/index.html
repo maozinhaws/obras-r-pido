@@ -6953,7 +6953,7 @@ window.ppDoEmailReset = ppDoEmailReset;
 (async function _ppRestoreCloudSession() {
   try {
     await window.cloudReady;
-    const sess = (await window.cloudGetSessionAsync?.()) || window.cloudGetSession?.();
+    const sess = await window.cloudGetSessionAsync?.();
     if (!sess || !sess.email) return;
     const stored = window.ppGetUser?.();
     if (!stored || stored.email !== sess.email) {
