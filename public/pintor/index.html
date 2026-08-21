@@ -6104,23 +6104,11 @@ window.renderCloudConfig = function renderCloudConfig() {
 
 window.gdriveConnect = async function gdriveConnect() {
   try {
-    if (typeof window.ppSignIn === 'function') {
-      const user = await window.ppSignIn();
-      if (user) {
-        try { window._ppShowApp?.(user); } catch(e) {}
-        toast('<svg class="ico" aria-hidden="true"><use href="#ico-database"/></svg> Sincronizando dados do Google Drive…');
-        if (typeof window.backupAutoSync === 'function') await window.backupAutoSync({ interactive: false });
-        try { window.renderGoogleStatus?.(); } catch(e) {}
-        window.renderGdriveConfig();
-        toast('<svg class="ico" aria-hidden="true"><use href="#ico-check-circle"/></svg> Conta Google conectada e sincronizada!');
-        return;
-      }
-    }
-    // Fallback: se não está logado, usa o mesmo fluxo da tela de intro
     toast('Abrindo login do Google…');
-    window.location.reload();
+    const res = await window.cloudSignInGoogle?.();
+    if (res?.error) toast(res.error);
   } catch (e) {
-    console.warn('[gdrive] connect falhou', e);
+    console.warn('[cloud] login Google falhou', e);
     toast('Não foi possível conectar agora.');
   }
 };
@@ -6279,7 +6267,6 @@ function acceptTerms() {
 }
 
 function rejectTerms() {
-  document.getElementById('terms-modal').style.display = 'none';
   toast('<svg class="ico" aria-hidden="true"><use href="#ico-alert"/></svg> É necessário aceitar os Termos para usar o Pintor Plus.');
 }
 // ─────────────────────────────────────────────────────────────
@@ -6830,17 +6817,34 @@ function _ppShowLogin() {
   setTimeout(() => { loginEl.style.opacity = '1'; }, 10);
 }
 
+// ── Compat: funções que antes vinham do drive-sync, agora servidas pela Nuvem ──
+window.ppGetUser = function ppGetUser() {
+  try {
+    const s = window.cloudGetSession?.();
+    if (s?.email) return { uid: s.userId, email: s.email, name: s.email, picture: '' };
+    const u = JSON.parse(localStorage.getItem('pp-auth-user') || 'null');
+    return u && (u.email || u.uid) ? u : null;
+  } catch (e) { return null; }
+};
+window.ppSignIn = async function ppSignIn() {
+  const res = await window.cloudSignInGoogle?.();
+  if (res?.error) { toast(res.error); return null; }
+  return null; // redireciona para o Google; a sessão volta no retorno
+};
+window.ppSignOut = async function ppSignOut() {
+  try { await window.cloudSignOut?.(); } catch (e) {}
+  try { localStorage.removeItem('pp-auth-user'); } catch (e) {}
+};
+window.getSyncLastError = function () { return window.getCloudLastError?.() || ''; };
+window.getSyncStatus = function () { return window.getCloudStatus?.() || 'offline'; };
+
 async function _ppTriggerLogin() {
   // Fluxo OAuth único que já concede drive.appdata na primeira consentida.
   // Evita o passo duplo do GIS ID Token → OAuth token, cujo segundo popup
   // era bloqueado no mobile e deixava a conta "conectada" sem token de Drive.
-  const user = await window.ppSignIn?.();
-  if (user) {
-    _ppShowApp(user);
-    _ppSyncAfterLogin(user);
-  } else {
-    toast(window.getSyncLastError?.() || 'Não foi possível conectar ao Google.');
-  }
+  toast('Abrindo login do Google…');
+  const res = await window.cloudSignInGoogle?.();
+  if (res?.error) toast(res.error);
 }
 window._ppTriggerLogin = _ppTriggerLogin;
 
@@ -6992,6 +6996,7 @@ async function ppLogoutConfirm() {
 
 window.addEventListener('load', () => {
   try { history.replaceState({ page: 'pg-home' }, '', '#pg-home'); } catch(e) {}
+  if (!_hasAcceptedTerms('local')) showTermsModal();
   renderHomeMini(); renderHomeEvents(); renderHomeNews(); buildSteps(1); attachEnterNav(); populateStatusSelect(); loadGoogleMaps();
   navigator.serviceWorker?.ready.then(() => _syncAlarmsToSW()).catch(()=>{});
 
