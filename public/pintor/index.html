@@ -7010,22 +7010,24 @@ window.addEventListener('load', () => {
   // houver conta ativa. Assim uma sessão válida nunca cai na tela de login
   // (o que antes fazia o usuário "perder" o orçamento salvo).
   const storedUser = window.ppGetUser?.();
-  if (storedUser) {
-    _ppShowApp(storedUser);
+  if (storedUser && !storedUser.email) {
+    _ppShowApp(storedUser); // modo offline explícito
   } else {
     (async () => {
       let sess = null;
-      try { sess = (await window.cloudGetSessionAsync?.()) || window.cloudGetSession?.(); } catch (e) {}
+      try { sess = await window.cloudGetSessionAsync?.(); } catch (e) {}
       if (sess?.email) {
         const appUser = { uid: sess.userId, email: sess.email, name: sess.email, picture: '', signedInAt: new Date().toISOString() };
         localStorage.setItem('pp-auth-user', JSON.stringify(appUser));
         _ppShowApp(appUser);
         try { await window.cloudSync?.(); } catch (e) {}
       } else {
+        try { localStorage.removeItem('pp-auth-user'); } catch (e) {}
         _ppShowLogin();
       }
     })();
   }
+
 
 });
 
