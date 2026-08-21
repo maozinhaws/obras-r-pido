@@ -111,7 +111,26 @@
       return { email: _normalize(user.email), userId: user.id };
     } catch (e) { return null; }
   }
+  // Apaga qualquer vestígio de "conta conectada" quando não há sessão real.
+  function _forgetSession() {
+    _cachedSession = null;
+    try { localStorage.removeItem(SESSION_CACHE_KEY); } catch (e) {}
+    try {
+      const u = JSON.parse(localStorage.getItem('pp-auth-user') || 'null');
+      // Mantém apenas o modo offline (sem e-mail); remove conta "fantasma".
+      if (u && u.email) localStorage.removeItem('pp-auth-user');
+    } catch (e) {}
+    try { window.renderCloudConfig?.(); } catch (e) {}
+    try { window.renderSyncStatus?.(); } catch (e) {}
+  }
   function cloudGetSession() {
+    // Só existe sessão se o SDK tiver credenciais no storage. Sem isso o cache
+    // é lixo antigo e faria o app dizer "conectado" sem estar de fato.
+    const hasSdkSession = !!localStorage.getItem('pp-cloud-auth');
+    if (!hasSdkSession) {
+      if (_cachedSession) _forgetSession();
+      return null;
+    }
     if (_cachedSession) return _cachedSession;
     const fromStorage = _readRawStorageSession();
     if (fromStorage) { _cachedSession = fromStorage; return fromStorage; }
@@ -121,14 +140,24 @@
     } catch (e) {}
     return null;
   }
-  async function cloudGetSessionAsync() {
+  // Garante uma sessão válida (renova o token se necessário).
+  async function _requireSession() {
     await window.cloudReady;
-    try {
-      const { data } = await _sb.auth.getSession();
-      if (data?.session) { _cacheSession(data.session); return _cachedSession; }
-    } catch (e) {}
-    return cloudGetSession();
+    if (!_sb) return null;
+    let sess = null;
+    try { sess = (await _sb.auth.getSession()).data?.session || null; } catch (e) {}
+    if (!sess) {
+      try { sess = (await _sb.auth.refreshSession()).data?.session || null; } catch (e) {}
+    }
+    if (!sess) { _forgetSession(); return null; }
+    _cacheSession(sess);
+    return sess;
   }
+  async function cloudGetSessionAsync() {
+    const sess = await _requireSession();
+    return sess ? _cachedSession : null;
+  }
+
 
 
   async function cloudSignUp({ email, senha, nome, telefone }) {
