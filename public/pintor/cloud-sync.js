@@ -279,7 +279,11 @@
         if (!origins.includes(e.origin)) return;
         const d = e.data;
         if (!d || typeof d !== 'object' || d.type !== 'authorization_response') return;
-        done = true; cleanup(); resolve(d);
+        // O broker envia { type: 'authorization_response', response: {...} }.
+        // Aceitar também o formato plano mantém compatibilidade com retornos
+        // antigos, mas nunca descarta uma autorização válida já concluída.
+        const response = d.response && typeof d.response === 'object' ? d.response : d;
+        done = true; cleanup(); resolve(response);
       };
       const popup = window.open(url, 'oauth', 'width=520,height=640');
       const timer = setInterval(() => {
