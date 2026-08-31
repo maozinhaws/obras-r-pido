@@ -6108,7 +6108,8 @@ window.gdriveConnect = async function gdriveConnect() {
   try {
     toast('Abrindo login do Google…');
     const res = await window.cloudSignInGoogle?.();
-    if (res?.error) toast(res.error);
+    if (res?.error) { toast(res.error); if (res.url) _ppShowLoginFallbackLink(res.url); return; }
+    if (res?.ok) { toast('Conta conectada!'); setTimeout(() => location.reload(), 900); }
   } catch (e) {
     console.warn('[cloud] login Google falhou', e);
     toast('Não foi possível conectar agora.');
@@ -6836,6 +6837,7 @@ window.ppGetUser = function ppGetUser() {
 window.ppSignIn = async function ppSignIn() {
   const res = await window.cloudSignInGoogle?.();
   if (res?.error) { toast(res.error); return null; }
+  if (res?.ok) { setTimeout(() => location.reload(), 900); return null; }
   return null; // redireciona para o Google; a sessão volta no retorno
 };
 window.ppSignOut = async function ppSignOut() {
@@ -6849,7 +6851,8 @@ async function _ppTriggerLogin() {
   // Login do Google na MESMA aba (sem popup — popups são bloqueados no mobile).
   toast('Abrindo login do Google…');
   const res = await window.cloudSignInGoogle?.();
-  if (res?.error) { toast(res.error); return; }
+  if (res?.error) { toast(res.error); if (res.url) _ppShowLoginFallbackLink(res.url); return; }
+  if (res?.ok) { toast('Conta conectada!'); setTimeout(() => location.reload(), 900); return; }
   // Se o navegador bloqueou a navegação automática, oferece um link real
   // para o usuário tocar (gesto direto nunca é bloqueado).
   if (res?.url) _ppShowLoginFallbackLink(res.url);
