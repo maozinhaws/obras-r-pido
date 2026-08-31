@@ -1818,7 +1818,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
 <link rel="stylesheet" href="/photo-annotator.css">
   <script type="module" crossorigin src="/pintor/assets/app-7mkkXZ-j.js"></script>
   <link rel="stylesheet" crossorigin href="/pintor/assets/app-BL-_ECWx.css">
-  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=28">
+  <link rel="stylesheet" href="/pintor/lovable-theme.css?v=29">
 <script>(function(){try{if(!localStorage.getItem("pp-theme"))localStorage.setItem("pp-theme","light");document.documentElement.classList.remove("dark");}catch(e){}})();</script>
 </head>
 <body>
@@ -2017,7 +2017,7 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:6px;">
-            <button id="sync-status-btn" onclick="window.executeSync?.({ interactive: true })" title="Sincronizar agora" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;color:var(--ink3);border-radius:8px;transition:color .2s;" aria-label="Status de sincronização">
+            <button id="sync-status-btn" onclick="window.ppSyncNow?.()" title="Sincronizar agora" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;color:var(--ink3);border-radius:8px;transition:color .2s;" aria-label="Status de sincronização">
               <svg id="sync-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
             </button>
             <button class="orbital-btn" onclick="toggleThemeAnim()" aria-label="Alternar tema">
@@ -3160,7 +3160,8 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
     if (els.cliente) els.cliente.setAttribute('enterkeyhint', 'next');
     if (els.telefone) els.telefone.setAttribute('enterkeyhint', 'next');
     if (els.apelido) els.apelido.setAttribute('enterkeyhint', 'done');
-    els.btnAbrirCamera.addEventListener('click', function(){ openCameraModal(); });
+    els.btnAbrirCamera.addEventListener('click', function(){ if (_ppUseParentCamera()) return; openCameraModal(); });
+    function _ppUseParentCamera(){ try { if (window.parent && window.parent !== window && typeof window.parent.openDetailedCameraForFlash === 'function') { window.parent.openDetailedCameraForFlash(function(urls){ (urls||[]).forEach(function(u){ if(u) state.modalPhotos.push(u); }); renderModalPhotos(); }); return true; } } catch(_){} return false; }
     els.modalFotosGaleria.addEventListener('change', e => handleModalPhotos(e.target.files));
     document.getElementById('modalFotosGaleriaBtn').addEventListener('change', e => handleModalPhotos(e.target.files));
     els.btnFecharCamera.addEventListener('click', closeCameraModal);
@@ -3184,13 +3185,14 @@ html.dark .hoc[style*="border-left: 3px solid var(--gn)"] { border-left: 3px sol
     function _onNomeFieldClick(){ if(_nomePickFirst){_nomePickFirst=false;openNomePick();} }
     function _onObsFieldClick(){ if(_obsPickFirst){_obsPickFirst=false;openObsPick();} }
     var NOME_SUGESTOES=%%NOME_SUGESTOES%%;
-    function openNomePick(){ document.activeElement&&document.activeElement.blur(); var g=document.getElementById('nomePickGrid'); g.innerHTML=NOME_SUGESTOES.map(function(n){ return '<button type=\'button\' onclick=\'selectNome(this.dataset.v)\' data-v=\''+n+'\' style=\'padding:10px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg-soft);font-family:Sora,sans-serif;font-size:12px;font-weight:700;color:var(--text);cursor:pointer;text-align:center;\'>'+n+'</button>'; }).join(''); document.getElementById('nomePickModal').style.display='flex'; syncFlashBlockingState(); }
+    function _ppParent(fn){ try { if (window.parent && window.parent !== window && typeof window.parent[fn] === 'function') return window.parent[fn]; } catch(_){} return null; }
+    function openNomePick(){ document.activeElement&&document.activeElement.blur(); var p=_ppParent('ppOpenNomePickShared'); if(p){ p(function(n){ if(n) document.getElementById('modalNome').value=n; }); return; } var g=document.getElementById('nomePickGrid'); g.innerHTML=NOME_SUGESTOES.map(function(n){ return '<button type=\'button\' onclick=\'selectNome(this.dataset.v)\' data-v=\''+n+'\' style=\'padding:10px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg-soft);font-family:Sora,sans-serif;font-size:12px;font-weight:700;color:var(--text);cursor:pointer;text-align:center;\'>'+n+'</button>'; }).join(''); document.getElementById('nomePickModal').style.display='flex'; syncFlashBlockingState(); }
     function closeNomePick(){ document.getElementById('nomePickModal').style.display='none'; syncFlashBlockingState(); }
     function selectNome(n){ document.getElementById('modalNome').value=n; closeNomePick(); }
     var OBS_SERVICOS=%%OBS_SERVICOS%%;
     var OBS_MATERIAIS=%%OBS_MATERIAIS%%;
-    function _renderObsChips(items,cId,type){ var svcs=state.modalSelectedServices||[]; var c=document.getElementById(cId); c.innerHTML=items.map(function(s){ var sel=svcs.indexOf(s)>=0; var bg=sel?(type==='srv'?'#ff6b35':'#059669'):'var(--bg-soft)'; var col=sel?'#fff':(type==='srv'?'#ff6b35':'#059669'); var bdr=sel?'transparent':(type==='srv'?'rgba(255,107,53,.25)':'#d1fae5'); return '<button type=\'button\' onclick=\'toggleService(this.dataset.v)\' data-v=\''+s+'\' style=\'padding:7px 12px;border-radius:20px;border:1.5px solid '+bdr+';background:'+bg+';font-family:Sora,sans-serif;font-size:12px;font-weight:700;color:'+col+';cursor:pointer;\'>'+s+'</button>'; }).join(''); }
-    function openObsPick(){ document.activeElement&&document.activeElement.blur(); _renderObsChips(OBS_SERVICOS,'obsServGrid','srv'); _renderObsChips(OBS_MATERIAIS,'obsMatGrid','mat'); document.getElementById('obsPickModal').style.display='flex'; syncFlashBlockingState(); }
+    function _renderObsChips(items,cId,type){ var svcs=state.modalSelectedServices||[]; var c=document.getElementById(cId); c.innerHTML=items.map(function(s){ var sel=svcs.indexOf(s)>=0; var bg=sel?(type==='srv'?'#ff6b35':'#059669'):'var(--bg-soft)'; var col=sel?'#fff':(type==='srv'?'#ff6b35':'#059669'); var bdr=sel?'transparent':(type==='srv'?'rgba(255,107,53,.25)':'#d1fae5'); return '<button type=\'button\' data-on=\''+(sel?1:0)+'\' onclick=\'toggleService(this.dataset.v)\' data-v=\''+s+'\' style=\'padding:7px 12px;border-radius:20px;border:1.5px solid '+bdr+';background:'+bg+';font-family:Sora,sans-serif;font-size:12px;font-weight:700;color:'+col+';cursor:pointer;\'>'+s+'</button>'; }).join(''); }
+    function openObsPick(){ document.activeElement&&document.activeElement.blur(); var p=_ppParent('ppOpenServicosPickShared'); if(p){ p(state.modalSelectedServices||[], function(res){ if(!res) return; state.modalSelectedServices=res.selected||[]; els.modalObs.value=res.texto||els.modalObs.value; }, els.modalObs.value||''); return; } _renderObsChips(OBS_SERVICOS,'obsServGrid','srv'); _renderObsChips(OBS_MATERIAIS,'obsMatGrid','mat'); document.getElementById('obsPickModal').style.display='flex'; syncFlashBlockingState(); }
     function closeObsPick(){ document.getElementById('obsPickModal').style.display='none'; syncFlashBlockingState(); }
     function toggleService(s){ var svcs=state.modalSelectedServices||[]; var i=svcs.indexOf(s); if(i>=0) svcs.splice(i,1); else svcs.push(s); state.modalSelectedServices=svcs; _renderObsChips(OBS_SERVICOS,'obsServGrid','srv'); _renderObsChips(OBS_MATERIAIS,'obsMatGrid','mat'); }
     function confirmObsPick(){ var allKnown=OBS_SERVICOS.concat(OBS_MATERIAIS); var current=els.modalObs.value; var customParts=current.split(',').map(function(s){return s.trim();}).filter(function(s){return s&&allKnown.indexOf(s)<0;}); var selected=state.modalSelectedServices||[]; els.modalObs.value=customParts.concat(selected).join(', '); closeObsPick(); }
@@ -4917,7 +4919,7 @@ function _renderItemObsChips() {
     const bg = on ? (type==='srv' ? '#7c3aed' : '#059669') : '#f1f5f9';
     const col = on ? '#fff' : (type==='srv' ? '#7c3aed' : '#059669');
     const bdr = on ? 'transparent' : (type==='srv' ? '#ddd6fe' : '#d1fae5');
-    return `<button type="button" data-key="${_esc(key)}" onclick="toggleItemObsSvc(this.dataset.key)" style="padding:7px 12px;border-radius:20px;border:1.5px solid ${bdr};background:${bg};font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:${col};cursor:pointer;">${_esc(s)}</button>`;
+    return `<button type="button" data-on="${on?1:0}" data-key="${_esc(key)}" onclick="toggleItemObsSvc(this.dataset.key)" style="padding:7px 12px;border-radius:20px;border:1.5px solid ${bdr};background:${bg};font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:${col};cursor:pointer;">${_esc(s)}</button>`;
   };
   document.getElementById('services-modal-body').innerHTML = srvList.map(s=>chip(s,'srv')).join('');
   document.getElementById('services-modal-mat-body').innerHTML = matList.map(s=>chip(s,'mat')).join('');
@@ -6844,14 +6846,54 @@ window.getSyncLastError = function () { return window.getCloudLastError?.() || '
 window.getSyncStatus = function () { return window.getCloudStatus?.() || 'offline'; };
 
 async function _ppTriggerLogin() {
-  // Fluxo OAuth único que já concede drive.appdata na primeira consentida.
-  // Evita o passo duplo do GIS ID Token → OAuth token, cujo segundo popup
-  // era bloqueado no mobile e deixava a conta "conectada" sem token de Drive.
+  // Login do Google na MESMA aba (sem popup — popups são bloqueados no mobile).
   toast('Abrindo login do Google…');
   const res = await window.cloudSignInGoogle?.();
-  if (res?.error) toast(res.error);
+  if (res?.error) { toast(res.error); return; }
+  // Se o navegador bloqueou a navegação automática, oferece um link real
+  // para o usuário tocar (gesto direto nunca é bloqueado).
+  if (res?.url) _ppShowLoginFallbackLink(res.url);
 }
 window._ppTriggerLogin = _ppTriggerLogin;
+
+function _ppShowLoginFallbackLink(url) {
+  const host = document.getElementById('google-signin-btn');
+  if (!host || document.getElementById('pp-google-fallback')) return;
+  const a = document.createElement('a');
+  a.id = 'pp-google-fallback';
+  a.href = url;
+  a.textContent = 'Toque aqui para continuar com o Google';
+  a.style.cssText = "display:block;margin-top:10px;font-family:'Sora',sans-serif;font-size:12.5px;font-weight:700;color:var(--bl);text-decoration:underline;text-align:center;";
+  host.insertAdjacentElement('afterend', a);
+}
+
+// ── Sincronizar agora (botão da Home) ──
+// Só recarrega a página DEPOIS que o banco de dados confirmou o backup.
+let _ppSyncing = false;
+async function ppSyncNow() {
+  if (_ppSyncing) return;
+  const sess = window.cloudGetSession?.();
+  if (!sess?.email) {
+    toast('Conecte sua conta na nuvem para sincronizar.');
+    try { openConfig(); } catch (e) {}
+    return;
+  }
+  _ppSyncing = true;
+  toast('Sincronizando com a nuvem…');
+  try { renderSyncStatus(); } catch (e) {}
+  let ok = false;
+  try { ok = !!(await window.cloudSync?.()); } catch (e) { console.warn(e); }
+  try { renderSyncStatus(); } catch (e) {}
+  _ppSyncing = false;
+  if (!ok) {
+    toast(window.getCloudLastError?.() || 'Falha ao sincronizar. Tente de novo.');
+    return;
+  }
+  toast('Backup confirmado! Atualizando…');
+  setTimeout(() => { try { location.reload(); } catch (e) {} }, 700);
+}
+window.ppSyncNow = ppSyncNow;
+window.executeSync = function () { return ppSyncNow(); };
 
 async function ppLoginOffline() {
   // Cria sessão local sem Google
@@ -7006,13 +7048,27 @@ window.addEventListener('load', () => {
   navigator.serviceWorker?.ready.then(() => _syncAlarmsToSW()).catch(()=>{});
 
   // ── Auth gate ──
-  // Só pede login se, DEPOIS de consultar a sessão da nuvem, realmente não
-  // houver conta ativa. Assim uma sessão válida nunca cai na tela de login
-  // (o que antes fazia o usuário "perder" o orçamento salvo).
+  // Decide NA HORA (sem esperar rede): se existe sessão em cache no aparelho,
+  // o app abre direto; se não existe, a tela de login já aparece de imediato.
+  // A validação real acontece em segundo plano.
   const storedUser = window.ppGetUser?.();
+  const hasCachedCloud = (() => {
+    try { return !!localStorage.getItem('pp-cloud-auth') && !!localStorage.getItem('pp-cloud-user'); }
+    catch (e) { return false; }
+  })();
+
   if (storedUser && !storedUser.email) {
     _ppShowApp(storedUser); // modo offline explícito
+  } else if (hasCachedCloud) {
+    let cached = null;
+    try { cached = JSON.parse(localStorage.getItem('pp-cloud-user') || 'null'); } catch (e) {}
+    _ppShowApp({ uid: cached?.userId, email: cached?.email, name: cached?.email, picture: '' });
   } else {
+    _ppShowLogin();
+  }
+
+  // Validação em segundo plano (renova token / derruba conta fantasma)
+  if (!(storedUser && !storedUser.email)) {
     (async () => {
       let sess = null;
       try { sess = await window.cloudGetSessionAsync?.(); } catch (e) {}
@@ -7980,6 +8036,89 @@ async function gDriveSyncClientes() {
     window._flashTempItem = S.tempItem;
     S.tempItem = { photos: [] };
     if (typeof openDetailedCamera === 'function') openDetailedCamera();
+  };
+
+  // ── Bridge: modais únicos de seleção (nome / serviços e materiais) ──
+  // O modo Flash (iframe) reutiliza EXATAMENTE os mesmos modais do modo detalhado.
+  // Os wrappers são instalados no momento da abertura (e não no boot) para
+  // sempre embrulhar a versão final das funções do app.
+  function _ppRestoreSharedItem() {
+    S.tempItem = window._ppSharedPrevItem || null;
+    window._ppSharedPrevItem = null;
+  }
+
+  function _ppPatchOnce(name, wrap) {
+    const cur = window[name];
+    if (typeof cur !== 'function' || cur.__ppShared) return;
+    const patched = wrap(cur);
+    patched.__ppShared = true;
+    window[name] = patched;
+  }
+
+  function _ppInstallSharedPickPatches() {
+    _ppPatchOnce('selectDetailNome', (orig) => function (n) {
+      if (window._ppNomePickShared) {
+        const cb = window._ppNomePickShared;
+        window._ppNomePickShared = null;
+        if (typeof window.closeDetailNamePick === 'function') window.closeDetailNamePick();
+        _ppRestoreSharedItem();
+        try { cb(n); } catch (e) { console.warn(e); }
+        return;
+      }
+      return orig.call(this, n);
+    });
+
+    _ppPatchOnce('confirmItemObsPick', (orig) => function () {
+      if (window._ppServicosPickShared) {
+        const cb = window._ppServicosPickShared;
+        window._ppServicosPickShared = null;
+        const selected = (S.tempItem?.services || []).map(window._ppStripPrefix);
+        const srvList = S.DEFAULT_SERVICES || [];
+        const matList = String((S.config && S.config.flashMateriais) || '')
+          .split(',').map(s => s.trim()).filter(Boolean);
+        const known = [...srvList, ...matList];
+        const custom = String(S.tempItem?.obs || '').split(',').map(s => s.trim())
+          .filter(s => s && !known.includes(s));
+        const texto = [...custom, ...selected].join(', ');
+        if (typeof window.closeServicesModal === 'function') window.closeServicesModal();
+        _ppRestoreSharedItem();
+        try { cb({ selected, texto }); } catch (e) { console.warn(e); }
+        return;
+      }
+      return orig.call(this);
+    });
+
+    _ppPatchOnce('closeServicesModal', (orig) => function () {
+      const wasShared = !!window._ppServicosPickShared;
+      window._ppServicosPickShared = null;
+      const r = orig.call(this);
+      if (wasShared) _ppRestoreSharedItem();
+      return r;
+    });
+
+    _ppPatchOnce('closeDetailNamePick', (orig) => function () {
+      const wasShared = !!window._ppNomePickShared;
+      window._ppNomePickShared = null;
+      const r = orig.call(this);
+      if (wasShared) _ppRestoreSharedItem();
+      return r;
+    });
+  }
+
+  window.ppOpenNomePickShared = function (callback) {
+    _ppInstallSharedPickPatches();
+    window._ppSharedPrevItem = S.tempItem;
+    if (!S.tempItem) S.tempItem = { services: [], obs: '', photos: [] };
+    window._ppNomePickShared = callback;
+    if (typeof window.openDetailNamePick === 'function') window.openDetailNamePick();
+  };
+
+  window.ppOpenServicosPickShared = function (selected, callback, texto) {
+    _ppInstallSharedPickPatches();
+    window._ppSharedPrevItem = S.tempItem;
+    S.tempItem = { services: (selected || []).slice(), obs: texto || '', photos: [] };
+    window._ppServicosPickShared = callback;
+    if (typeof window.openServicesModal === 'function') window.openServicesModal();
   };
 })();
 </script>
