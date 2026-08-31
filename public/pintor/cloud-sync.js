@@ -240,27 +240,77 @@
     return { ok: true };
   }
 
-  // Login com Google (OAuth do backend). Redireciona a página inteira —
-  // sem popup, que era bloqueado no mobile.
+  // Login com Google via broker OAuth do Lovable Cloud (mesma origem:
+  // /~oauth/initiate). O endpoint /auth/v1/authorize do backend devolve 400
+  // ("missing OAuth secret") porque as credenciais são gerenciadas pelo broker.
   async function cloudSignInGoogle() {
     await window.cloudReady;
     if (!_sb) return { error: 'Backend indisponível.' };
-    const { data, error } = await _sb.auth.signInWithOAuth({
+    const state = (function () {
+      try {
+        return [...crypto.getRandomValues(new Uint8Array(16))]
+          .map((b) => b.toString(16).padStart(2, '0')).join('');
+      } catch (e) { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    })();
+    const redirectUri = window.location.origin + '/pintor/index.html';
+    const params = new URLSearchParams({
       provider: 'google',
-      options: {
-        redirectTo: window.location.origin + '/pintor/index.html',
-        queryParams: { prompt: 'select_account' },
-      },
+      redirect_uri: redirectUri,
+      state,
+      prompt: 'select_account',
     });
-    if (error) { _setErr(error.message || 'Falha no login com Google.'); return { error: error.message || 'Falha no login com Google.' }; }
-    if (data?.url) {
-      try { window.location.assign(data.url); } catch (e) {}
-      // Se a navegação automática for bloqueada, devolve a URL para a UI
-      // oferecer um link tocável (gesto direto nunca é bloqueado).
-      return { redirecting: true, url: data.url };
+    let inIframe = false;
+    try { inIframe = window.self !== window.top; } catch (e) { inIframe = true; }
+
+    // Fora de iframe: navegação normal (nunca é bloqueada no mobile).
+    if (!inIframe) {
+      const url = '/~oauth/initiate?' + params.toString();
+      try { window.location.assign(url); } catch (e) {}
+      return { redirecting: true, url };
     }
-    return { error: 'Não foi possível abrir o login do Google.' };
+
+    // Dentro de iframe (preview): popup + web_message.
+    params.set('response_mode', 'web_message');
+    const origins = ['https://oauth.lovable.app', 'https://lovable.dev'];
+    const url = '/~oauth/initiate?' + params.toString();
+    const tokens = await new Promise((resolve) => {
+      let done = false;
+      const onMsg = (e) => {
+        if (!origins.includes(e.origin)) return;
+        const d = e.data;
+        if (!d || typeof d !== 'object' || d.type !== 'authorization_response') return;
+        done = true; cleanup(); resolve(d);
+      };
+      const popup = window.open(url, 'oauth', 'width=520,height=640');
+      const timer = setInterval(() => {
+        if (popup && popup.closed && !done) { cleanup(); resolve({ error: 'cancelado' }); }
+      }, 500);
+      function cleanup() {
+        clearInterval(timer);
+        window.removeEventListener('message', onMsg);
+        try { popup && popup.close(); } catch (e) {}
+      }
+      window.addEventListener('message', onMsg);
+      if (!popup) { cleanup(); resolve({ error: 'popup_blocked' }); }
+    });
+    if (tokens?.error === 'popup_blocked') {
+      return { error: 'O navegador bloqueou a janela do Google.', url };
+    }
+    if (tokens?.error || tokens?.state !== state || !tokens?.access_token) {
+      const msg = tokens?.error_description || 'Falha no login com Google.';
+      _setErr(msg);
+      return { error: msg, url };
+    }
+    const { error } = await _sb.auth.setSession({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    });
+    if (error) { _setErr(error.message); return { error: error.message }; }
+    _setStatus('pending');
+    setTimeout(() => cloudSync().catch(() => {}), 400);
+    return { ok: true };
   }
+
 
 
 
