@@ -253,7 +253,12 @@
       },
     });
     if (error) { _setErr(error.message || 'Falha no login com Google.'); return { error: error.message || 'Falha no login com Google.' }; }
-    if (data?.url) { window.location.assign(data.url); return { redirecting: true }; }
+    if (data?.url) {
+      try { window.location.assign(data.url); } catch (e) {}
+      // Se a navegação automática for bloqueada, devolve a URL para a UI
+      // oferecer um link tocável (gesto direto nunca é bloqueado).
+      return { redirecting: true, url: data.url };
+    }
     return { error: 'Não foi possível abrir o login do Google.' };
   }
 

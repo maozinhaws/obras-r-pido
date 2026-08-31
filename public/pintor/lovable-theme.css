@@ -456,14 +456,61 @@ html.dark #services-modal-mat-body button {
   border-color: rgba(255,255,255,0.12) !important;
 }
 
-#obsServGrid button[style*="#ff6b35"],
-#services-modal-body button[style*="#7c3aed"],
-#obsMatGrid button[style*="#059669"],
-#services-modal-mat-body button[style*="#059669"] {
+/* Chips NÃO selecionados (fundo claro #f1f5f9 / var) — texto colorido legível */
+#obsServGrid button[data-on="0"],
+#services-modal-body button[data-on="0"],
+#obsServGrid button[style*="background:#f1f5f9"],
+#services-modal-body button[style*="background:#f1f5f9"] {
+  background: rgba(255,255,255,0.92) !important;
+  color: #6d28d9 !important;
+}
+#obsMatGrid button[data-on="0"],
+#services-modal-mat-body button[data-on="0"],
+#obsMatGrid button[style*="background:#f1f5f9"],
+#services-modal-mat-body button[style*="background:#f1f5f9"] {
+  background: rgba(255,255,255,0.92) !important;
+  color: #047857 !important;
+}
+html.dark #obsServGrid button[data-on="0"],
+html.dark #services-modal-body button[data-on="0"],
+html.dark #obsServGrid button[style*="background:#f1f5f9"],
+html.dark #services-modal-body button[style*="background:#f1f5f9"] {
+  background: rgba(28,18,42,0.72) !important;
+  color: #c4b5fd !important;
+}
+html.dark #obsMatGrid button[data-on="0"],
+html.dark #services-modal-mat-body button[data-on="0"],
+html.dark #obsMatGrid button[style*="background:#f1f5f9"],
+html.dark #services-modal-mat-body button[style*="background:#f1f5f9"] {
+  background: rgba(28,18,42,0.72) !important;
+  color: #6ee7b7 !important;
+}
+
+/* Chips SELECIONADOS: fundo sólido + texto branco (nunca branco no branco) */
+#obsServGrid button[data-on="1"],
+#services-modal-body button[data-on="1"],
+#obsServGrid button[style*="background:#ff6b35"],
+#services-modal-body button[style*="background:#7c3aed"] {
+  background: #6d28d9 !important;
   color: #ffffff !important;
   border-color: transparent !important;
   box-shadow: 0 10px 24px -10px rgba(15,5,40,0.32) !important;
 }
+#obsMatGrid button[data-on="1"],
+#services-modal-mat-body button[data-on="1"],
+#obsMatGrid button[style*="background:#059669"],
+#services-modal-mat-body button[style*="background:#059669"] {
+  background: #047857 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: 0 10px 24px -10px rgba(15,5,40,0.32) !important;
+}
+
+/* Sugestões de nome (item) — texto sempre contrastando */
+#detail-nome-pick-grid button,
+#nomePickGrid button { color: #0a0a0a !important; }
+html.dark #detail-nome-pick-grid button,
+html.dark #nomePickGrid button { color: #ededf0 !important; }
 
 .add-room-btn {
   border: 2px dashed rgba(255,107,53,0.45) !important;
