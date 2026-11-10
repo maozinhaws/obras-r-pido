@@ -4660,6 +4660,21 @@ function populateStatusSelect() {
   sel.innerHTML = S.statusArr.map(s => `<option value="${s}">${s}</option>`).join('');
 }
 
+// SELETOR DE MODO (Novo Orçamento)
+function showModeSelector(){
+  const m = document.getElementById('mode-selector-modal');
+  if (m) { m.style.display = 'flex'; try { syncBlockingUiState(); } catch(_){} }
+}
+function selectMode(mode){
+  const m = document.getElementById('mode-selector-modal');
+  if (m) m.style.display = 'none';
+  try { syncBlockingUiState(); } catch(_){}
+  if (mode === 'flash' && typeof window.openFlash === 'function') window.openFlash();
+  else newOrc();
+}
+window.showModeSelector = showModeSelector;
+window.selectMode = selectMode;
+
 // NOVO ORÇAMENTO
 function newOrc(){
   canNavigateAsync(() => {
