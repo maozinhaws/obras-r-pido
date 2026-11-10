@@ -9,62 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermosRouteImport } from './routes/termos'
-import { Route as OrcamentosRouteImport } from './routes/orcamentos'
-import { Route as MaisRouteImport } from './routes/mais'
-import { Route as FornecedoresRouteImport } from './routes/fornecedores'
-import { Route as FlashRouteImport } from './routes/flash'
-import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
-import { Route as ClientesRouteImport } from './routes/clientes'
-import { Route as BackupRouteImport } from './routes/backup'
-import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AgendaRouteImport } from './routes/agenda'
+import { Route as BackupRouteImport } from './routes/backup'
+import { Route as ClientesRouteImport } from './routes/clientes'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as FlashRouteImport } from './routes/flash'
+import { Route as FornecedoresRouteImport } from './routes/fornecedores'
+import { Route as MaisRouteImport } from './routes/mais'
+import { Route as OrcamentosRouteImport } from './routes/orcamentos'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as OrcamentosIndexRouteImport } from './routes/orcamentos.index'
-import { Route as OrcamentosNovoRouteImport } from './routes/orcamentos.novo'
 import { Route as OrcamentosIdRouteImport } from './routes/orcamentos.$id'
-import { Route as OrcamentosIdReciboRouteImport } from './routes/orcamentos.$id.recibo'
-import { Route as ApiPublicSupabaseConfigRouteImport } from './routes/api/public/supabase-config'
-import { Route as ApiPublicGoogleConfigRouteImport } from './routes/api/public/google-config'
+import { Route as OrcamentosNovoRouteImport } from './routes/orcamentos.novo'
 import { Route as ApiPublicExcluirContaRouteImport } from './routes/api/public/excluir-conta'
+import { Route as ApiPublicGoogleConfigRouteImport } from './routes/api/public/google-config'
+import { Route as ApiPublicSupabaseConfigRouteImport } from './routes/api/public/supabase-config'
+import { Route as OrcamentosIdReciboRouteImport } from './routes/orcamentos.$id.recibo'
 
-const TermosRoute = TermosRouteImport.update({
-  id: '/termos',
-  path: '/termos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OrcamentosRoute = OrcamentosRouteImport.update({
-  id: '/orcamentos',
-  path: '/orcamentos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MaisRoute = MaisRouteImport.update({
-  id: '/mais',
-  path: '/mais',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FornecedoresRoute = FornecedoresRouteImport.update({
-  id: '/fornecedores',
-  path: '/fornecedores',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FlashRoute = FlashRouteImport.update({
-  id: '/flash',
-  path: '/flash',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
-  id: '/configuracoes',
-  path: '/configuracoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClientesRoute = ClientesRouteImport.update({
-  id: '/clientes',
-  path: '/clientes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BackupRoute = BackupRouteImport.update({
-  id: '/backup',
-  path: '/backup',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AgendaRoute = AgendaRouteImport.update({
@@ -72,9 +37,44 @@ const AgendaRoute = AgendaRouteImport.update({
   path: '/agenda',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BackupRoute = BackupRouteImport.update({
+  id: '/backup',
+  path: '/backup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientesRoute = ClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlashRoute = FlashRouteImport.update({
+  id: '/flash',
+  path: '/flash',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FornecedoresRoute = FornecedoresRouteImport.update({
+  id: '/fornecedores',
+  path: '/fornecedores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaisRoute = MaisRouteImport.update({
+  id: '/mais',
+  path: '/mais',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrcamentosRoute = OrcamentosRouteImport.update({
+  id: '/orcamentos',
+  path: '/orcamentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrcamentosIndexRoute = OrcamentosIndexRouteImport.update({
@@ -82,24 +82,19 @@ const OrcamentosIndexRoute = OrcamentosIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OrcamentosRoute,
 } as any)
-const OrcamentosNovoRoute = OrcamentosNovoRouteImport.update({
-  id: '/novo',
-  path: '/novo',
-  getParentRoute: () => OrcamentosRoute,
-} as any)
 const OrcamentosIdRoute = OrcamentosIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => OrcamentosRoute,
 } as any)
-const OrcamentosIdReciboRoute = OrcamentosIdReciboRouteImport.update({
-  id: '/recibo',
-  path: '/recibo',
-  getParentRoute: () => OrcamentosIdRoute,
+const OrcamentosNovoRoute = OrcamentosNovoRouteImport.update({
+  id: '/novo',
+  path: '/novo',
+  getParentRoute: () => OrcamentosRoute,
 } as any)
-const ApiPublicSupabaseConfigRoute = ApiPublicSupabaseConfigRouteImport.update({
-  id: '/api/public/supabase-config',
-  path: '/api/public/supabase-config',
+const ApiPublicExcluirContaRoute = ApiPublicExcluirContaRouteImport.update({
+  id: '/api/public/excluir-conta',
+  path: '/api/public/excluir-conta',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicGoogleConfigRoute = ApiPublicGoogleConfigRouteImport.update({
@@ -107,10 +102,15 @@ const ApiPublicGoogleConfigRoute = ApiPublicGoogleConfigRouteImport.update({
   path: '/api/public/google-config',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicExcluirContaRoute = ApiPublicExcluirContaRouteImport.update({
-  id: '/api/public/excluir-conta',
-  path: '/api/public/excluir-conta',
+const ApiPublicSupabaseConfigRoute = ApiPublicSupabaseConfigRouteImport.update({
+  id: '/api/public/supabase-config',
+  path: '/api/public/supabase-config',
   getParentRoute: () => rootRouteImport,
+} as any)
+const OrcamentosIdReciboRoute = OrcamentosIdReciboRouteImport.update({
+  id: '/recibo',
+  path: '/recibo',
+  getParentRoute: () => OrcamentosIdRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -247,60 +247,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/termos': {
-      id: '/termos'
-      path: '/termos'
-      fullPath: '/termos'
-      preLoaderRoute: typeof TermosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orcamentos': {
-      id: '/orcamentos'
-      path: '/orcamentos'
-      fullPath: '/orcamentos'
-      preLoaderRoute: typeof OrcamentosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mais': {
-      id: '/mais'
-      path: '/mais'
-      fullPath: '/mais'
-      preLoaderRoute: typeof MaisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fornecedores': {
-      id: '/fornecedores'
-      path: '/fornecedores'
-      fullPath: '/fornecedores'
-      preLoaderRoute: typeof FornecedoresRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/flash': {
-      id: '/flash'
-      path: '/flash'
-      fullPath: '/flash'
-      preLoaderRoute: typeof FlashRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/configuracoes': {
-      id: '/configuracoes'
-      path: '/configuracoes'
-      fullPath: '/configuracoes'
-      preLoaderRoute: typeof ConfiguracoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/clientes': {
-      id: '/clientes'
-      path: '/clientes'
-      fullPath: '/clientes'
-      preLoaderRoute: typeof ClientesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/backup': {
-      id: '/backup'
-      path: '/backup'
-      fullPath: '/backup'
-      preLoaderRoute: typeof BackupRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/agenda': {
@@ -310,11 +261,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgendaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/backup': {
+      id: '/backup'
+      path: '/backup'
+      fullPath: '/backup'
+      preLoaderRoute: typeof BackupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clientes': {
+      id: '/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof ClientesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flash': {
+      id: '/flash'
+      path: '/flash'
+      fullPath: '/flash'
+      preLoaderRoute: typeof FlashRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fornecedores': {
+      id: '/fornecedores'
+      path: '/fornecedores'
+      fullPath: '/fornecedores'
+      preLoaderRoute: typeof FornecedoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mais': {
+      id: '/mais'
+      path: '/mais'
+      fullPath: '/mais'
+      preLoaderRoute: typeof MaisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orcamentos': {
+      id: '/orcamentos'
+      path: '/orcamentos'
+      fullPath: '/orcamentos'
+      preLoaderRoute: typeof OrcamentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orcamentos/': {
@@ -324,13 +324,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrcamentosIndexRouteImport
       parentRoute: typeof OrcamentosRoute
     }
-    '/orcamentos/novo': {
-      id: '/orcamentos/novo'
-      path: '/novo'
-      fullPath: '/orcamentos/novo'
-      preLoaderRoute: typeof OrcamentosNovoRouteImport
-      parentRoute: typeof OrcamentosRoute
-    }
     '/orcamentos/$id': {
       id: '/orcamentos/$id'
       path: '/$id'
@@ -338,18 +331,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrcamentosIdRouteImport
       parentRoute: typeof OrcamentosRoute
     }
-    '/orcamentos/$id/recibo': {
-      id: '/orcamentos/$id/recibo'
-      path: '/recibo'
-      fullPath: '/orcamentos/$id/recibo'
-      preLoaderRoute: typeof OrcamentosIdReciboRouteImport
-      parentRoute: typeof OrcamentosIdRoute
+    '/orcamentos/novo': {
+      id: '/orcamentos/novo'
+      path: '/novo'
+      fullPath: '/orcamentos/novo'
+      preLoaderRoute: typeof OrcamentosNovoRouteImport
+      parentRoute: typeof OrcamentosRoute
     }
-    '/api/public/supabase-config': {
-      id: '/api/public/supabase-config'
-      path: '/api/public/supabase-config'
-      fullPath: '/api/public/supabase-config'
-      preLoaderRoute: typeof ApiPublicSupabaseConfigRouteImport
+    '/api/public/excluir-conta': {
+      id: '/api/public/excluir-conta'
+      path: '/api/public/excluir-conta'
+      fullPath: '/api/public/excluir-conta'
+      preLoaderRoute: typeof ApiPublicExcluirContaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/google-config': {
@@ -359,12 +352,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicGoogleConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/excluir-conta': {
-      id: '/api/public/excluir-conta'
-      path: '/api/public/excluir-conta'
-      fullPath: '/api/public/excluir-conta'
-      preLoaderRoute: typeof ApiPublicExcluirContaRouteImport
+    '/api/public/supabase-config': {
+      id: '/api/public/supabase-config'
+      path: '/api/public/supabase-config'
+      fullPath: '/api/public/supabase-config'
+      preLoaderRoute: typeof ApiPublicSupabaseConfigRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/orcamentos/$id/recibo': {
+      id: '/orcamentos/$id/recibo'
+      path: '/recibo'
+      fullPath: '/orcamentos/$id/recibo'
+      preLoaderRoute: typeof OrcamentosIdReciboRouteImport
+      parentRoute: typeof OrcamentosIdRoute
     }
   }
 }
