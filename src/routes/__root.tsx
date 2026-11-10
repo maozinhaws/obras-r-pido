@@ -78,7 +78,7 @@ function ErrorComponent({ error, reset }: import("@tanstack/react-router").Error
           {"> ERR_RUNTIME"}
         </div>
         <h1 className="text-display text-2xl mb-2">Algo quebrou</h1>
-        <p className="text-foreground/60 text-sm mb-6">{error.message}</p>
+        <p className="text-foreground/60 text-sm mb-6">{(error as Error)?.message}</p>
         <div className="flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
