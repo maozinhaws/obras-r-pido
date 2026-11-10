@@ -172,7 +172,7 @@
       email,
       password: senha,
       options: {
-        emailRedirectTo: window.location.origin + '/pintor/',
+        emailRedirectTo: window.location.origin + '/pintor/app.html',
         data: { nome: nome || '', telefone: tel },
       },
     });
@@ -252,7 +252,7 @@
           .map((b) => b.toString(16).padStart(2, '0')).join('');
       } catch (e) { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
     })();
-    const redirectUri = window.location.origin + '/pintor/index.html';
+    const redirectUri = window.location.origin + '/pintor/app.html';
     const params = new URLSearchParams({
       provider: 'google',
       redirect_uri: redirectUri,
