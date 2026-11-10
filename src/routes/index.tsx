@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
 
 function RedirectToApp() {
   useEffect(() => {
-    window.location.replace("/pintor/index.html");
+    window.location.replace("/pintor/app.html");
   }, []);
   return (
     <div
